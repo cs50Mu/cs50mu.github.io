@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>error code vs exception - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="error-code OR exception, it&amp;rsquo;s a question. 然而答案是，you should use both，难点在于确定在什么场景下用什么 适合用 exception 的情况 发生的错误无法处理时 In some situations you can&amp;rsquo;t do anything with the error code, and you just need to" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2021/01/26/error-code-vs-exception/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="error code vs exception" />
+<meta property="og:description" content="error-code OR exception, it&rsquo;s a question. 然而答案是，you should use both，难点在于确定在什么场景下用什么 适合用 exception 的情况 发生的错误无法处理时 In some situations you can&rsquo;t do anything with the error code, and you just need to" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2021/01/26/error-code-vs-exception/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-01-26T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-01-26T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="error code vs exception">
+<meta itemprop="description" content="error-code OR exception, it&rsquo;s a question. 然而答案是，you should use both，难点在于确定在什么场景下用什么 适合用 exception 的情况 发生的错误无法处理时 In some situations you can&rsquo;t do anything with the error code, and you just need to"><meta itemprop="datePublished" content="2021-01-26T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2021-01-26T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1199">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="error code vs exception"/>
+<meta name="twitter:description" content="error-code OR exception, it&rsquo;s a question. 然而答案是，you should use both，难点在于确定在什么场景下用什么 适合用 exception 的情况 发生的错误无法处理时 In some situations you can&rsquo;t do anything with the error code, and you just need to"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">error code vs exception</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-01-26 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#适合用-exception-的情况">适合用 exception 的情况</a></li>
+            <li><a href="#适合用-error-code-的情况">适合用 error-code 的情况</a></li>
+            <li><a href="#sum-up">sum up</a></li>
+            <li><a href="#unchecked-exceptions-的问题">Unchecked Exceptions 的问题</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>error-code OR exception, it&rsquo;s a question.</p>
+<p>然而答案是，you should use both，难点在于确定在什么场景下用什么</p>
+<h3 id="适合用-exception-的情况">适合用 exception 的情况</h3>
+<ul>
+<li>发生的错误无法处理时</li>
+</ul>
+<p>In some situations <strong>you can&rsquo;t do anything with the error code</strong>, and you just need to handle it in an upper level in the call stack, usually just log the error, display something to the user or close the program. In these cases, error codes would require you to bubble up the error codes manually level by level which is obviously much easier to do with exceptions. The point is that this is for unexpected and unhandleable situations. 与其将错误一层一层的 bubble up，不如将它一次性抛到最顶层</p>
+<ul>
+<li>In some situations you have a sequence of commands, and if any of them fail you should cleanup/dispose resources. 当有一堆调用要执行，而且每一个调用都有可能报错时，很明显用 exception 更方便，而不是每次调用后都要 handle 一次可能的error。</li>
+<li>In constructors you can only throw exceptions. 在初始化时若出错一律直接抛 exception，遵循速错原则</li>
+</ul>
+<h3 id="适合用-error-code-的情况">适合用 error-code 的情况</h3>
+<p>一般来说，除了上面适合使用 exception 的情况，其它任何时候都应该使用 error-code。</p>
+<p>in all other situations where you&rsquo;re returning some information on which the caller CAN/SHOULD take some action, using return codes is probably a better alternative. This includes all expected &ldquo;errors&rdquo;, because probably they should be handled by the immediate caller, and will hardly need to be bubbled up too many levels up in the stack.</p>
+<h3 id="sum-up">sum up</h3>
+<p>To sum it up:</p>
+<ul>
+<li>
+<p>I like to use exceptions when I have an unexpected situation, in which there&rsquo;s not much to do, and usually we want to abort a large block of code or even the whole operation or program. This is like the old &ldquo;on error goto&rdquo;.</p>
+</li>
+<li>
+<p>I like to use return codes when I have expected situations in which the caller code can/should take some action. This includes most business methods, APIs, validations, and so on.</p>
+</li>
+</ul>
+<h3 id="unchecked-exceptions-的问题">Unchecked Exceptions 的问题</h3>
+<p>首先，啥是 unchecked exception？</p>
+<p>A quick recap. In an unchecked exceptions model, <strong>you throw and catch exceptions, without it being part of the type system or a function’s signature</strong>.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// Foo throws an unhandled exception:
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">Foo</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="n">Exception</span><span class="o">(...);</span>
+<span class="o">}</span>
+
+<span class="c1">// Bar calls Foo, and handles that exception:
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">Bar</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">Foo</span><span class="o">();</span>
+    <span class="o">}</span>
+    <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Handle the error.
+</span><span class="c1"></span>    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// Baz also calls Foo, but does not handle that exception:
+</span><span class="c1"></span><span class="kt">void</span> <span class="nf">Baz</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">Foo</span><span class="o">();</span> <span class="c1">// Let the error escape to our callers.
+</span><span class="c1"></span><span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>问题在哪？</p>
+<p>In this model, <strong>any function call – and sometimes any statement – can throw an exception, transferring control non-locally somewhere else. Where? Who knows.</strong> There are no annotations or type system artifacts to guide your analysis. As a result, it’s difficult for anyone to reason about a program’s state at the time of the throw, the state changes that occur while that exception is propagated up the call stack – and possibly across threads in a concurrent program – and the resulting state by the time it gets caught or goes unhandled. 任何地方都有可能抛出exception，使得对于代码的分析变得非常困难。（我理解，这是因为没有限制，所以大家可以随心所欲的写，因而也非常难于理解。若大家在写的时候都遵循一定的规则，理论上也是可以写出易懂的代码，但每个人的水平不一样，对待代码的态度也不一样，在工程上没有限制的情况下，必然会造成“百花齐放”的现象）</p>
+<p>非常经典的分析：为什么 exception 在业界如此流行？</p>
+<blockquote>
+<p>It’s of course possible to try. Doing so requires reading API documentation, doing manual audits of the code, leaning heavily on code reviews, and a healthy dose of luck. The language isn’t helping you out one bit here. Because failures are rare, this tends not to be as utterly disastrous as it sounds. My conclusion is that’s why many people in the industry think unchecked exceptions are “good enough.” They stay out of your way for the common success paths and, because most people don’t write robust error handling code in non-systems programs, throwing an exception usually gets you out of a pickle fast. Catching and then proceeding often works too. No harm, no foul. Statistically speaking, programs “work.”</p>
+</blockquote>
+<p>exception 的通病（不管是checked还是unchecked）</p>
+<blockquote>
+<p>Another thing most exception systems get wrong is encouraging too coarse a granularity of handling errors. Proponents of return codes love that error handling is localized to a specific function call. (I do too!) In exception handling systems, it’s all too easy to slap a coarse-grained try/catch block around some huge hunk of code, without carefully reacting to individual failures. That produces brittle code that’s almost certainly wrong; if not today, then after the inevitable refactoring that will occur down the road. A lot of this has to do with having the right syntaxes. 一般人通常做法是一个<code>try ... catch</code> wrap 住一大段代码，简单是简单，但一般会埋坑</p>
+</blockquote>
+<p>参考：</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/253314/conventions-for-exceptions-or-error-codes">Conventions for exceptions or error codes</a></li>
+<li><a href="http://joeduffyblog.com/2016/02/07/the-error-model/">The Error Model</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-01-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2021/02/05/reading-notes-of-geektime-software-engineering/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">极客时间「软件工程之美」学习笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2021/01/26/golang-best-practice/">
+            <span class="next-text nav-default">Golang工程最佳实践</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

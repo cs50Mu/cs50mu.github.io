@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>jekyll on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/jekyll/</link>
+    <description>Recent content in jekyll on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 13 Oct 2013 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/jekyll/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>understand octopress</title>
+      <link>http://localhost:1313/post/2013/10/13/understand-octopress/</link>
+      <pubDate>Sun, 13 Oct 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/10/13/understand-octopress/</guid>
+      <description>好奇害死猫。 一开始是想着给现在的博客主题添加一个sidebar，再后来就想着搞清楚Octopress的原理，仔细一研究，原来里面用到了好多好</description>
+    </item>
+    
+  </channel>
+</rss>

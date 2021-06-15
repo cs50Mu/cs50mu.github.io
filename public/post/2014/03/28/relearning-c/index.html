@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>重新学习C - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="发现写learn python the hard way的大神Zed.A.Shaw的the hard其实是一个系列，除了python还有Ruby、C、SQL、Regex，" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2014/03/28/relearning-c/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="重新学习C" />
+<meta property="og:description" content="发现写learn python the hard way的大神Zed.A.Shaw的the hard其实是一个系列，除了python还有Ruby、C、SQL、Regex，" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2014/03/28/relearning-c/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2014-03-28T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2014-03-28T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="重新学习C">
+<meta itemprop="description" content="发现写learn python the hard way的大神Zed.A.Shaw的the hard其实是一个系列，除了python还有Ruby、C、SQL、Regex，"><meta itemprop="datePublished" content="2014-03-28T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2014-03-28T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1128">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="重新学习C"/>
+<meta name="twitter:description" content="发现写learn python the hard way的大神Zed.A.Shaw的the hard其实是一个系列，除了python还有Ruby、C、SQL、Regex，"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">重新学习C</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-03-28 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>发现写learn python the hard way的大神Zed.A.Shaw的the hard其实是一个系列，除了python还有Ruby、C、SQL、Regex，都是我想学的有木有！这几天在看他的C的教程，虽然只是一个alpha版本，但已经很牛逼了啊，一开始还可以，现在光是消化一小节都要好几天好不好！看了他的教程，感觉自己以前学过的那点东西真的是连屎都不如。。anyway，学到了很多东东，记录下学到的东西。</p>
+<ul>
+<li>指针。发现在实际使用中很容易把指针变量和指针所指的内容搞混，要记住，指针变量里存放的只是一个地址而已，所以它的大小（位数）是固定的，应该是4个字节，跟它所指的内容没有一点关系。比如我在练习中遇到的一个问题是，有一个结构体，结构体有几个字符型指针，也就是说这几个指针是指向几个字符串的，然后在给这个结构体申请空间的时候我就晕了。。到底应该申请多少呢？直接malloc(sizeof(struct Address))吗？因为我总纠结着结构体里的字符型指针，想着这几个指针指向的字符数目又没有定，这可怎么办呢？其实是我想多了，把指针和它指向的内容混淆了，要知道，指针就是指针而已，大小固定，4个字节，所以上面那个结构体的大小是固定的，可以直接用sizeof来计算。至于那几个指针指向的字符串嘛，等要用的时候再malloc就可以了，也就是说它们跟上面说的结构体没半毛钱关系！只是因为里面有个指针指向了它们而已。</li>
+<li>内存管理。这个之前真的是没有想过，也没有遇到过。因为总是在用一些脚本语言，根本就没有关注过内存管理的问题，导致现在遇到都不知道该怎么处理了，现在通过一次练习，对内存管理有了一些理解了。基本上，在C中一切内存管理都要自己来，要放东西的时候就要自己malloc申请空间，不需要提前申请，只要在需要使用的时候申请就行了，然后记得申请的空间用完后要自己释放，否则会导致内存泄露！</li>
+<li>动态数据结构从文件的读取和写入。乍一想觉得挺简单，其实还是蛮复杂的好不好。。先说写入，这里说的动态结构是指用指针实现的，就是不是固定的数组，所以具体大小可以到时候malloc随意申请，灵活是灵活，但要写入文件的时候就SB了，不能像固定结构那样直接一个<code>fwrite(&amp;addr, sizeof(struct Addr), 1, fpr)</code>就行了好不好，你要自己找到指针指向的内容，然后一个一个自己写啊！再说读取，首先顺序要一致，怎么写入的就要怎么读取出来，否则肯定是没戏啊，然后读取的时候要先准备好地方啊！也就是说要为读入的数据用malloc提前申请空间啊！还有一个就是一次读入数据大小的问题，这个要好好弄清楚，我在练习的时候就是这个没弄清楚，导致程序一直都有问题，还是那句话，不要把指针和指针指向的内容混淆！！</li>
+<li>gdb。gdb是个神器！！</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-03-28
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2014/03/30/two-sort-algorithms/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">冒泡排序和插入排序</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2014/03/03/get-your-visit-internet-frequency-by-python/">
+            <span class="next-text nav-default">统计浏览器历史记录</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

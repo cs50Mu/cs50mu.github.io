@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Structure and Interpretation of Computer Programs - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="大名鼎鼎的SICP，下面是我在学习Berkeley的CS61A时做的笔记,非常有意思的一门课！ 高阶函数 理解这玩意儿有时候确实挺费脑筋。。。下" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2014/07/26/sicp/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Structure and Interpretation of Computer Programs" />
+<meta property="og:description" content="大名鼎鼎的SICP，下面是我在学习Berkeley的CS61A时做的笔记,非常有意思的一门课！ 高阶函数 理解这玩意儿有时候确实挺费脑筋。。。下" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2014/07/26/sicp/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2014-07-26T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2014-07-26T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="Structure and Interpretation of Computer Programs">
+<meta itemprop="description" content="大名鼎鼎的SICP，下面是我在学习Berkeley的CS61A时做的笔记,非常有意思的一门课！ 高阶函数 理解这玩意儿有时候确实挺费脑筋。。。下"><meta itemprop="datePublished" content="2014-07-26T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2014-07-26T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="3857">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Structure and Interpretation of Computer Programs"/>
+<meta name="twitter:description" content="大名鼎鼎的SICP，下面是我在学习Berkeley的CS61A时做的笔记,非常有意思的一门课！ 高阶函数 理解这玩意儿有时候确实挺费脑筋。。。下"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Structure and Interpretation of Computer Programs</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-07-26 </span>
+        <div class="post-category">
+            <a href="/categories/python/"> python </a>
+            <a href="/categories/programming/"> programming </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#高阶函数">高阶函数</a></li>
+        <li><a href="#递归--破钱">递归  破钱</a></li>
+        <li><a href="#adtabstract-data-type">ADT(Abstract Data type)</a></li>
+        <li><a href="#implicit-sequences">Implicit Sequences</a></li>
+        <li><a href="#mutation-in-for-loops">Mutation in for loops</a></li>
+        <li><a href="#nonlocal与list">nonlocal与list</a></li>
+        <li><a href="#format-method-of-strings">format method of strings</a></li>
+        <li><a href="#generic-functions">Generic Functions</a></li>
+        <li><a href="#memoization">Memoization</a></li>
+        <li><a href="#huffman-encoding">Huffman Encoding</a></li>
+        <li><a href="#scheme">Scheme</a></li>
+        <li><a href="#tail-recursion-尾递归">Tail Recursion 尾递归</a></li>
+        <li><a href="#streams">Streams</a></li>
+        <li><a href="#declarative-programming">Declarative Programming</a></li>
+        <li><a href="#concurrency-并行">Concurrency 并行</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>大名鼎鼎的SICP，下面是我在学习Berkeley的CS61A时做的笔记,非常有意思的一门课！</p>
+<h2 id="高阶函数">高阶函数</h2>
+<p>理解这玩意儿有时候确实挺费脑筋。。。下面这个trick花了好久才理解。。关键一开始没想明白返回的到底是匿名函数还是匿名函数的执行结果 <br>
+def cons(a, b):
+return lambda m: m(a,b) # 此处返回的是一个参数为m的匿名函数！！并且m是一个函数，m接受两个参数a和b</p>
+<pre><code>def car(p):
+	return p(lambda x,y:x) # 
+
+car(cons(1,2)) # 结果应该为1
+</code></pre>
+<p>以上代码大概类似于下面的代码： <br>
+def fuck(func):
+def wrapper(a,b):
+return func(a,b)
+return wrapper</p>
+<pre><code>x = fuck(lambda x,y:x)
+x(1,2) # 输出1
+</code></pre>
+<h2 id="递归--破钱">递归  破钱</h2>
+<p>下面的函数实现的功能是，给定一个数值，比方说100块，和一堆小面额的纸币，找出用这些小面额纸币来表示这100块总共有几种方法。其中link函数是用来制作链表的，first函数返回链表的第一个元素，rest函数返回链表的剩余所有元素。可以看到函数是用递归实现的，依据大概是这样的：100块的表示方法可以分为两类，一类方法中使用链表中的第一个面额，另一类方法中不使用第一个面额。就这么简单。。。神奇的是它竟然是能工作的！
+def count_change(amount, denominations):
+'''
+Return the number of ways to make change for amount
+'''
+if amount &lt; 0 or denominations == empty:
+return 0
+elif amount == 0:
+return 1
+using_coin = count_change(amount - first(denominations), denominations)
+not_using_coin = count_change(amount, rest(denominations))
+return using_coin + not_using_coin</p>
+<pre><code>denominations = link(50, link(25, link(10, link(5, link(1, empty)))))
+&gt;&gt;&gt; print_linked_list(denominations)
+&lt; 50 25 10 5 1 &gt;
+&gt;&gt;&gt; count_change(100, denominations)
+292
+</code></pre>
+<h2 id="adtabstract-data-type">ADT(Abstract Data type)</h2>
+<p>ADT也属于抽象的一种，目的是控制复杂度，把复杂并且与下面要实现的功能无关的细节隐藏起来，只把几个关键的东西暴露给外部，要形成一个ADT一般需要一个constructor，一个selector，一个mutator等，有了这些，外部就可以用它们进一步实现别的功能了，像链表啊，树啊都属于ADT。其中，deep list和tree属于hierarchical data structure</p>
+<h2 id="implicit-sequences">Implicit Sequences</h2>
+<p>a sequence can be represented <strong>without</strong> each element being stored explicitly in the memory of the computer. That is, we can construct an object that provides access to all of the elements of some sequential dataset without computing all of those elements in advance and storing them. Instead, we compute elements on demand. 很巧妙的一种实现方式，不是把元素全部计算出来放在内存里等着去取，而是需要的时候才计算一个出来，这样可以节省大量的内存。这在计算机科学中叫lazy computation(lazy computation describes any program that delays the computation of a value until that value is needed). 但注意，实现这个强大功能的前提是sequential access(相对于random access)，也就是说只能按顺序依次获取，不能想取哪个就取哪个。嗯，iterator就是在这个背景下诞生了。。An iterator is an object that provides <strong>sequential access</strong> to an underlying sequential dataset. iterator就是为了方便处理那些具有内在顺序结构的数据而诞生的。The iterator abstraction has two components: a mechanism for retrieving the next element in some underlying series of elements and a mechanism for signaling that the end of the series has been reached and no further elements remain. In programming languages with built-in object systems, this abstraction typically corresponds to a particular interface that can be implemented by classes.</p>
+<ul>
+<li>iterators与iterables</li>
+</ul>
+<p>原来这两个不是一个东西。iterators需要实现<code>__next__</code>方法，是具体干活的。  <br>
+An object is iterable if it <strong>returns an iterator</strong> when its <code>__iter__</code> method is invoked. Iterable values represent data collections, and they provide a fixed representation that may produce more than one iterator. iterator和iterable类似于类和实例的关系吧,iterator负责实现模型、架构，iterable负责实例化。For example, an instance of the <code>Letters</code> class below represents a sequence of consecutive letters. Each time its <code>__iter__</code> method is invoked, a new <code>LetterIter</code> instance is constructed, which allows for sequential access to the contents of the sequence.  <br>
+&raquo;&gt; class LetterIter:
+&ldquo;&ldquo;&ldquo;An iterator over letters of the alphabet in ASCII order.&rdquo;&rdquo;&rdquo;
+def <strong>init</strong>(self, start=&lsquo;a&rsquo;, end=&lsquo;e&rsquo;):
+self.next_letter = start
+self.end = end
+def <strong>next</strong>(self):
+if self.next_letter == self.end:
+raise StopIteration
+letter = self.next_letter
+self.next_letter = chr(ord(letter)+1)
+return letter</p>
+<pre><code>&gt;&gt;&gt; class Letters:
+	def __init__(self, start='a', end='e'):
+        self.start = start
+        self.end = end
+	def __iter__(self):
+        return LetterIter(self.start, self.end)
+
+&gt;&gt;&gt; b_to_k = Letters('b', 'k')
+&gt;&gt;&gt; first_iterator = b_to_k.__iter__()
+&gt;&gt;&gt; next(first_iterator)
+'b'
+&gt;&gt;&gt; next(first_iterator)
+'c'
+&gt;&gt;&gt; second_iterator = iter(b_to_k)
+&gt;&gt;&gt; second_iterator.__next__()
+'b'
+&gt;&gt;&gt; first_iterator.__next__()
+'d'
+&gt;&gt;&gt; first_iterator.__next__()
+'e'
+&gt;&gt;&gt; second_iterator.__next__()
+'c'
+&gt;&gt;&gt; second_iterator.__next__()
+'d'
+</code></pre>
+<p>但是！在Python中<code>__next__</code>和<code>__iter__</code>方法是在同一个类中的！To use an iterator in a for loop, the iterator must also have an <code>__iter__</code> method. The <a href="http://docs.python.org/3/library/stdtypes.html#iterator-types">Iterator types</a> section of the Python docs suggest that an iterator have an <code>__iter__</code> method that returns the iterator itself, so that all iterators are iterable. 只要理解了<code>__iter__</code>方法的作用，也很容易理解的啦。</p>
+<ul>
+<li>Generators and Yield Statements</li>
+</ul>
+<p>Generators属于Iterator，a generator is an <strong>iterator</strong> returned by a special class of function called a generator function. Generator functions are distinguished from regular functions in that rather than containing return statements in their body, they use yield statement to return elements of a series.</p>
+<p>The Letters and Positives objects above require us to introduce a new field self.current into our object to keep track of progress through the sequence. With simple sequences like those shown above, this can be done easily. With complex sequences, however, it can be quite difficult for the <code>__next__</code> method to save its place in the calculation. Generators allow us to define more complicated iterations by leveraging the features of the Python interpreter.</p>
+<p>Generators do not use attributes of an object to track their progress through a series. Instead, they control the execution of the generator function, which runs until the next yield statement is executed each time the generator&rsquo;s <code>__next__</code> method is invoked. The Letters iterator can be implemented much more compactly using a generator function. 虽然实现的功能是一样的，但Generators与iterators的实现机理是不一样的，yield的机理貌似是coroutines，到底是个神马东东，待查。</p>
+<pre><code>&gt;&gt;&gt; def letters_generator():
+	current = 'a'
+	while current &lt;= 'd':
+        yield current
+        current = chr(ord(current)+1)
+
+&gt;&gt;&gt; for letter in letters_generator():
+	print(letter)
+a
+b
+c
+d
+</code></pre>
+<p>Even though we never explicitly defined <code>__iter__</code> or <code>__next__</code> methods, the yield statement indicates that we are defining a generator function. When called, a generator function doesn&rsquo;t return a particular yielded value, but instead a generator (which is a type of iterator) that itself can return the yielded values. A generator object has <code>__iter__</code> and <code>__next__</code> methods, and each call to <code>__next__</code> continues execution of the generator function from wherever it left off previously until another yield statement is executed.</p>
+<p>The first time <code>__next__</code> is called, the program executes statements from the body of the <code>letters_generator</code> function until it encounters the yield statement. Then, it pauses and returns the value of current. yield statements do not destroy the newly created environment, they preserve it for later. When <code>__next__</code> is called again, execution resumes where it left off. The values of current and of any other bound names in the scope of <code>letters_generator</code> are preserved across subsequent calls to <code>__next__</code>.</p>
+<p>这样，可以用yield语句来简化iterables的写法
+&raquo;&gt; class LettersWithYield:
+def <strong>init</strong>(self, start=&lsquo;a&rsquo;, end=&lsquo;e&rsquo;):
+self.start = start
+self.end = end
+def <strong>iter</strong>(self):
+next_letter = self.start
+while next_letter &lt; self.end:
+yield next_letter
+next_letter = chr(ord(next_letter)+1)</p>
+<p>以前没有Generators的时候，还需要定义一个<code>__next__</code>方法来生成iterator，然后用<code>__iter__</code>方法来返回self，这下因为yield本身返回的就是一个Generator(也属于Iterator)，所以无需<code>__next__</code>方法来生成iterator。</p>
+<h2 id="mutation-in-for-loops">Mutation in for loops</h2>
+<p>如果在for循环中对对象做了修改（增加或删除），会出现无法预测的结果
+# Demo: Mutation in For Loops
+# lst = list(range(10, 20))
+# for item in lst:
+#     print(item)
+#     lst.remove(item)
+# lst
+# 下面是解决办法, 不过原理未搞懂，待查
+class BetterList(list):
+def <strong>iter</strong>(self):
+return list.<strong>iter</strong>(self[:])</p>
+<h2 id="nonlocal与list">nonlocal与list</h2>
+<p>看下面两段代码  <br>
+def make_accumulator():
+&ldquo;&ldquo;&ldquo;Return an accumulator function that takes a single numeric argument and
+accumulates that argument into total, then returns total.
+&quot;&rdquo;&rdquo;
+total = []
+def accumulator(amount):
+total.append(amount)
+return sum(total)
+return accumulator</p>
+<pre><code>def make_accumulator_nonlocal():
+    &quot;&quot;&quot;Return an accumulator function that takes a single numeric argument and
+    accumulates that argument into total, then returns total.
+    &quot;&quot;&quot;
+    total = 0
+    def accumulator(amount):
+	nonlocal total
+	total += amount
+	return total
+    return accumulator
+</code></pre>
+<p>为何单个变量(total)在&quot;全局&quot;访问的时候需要nonlocal参数，而列表就不用了呢？</p>
+<h2 id="format-method-of-strings">format method of strings</h2>
+<pre><code>&gt;&gt;&gt; 'I {0}, you {0}, we all {0} for {1}!'.format('scream', 'ice cream')
+'I scream, you scream, we all scream for ice cream!'
+</code></pre>
+<h2 id="generic-functions">Generic Functions</h2>
+<p>Generic functions are methods or functions that apply to arguments of different types. 我理解就是不管对象类型是不是一样，都可以用这个通用函数来做运算。Generic functions主要有下面三种实现方式：</p>
+<ul>
+<li>Interfaces</li>
+<li>Type dispatching</li>
+<li>Coercion</li>
+</ul>
+<h2 id="memoization">Memoization</h2>
+<p>Keep track of all the calls we have ever made to fib and their answers. Then when we made a repeated recursive call, we immediately return the answer.</p>
+<h2 id="huffman-encoding">Huffman Encoding</h2>
+<p>一种可变编码方式，可针对词频进行优化编码，出现次数多的字母用相对小的位数来编码，出现次数多的字母用相对多的位数来编码，这样相对于固定位编码方式可节省存储空间。 <br>
+使用方法：</p>
+<ul>
+<li>统计字母出现频率，并据此创建霍夫曼二叉树。创建的方法就是对给定的字母、频率，不停的merge掉频率最小的两个，并根据这两个生成一个新的HuffmanTree，它的频率为那两个频率最小的频率之和，以此直至只剩下两个HuffmanTree为止.</li>
+<li>编码</li>
+<li>解码
+编码和解码部分可用递归优雅的实现</li>
+</ul>
+<h2 id="scheme">Scheme</h2>
+<ul>
+<li>区分symbol和string. When you type things in the interpreter, Scheme will evaluate it. The rule for evaluating a symbol is to get the value bound to that symbol. This is one difference between strings and symbols&ndash;symbols don&rsquo;t evaluate to themselves(which strings do). However, as you saw above, when you type in &lsquo;a, you get a. This is because when you use single quote, you&rsquo;re telling Scheme <strong>not to follow</strong> the normal rules of the evaluation and just have the symbol return as itself.</li>
+<li>Special Forms. 类似于其它语言中的关键字，比如define if and or等等</li>
+<li>Lambdas. 语法： <code>(lambda (&lt;PARAMETERS&gt;) &lt;EXPR&gt;)</code></li>
+<li>Functions. 语法：<code>(define (&lt;FUNCTIONNAME&gt; &lt;PARAMETERS&gt;) &lt;EXPR&gt;)</code>. Python will automatically transform it to <code>(define &lt;FUNCTIONNAME&gt; (lambda (&lt;PARAMETERS&gt;) &lt;EXPR&gt;)</code> for you.所以在Scheme中，lambda更基础.</li>
+<li>关键字let. 语法：
+(let ( (<SYMBOL1> <EXPR1>)
+&hellip;
+(<SYMBOLN> <EXPRN>) )
+<BODY> )
+它等价于：<code>( (lambda (&lt;SYMBOL1&gt; ... &lt;SYMBOLN&gt;) &lt;BODY&gt;) &lt;EXPR1&gt; ... &lt;EXPRN&gt;)</code></li>
+<li>Pairs. 创建：<code>(define a (cons 1 2))</code> 获取： <code>(car a)</code> <code>(cdr a)</code></li>
+<li>List. A List is a specific kind of Pair that is either nil(an empty list) or a Pair whose cdr is another List. 比如，(cons 1 (cons 2 nil))，它可以简写成&rsquo;(1 2)，检查List是否为空可用null?语句</li>
+</ul>
+<h2 id="tail-recursion-尾递归">Tail Recursion 尾递归</h2>
+<p>是对递归的一种优化，我们都知道，一般线性递归在新的调用之前需要在堆栈中保存当前调用的信息，这样随着函数调用的增多，对内存的占用会越来越大，而尾递归能够实现这一次的调用使用的堆栈空间直接覆盖上次用过的，因此虽然函数调用在不断进行，但对内存的占用却是不变的！（linuxfish注：看了一堆介绍，我肿么觉得尾递归有点过程语言中循环的感觉，是不是因为函数式编程中没有循环，才用尾递归的？）</p>
+<p>注意，要区分尾递归语法和尾递归优化，也就是说，你可以把递归写成尾递归的形式，但底层（解释器、编译器）是否给你优化就不一定了。比如，Python可以写成尾递归的形式，但是没用，照样会stackoverflow，因为解释器并不支持。</p>
+<h2 id="streams">Streams</h2>
+<p>这应该是Python中generator的鼻祖了吧。Streams are a clever idea that allows one to use sequence manipulations without incurring the costs of manipulating sequences as list. With streams we can achieve the best of both worlds: We can formulate programs elegantly as sequences manipulations, while attaining the efficiency of <strong>incremental computation</strong>. The basic idea is to arrange to construct a stream only partially, and to pass the partial construction to the program that consumes the stream. If the consumer attempts to access a part of the stream that has not yet been constructed, the stream will automatically construct just enough more of itself to produce the required part, thus preserving the illusion that the entire stream exists. In other words. In other words, although we will write programs as if we were processing complete sequences, we design our stream implemention to automatically and transparently interleave the construction of the stream with its use.感觉这玩意儿纯粹是Schemer们妄图所有问题都用list pair来解决，发现不行后又整出来的一个东东。这也是所谓的函数式语言的懒惰特性，所谓懒就是不到万不得已不动弹。。而不是傻乎乎的一下子就把整个list都计算出来。</p>
+<h2 id="declarative-programming">Declarative Programming</h2>
+<p>比如SQL语言</p>
+<p>data values are often stored in large repositories called databases. A database consists of a data store containing structured data values and an interface for retrieving subsets of the data based on their characteristics. Each value stored in a database is called a record. Records are typically retrieved via a query, which is an expression in a query programming language. By far the most ubiquitous query language in use is called Structure Query Language or SQL.</p>
+<p>SQL is an example of a declarative programming language. Expressions do not <strong>describe computations directly</strong>, but instead state the form of the <strong>result</strong> of some computation. It is the role of the <strong>query interpreter</strong> of the database system to design and perform a computational process to produce such a result.</p>
+<p>This interaction differs substantially from the procedural programming paradigm of Python or Scheme. In Python, <strong>computational processes are described directly by the programmer.</strong> A declarative language specifies the form of the result, but abstracts away procedural details.</p>
+<h2 id="concurrency-并行">Concurrency 并行</h2>
+<ul>
+<li>并行是一个现实问题，生活中经常会遇到，又是一个提升效率的好办法，并行办事比串行等待效率要高很多！</li>
+<li>由于线程并行所导致的问题可以通过引入锁的机制来解决，不过要注意防止死锁现象。</li>
+<li>还可以通过Message Passing来解决</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2014-07-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2014/09/18/binary-search-and-spreadsheet-numeration/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">binary search and spreadsheet numeration</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2014/07/14/my-first-vps/">
+            <span class="next-text nav-default">捣鼓VPS翻墙</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

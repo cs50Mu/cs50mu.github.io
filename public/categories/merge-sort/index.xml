@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>merge sort on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/merge-sort/</link>
+    <description>Recent content in merge sort on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 03 Jul 2013 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/merge-sort/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>归并排序的非递归算法</title>
+      <link>http://localhost:1313/post/2013/07/03/merge-sort/</link>
+      <pubDate>Wed, 03 Jul 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/07/03/merge-sort/</guid>
+      <description>归并排序的效率很高，复杂度只有NlogN，但想起来很费劲啊。。尤其是递归算法，绕来绕去的被绕晕了。。今天在看《Python编程实践》（Pra</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Golang on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/golang/</link>
+    <description>Recent content in Golang on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 26 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/golang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Golang工程最佳实践</title>
+      <link>http://localhost:1313/post/2021/01/26/golang-best-practice/</link>
+      <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2021/01/26/golang-best-practice/</guid>
+      <description>examples Building Go Web Applications and Microservices Using Gin 有实现，有测试，有重构 项目分层 model 所有的数据模型，被其它层所依赖 repo 数据层，屏蔽所有数据存取的细节 它的底层可以是数据库，也可以</description>
+    </item>
+    
+    <item>
+      <title>database/sql 源码学习</title>
+      <link>http://localhost:1313/post/2019/10/17/golang-database-sql/</link>
+      <pubDate>Thu, 17 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/10/17/golang-database-sql/</guid>
+      <description>数据结构 ColumnType contains the name and type of a column. 用于表示数据库表字段的基本信息 Conn represents a single database connection rather than a pool of database connections. 只代表一个数据库连接，适用于只能对一个连接操作的场景，比如</description>
+    </item>
+    
+    <item>
+      <title>job queue in Golang</title>
+      <link>http://localhost:1313/post/2019/07/20/job-queue-in-golang/</link>
+      <pubDate>Sat, 20 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/07/20/job-queue-in-golang/</guid>
+      <description>异步任务，还是蛮常见的 算不上 job queue的形式 go process(job) 这其实算不上一个queue，但简单。同时，少了一些对并发的控制，比如控制同时执行的任务数等</description>
+    </item>
+    
+    <item>
+      <title>Golang 中的文字编码问题</title>
+      <link>http://localhost:1313/post/2019/05/19/a-encoding-problem-in-golang/</link>
+      <pubDate>Sun, 19 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/05/19/a-encoding-problem-in-golang/</guid>
+      <description>过程描述 记录一个文字编码的问题 在请求支付宝支付的接口时，发现返回的Response如果有中文的话，print出来后会有乱码。第一反应肯定是编</description>
+    </item>
+    
+    <item>
+      <title>database with sqlx in Golang</title>
+      <link>http://localhost:1313/post/2019/05/09/database-with-sqlx-in-golang/</link>
+      <pubDate>Thu, 09 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/05/09/database-with-sqlx-in-golang/</guid>
+      <description>database with sqlx in Golang Parameterized Queries 翻译为参数化查询？是个什么概念呢？ Bind parameters—also called dynamic parameters or bind variables—are an alternative way to pass data to the database. Instead of putting</description>
+    </item>
+    
+    <item>
+      <title>Error Handling in Go</title>
+      <link>http://localhost:1313/post/2019/05/09/error-handling-in-go/</link>
+      <pubDate>Thu, 09 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/05/09/error-handling-in-go/</guid>
+      <description>From: Don’t just check errors, handle them gracefully error变量 1 2 3 4 5 6 var ErrNotFound = errors.New(&amp;#34;datastore:notfound&amp;#34;) err := Foo() if err == ErrNotFound { // ... } 优点：简单 缺点：不能带上下文，只有一个简单的固定字符描述；而</description>
+    </item>
+    
+  </channel>
+</rss>

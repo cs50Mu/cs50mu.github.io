@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>trivial problems - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="今天很高兴，因为解决了几个困扰很久的问题。 OpenVPN 为便于办公，公司提供了VPN，不过只提供了OpenVPN的连接方案，之前在arch上一直是用pp" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2015/01/20/trivial-problems/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="trivial problems" />
+<meta property="og:description" content="今天很高兴，因为解决了几个困扰很久的问题。 OpenVPN 为便于办公，公司提供了VPN，不过只提供了OpenVPN的连接方案，之前在arch上一直是用pp" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2015/01/20/trivial-problems/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2015-01-20T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2015-01-20T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="trivial problems">
+<meta itemprop="description" content="今天很高兴，因为解决了几个困扰很久的问题。 OpenVPN 为便于办公，公司提供了VPN，不过只提供了OpenVPN的连接方案，之前在arch上一直是用pp"><meta itemprop="datePublished" content="2015-01-20T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2015-01-20T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="717">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="trivial problems"/>
+<meta name="twitter:description" content="今天很高兴，因为解决了几个困扰很久的问题。 OpenVPN 为便于办公，公司提供了VPN，不过只提供了OpenVPN的连接方案，之前在arch上一直是用pp"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">trivial problems</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-01-20 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#openvpn">OpenVPN</a></li>
+        <li><a href="#urxvt-ssh远程登陆的问题">urxvt SSH远程登陆的问题</a></li>
+        <li><a href="#vim中使用tab自动补全">vim中使用tab自动补全</a></li>
+        <li><a href="#参考">参考</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>今天很高兴，因为解决了几个困扰很久的问题。</p>
+<h2 id="openvpn">OpenVPN</h2>
+<p>为便于办公，公司提供了VPN，不过只提供了OpenVPN的连接方案，之前在arch上一直是用pptp连接的，大概看了看wiki上OpenVPN的文档，一大堆。。。头大。</p>
+<p>不过，今天仔细一看，原来并不麻烦，只要把管理员提供的证书文件等放到相应文件夹上就搞定了！</p>
+<blockquote>
+<p>将这几个文件放到/etc/openvpn目录下   xxx.ovpn ca.crt  xxx.crt  xxx.key  其中xxx.pvpn是配置文件
+然后就可以启动了！ sudo openvpn /etc/openvpn/xxx.ovpn   会提示输入密码，输入管理员提供的密码即可</p>
+</blockquote>
+<h2 id="urxvt-ssh远程登陆的问题">urxvt SSH远程登陆的问题</h2>
+<p>之前在Arch上用urxvt一直比较happy，不过公司里开发都是SSH远程登陆到linux主机上进行的，那么问题来了，明明在本地显示很正常的vim，SSH到了公司上的Linux主机上，显示就成了一堆渣。。明明vim的配置文件都是一样的啊。。  后来慢慢发现不是vim的问题，是终端的问题！！因为我换用lilyterm后就显示正常了！！然后，终于在今天让我google到解决方案了～</p>
+<blockquote>
+<ol>
+<li>
+<p>Run the following command on the external host to make a terminfo directory
+under the logged in user&rsquo;s home folder.</p>
+<p>mkdir -p ~/.terminfo/r/</p>
+</li>
+<li>
+<p>Copy the appropriate terminal profile from your local machine to the newly
+created folder on the remote host.</p>
+<p>scp /usr/share/terminfo/r/rxvt-unicode-256color <a href="mailto:user@helloworld.com">user@helloworld.com</a>:.terminfo/r/</p>
+</li>
+<li>
+<p>Restart the SSH connection. It should work now.</p>
+</li>
+</ol>
+</blockquote>
+<h2 id="vim中使用tab自动补全">vim中使用tab自动补全</h2>
+<p>对于程序员来说，这世界上如果没有自动补全的话，简直不能想象。。之前习惯了使用TAB自动补全，现在在公司的远程Linux上却怎么也搞不出TAB自动补全的效果。。配置文件和插件都装一样的也不行。。。真是见鬼了。。 今天发现应该是之前装了supertab，然后不知道怎么又自己给删了，但是效果还在。。在远程Linux上装了supertab后，嗯，就是这个感觉～～</p>
+<p>本事件的教训就是，无论做什么一定要做好记录。。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="http://www.cs.helsinki.fi/u/andrews/misc/full_urxvt_support_on_ssh_terminals.txt'">FULL URXVT TERMINAL SUPPORT FOR REMOTE (SSH) CONNECTIONS</a></li>
+<li><a href="'https://stavrovski.net/blog/installing-and-setting-up-openvpn-in-archlinux'">Installing and setting up OpenVPN in ArchLinux</a></li>
+<li><a href="'https://wiki.archlinux.org/index.php/Airvpn'">Configuring OpenVPN to connect as a client to an AirVPN server</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2015-01-20
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2015/02/02/logging-module-of-python/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Python的logging模块总结</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2015/01/19/problems-about-python-and-mysql/">
+            <span class="next-text nav-default">problems about python and mysql</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

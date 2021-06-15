@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Octopress搭建备忘 - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="缘由 突然想玩玩Octopress，于是开始搜索，发现在Archlinux上使用Octopress会有两个问题 Ruby版本问题。Arch上的R" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2013/06/12/memo-about-octopress/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Octopress搭建备忘" />
+<meta property="og:description" content="缘由 突然想玩玩Octopress，于是开始搜索，发现在Archlinux上使用Octopress会有两个问题 Ruby版本问题。Arch上的R" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2013/06/12/memo-about-octopress/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2013-06-12T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2013-06-12T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="Octopress搭建备忘">
+<meta itemprop="description" content="缘由 突然想玩玩Octopress，于是开始搜索，发现在Archlinux上使用Octopress会有两个问题 Ruby版本问题。Arch上的R"><meta itemprop="datePublished" content="2013-06-12T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2013-06-12T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1150">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Octopress搭建备忘"/>
+<meta name="twitter:description" content="缘由 突然想玩玩Octopress，于是开始搜索，发现在Archlinux上使用Octopress会有两个问题 Ruby版本问题。Arch上的R"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Octopress搭建备忘</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2013-06-12 </span>
+        <div class="post-category">
+            <a href="/categories/octopress/"> Octopress </a>
+            <a href="/categories/markdown/"> Markdown </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#缘由">缘由</a></li>
+        <li><a href="#安装过程">安装过程</a></li>
+        <li><a href="#网站结构">网站结构</a></li>
+        <li><a href="#发布流程">发布流程</a></li>
+        <li><a href="#to-do-list">To-Do List</a></li>
+        <li><a href="#参考">参考</a></li>
+        <li><a href="#不错的markdown示例">不错的Markdown示例</a>
+          <ul>
+            <li><a href="#update">update:</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="缘由">缘由</h2>
+<p>突然想玩玩Octopress，于是开始搜索，发现在Archlinux上使用Octopress会有两个问题</p>
+<ul>
+<li>Ruby版本问题。Arch上的Ruby版本已经更新到2.0版本了，而Octopress用的是1.9版本的</li>
+<li>Octopress使用Pygments来高亮代码，而Pygments不支持Arch默认的Python 3</li>
+</ul>
+<p>重新以“octopress archlinux”为参数搜索，找到一篇很好的针对Arch的教程，不过它是针对zsh写的，所以bash用户需要略做修改。</p>
+<h2 id="安装过程">安装过程</h2>
+<p>基本比较顺利，只记录下遇到的问题</p>
+<ul>
+<li>
+<p>rbenv exec gem install bundler 这一步死活进行不下去！提示找不到bundler，搜索后说是可能是<code>http://rubygems.org/</code>无法访问了，在浏览器看了下访问正常啊！但就是不行。。最终解决办法，换源（尼玛还是GFW的事）:</p>
+<pre><code>  gem sources --remove http://rubygems.ogr/
+  gem sources -a http://ruby.taobao.org/   # 淘宝的RubyGems镜像
+  gem sources -l
+  *** CURRENT SOURCES ***
+
+  http://ruby.taobao.org
+</code></pre>
+</li>
+<li>
+<p>安装python-virtualenvwrapper的时候，有一个包一直装不上，提示不存在，纠结了很久，最后才恍然大悟，更新系统源后解决。</p>
+</li>
+<li>
+<p>新建帖子时不能用中文，否则标题会出乱码,可以先在<code>rake new_post[&quot;new post name&quot;]</code>中使用英文名字，然后在具体编辑帖子的时候，修改title选项使用中文。</p>
+</li>
+</ul>
+<h2 id="网站结构">网站结构</h2>
+<p>根据我粗浅的理解，安装完成后博客的结构在github上是这样的：博客代码库名称是cs50mu.github.com，下面有两个分支，master分支是根据源码生成的blog静态页面；source分支是用于生成blog的源码，所以每次提交静态页面后还需要提交更新的blog源码，这个不要忘记了。</p>
+<h2 id="发布流程">发布流程</h2>
+<p>首先，需要进入blog编辑的虚拟环境（也就是为了兼容ruby和python而搭的虚拟环境）</p>
+<pre><code>workon blog_env
+</code></pre>
+<p>退出这个虚拟环境需要</p>
+<pre><code>deactivate
+</code></pre>
+<p>然后就可以开始啦！</p>
+<ol>
+<li>
+<p>用<code>rake new_post[&quot;new post name&quot;]</code>命令新建blog文章。</p>
+</li>
+<li>
+<p>在<code>souce/_post</code>文件夹用vim编辑新建的blog文件。</p>
+</li>
+<li>
+<p><code>rake preview</code>在本机预览。</p>
+</li>
+<li>
+<p><code>rake generate</code>和<code>rake deploy</code>提交到github。</p>
+</li>
+<li>
+<p>最后，不要忘记将更新后的源码提交到source分支。</p>
+<pre><code> git add .
+ git commit -m 'some comment'
+ git push origin source
+</code></pre>
+</li>
+</ol>
+<h2 id="to-do-list">To-Do List</h2>
+<ul>
+<li>换一套博客模板,目前用的是系统默认的，我发现太多懒人了。。</li>
+<li>添加评论系统</li>
+<li>去掉twitter等在天朝不和谐的东东</li>
+</ul>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="http://www.wongdev.com/blog/2013/01/16/octopress-on-archlinux/">Octopress on Arch Linux</a></li>
+<li><a href="http://shadow.ma/blog/2013/04/07/octopress-on-arch-linux/">Octopress 在 Arch Linux 下的一些問題</a></li>
+<li><a href="http://ishalou.com/blog/2012/10/15/how-to-use-octopress/">使用Octopress + Github管理blog</a>,这篇很不错，很适合我这样的菜鸟，看了它后基本理解了整个搭建原理。</li>
+</ul>
+<h2 id="不错的markdown示例">不错的Markdown示例</h2>
+<ul>
+<li><a href="http://equation85.github.io/blog/markdown-examples/">Markdown语法示例</a>，非常不错！上面代码，下面展示效果，非常直观。</li>
+<li><a href="http://wowubuntu.com/markdown/#list">Markdown 语法说明</a></li>
+</ul>
+<h3 id="update">update:</h3>
+<p>终于找到Markdown中插入代码不起作用的原因了！原来在列表中嵌套的代码需要缩进2个tab才起作用。</p>
+<blockquote>
+<p>To put a code block within a list item, the code block needs to be indented twice — 8 spaces or two tabs.
+<a href="http://daringfireball.net/projects/markdown/syntax#list">Ref</a></p>
+</blockquote>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2013-06-12
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2013/06/12/hello/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Hello,World</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

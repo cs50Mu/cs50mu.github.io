@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>macro economics on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/macro-economics/</link>
+    <description>Recent content in macro economics on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 11 Sep 2013 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/macro-economics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>two more books about macro economics</title>
+      <link>http://localhost:1313/post/2013/09/11/two-more-books-about-macro-economics/</link>
+      <pubDate>Wed, 11 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/09/11/two-more-books-about-macro-economics/</guid>
+      <description>###《一转念》 by 兰小欢 书中大部分内容讲的是用经济学的供求原理来解释生活中一些看似古怪的现象，还有一些作者的随想。以下是摘录： 你要是把喜儿都</description>
+    </item>
+    
+    <item>
+      <title>宏观经济学</title>
+      <link>http://localhost:1313/post/2013/09/01/macro-economics/</link>
+      <pubDate>Sun, 01 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/09/01/macro-economics/</guid>
+      <description>趁假期终于把拖了很久没看的宏观经济学匆匆看完了，这样加上之前的微观经济学，我对经济学的入门算是开始了吧！不过发现如果仅仅只是摘抄书上的内容，</description>
+    </item>
+    
+  </channel>
+</rss>

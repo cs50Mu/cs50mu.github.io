@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>学习正则表达式 - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="正则表达式真的很强大啊！ 但我在用的过程中写的表达式总是不能达到期望的效果，今天又认真看了下，对它又有了一些新的理解。 贪婪模式Vs非贪婪模式。" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2013/06/16/regular-expressions/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="学习正则表达式" />
+<meta property="og:description" content="正则表达式真的很强大啊！ 但我在用的过程中写的表达式总是不能达到期望的效果，今天又认真看了下，对它又有了一些新的理解。 贪婪模式Vs非贪婪模式。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2013/06/16/regular-expressions/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2013-06-16T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2013-06-16T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="学习正则表达式">
+<meta itemprop="description" content="正则表达式真的很强大啊！ 但我在用的过程中写的表达式总是不能达到期望的效果，今天又认真看了下，对它又有了一些新的理解。 贪婪模式Vs非贪婪模式。"><meta itemprop="datePublished" content="2013-06-16T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2013-06-16T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1465">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="学习正则表达式"/>
+<meta name="twitter:description" content="正则表达式真的很强大啊！ 但我在用的过程中写的表达式总是不能达到期望的效果，今天又认真看了下，对它又有了一些新的理解。 贪婪模式Vs非贪婪模式。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">学习正则表达式</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2013-06-16 </span>
+        <div class="post-category">
+            <a href="/categories/regular-expression/"> regular expression </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>正则表达式真的很强大啊！</p>
+<p>但我在用的过程中写的表达式总是不能达到期望的效果，今天又认真看了下，对它又有了一些新的理解。</p>
+<ul>
+<li>贪婪模式Vs非贪婪模式。我写的表达式没效果的原因十有八九是因为这个，缺了个?。默认情况下，正则表达式的匹配都是贪婪的，也就是匹配尽可能多的字符，比如妄图用<code>&lt;img.*&gt;</code>来匹配所有的图片标签是不可行的，因为在贪婪模式下这会一直匹配到文末的<code>&gt;</code>处。正确的方法是使用非贪婪模式，即最小匹配，<code>&lt;img.*?&gt;</code>，保险起见，最好写成<code>&lt;img[^&gt;]*?&gt;</code>，表示在<code>&lt;img</code>标签后跟任意个非<code>&gt;</code>的字符然后再跟一个<code>&gt;</code>。</li>
+<li>组与捕获。在实际应用中，通常需要匹配两个或更多方案中的任意一种正则表达式，通常还需要捕获匹配的内容以备进一步处理，所有这些都可以通过<code>()</code>来实现，在多种方案中选取一个的情况则使用交替字符<code>|</code>。比如，<code>(air(craft|plane)|jet)</code>可表示aircraft airplane jet，这里<code>()</code>有两个作用：对表达式进行组合，捕获匹配某个表达式的文本。如果匹配的是前半部分的话（aircraft或airplane），会有两次捕获：aircraft或airplane作为第一次捕获，craft或plane作为第二次捕获；如果匹配的是后半部分的话（jet），就只有一次捕获。可以通过在左括号后面跟随一个<code>?:</code>来关闭捕获，比如，<code>(air(?:craft|plane)jet)</code>，这样的话，如果前半部分匹配，也只会有一次捕获了，即aircraft和airplane，通过关闭一些不需要的捕获，能方便后面对它的引用。<br>
+对前面的捕获，可以通过反向引用对其进行引用，有两种方法可以实现引用：一种是使用<code>\i</code>，这里的i指的是前面捕获号。每次捕获都会有一个编号，从1开始，从左到右，每次遇到一个新的左圆括号时进行一次新的捕获编号。比如，为匹配重复单词，使用<code>(\w+)\s+\1</code>，表示匹配开始一个单词，之后至少一个空白字符，再之后是与捕获的单词相同的单词。方法二，在较长的或复杂的正则表达式中，为维护方便，通常对捕获进行命名而不是使用编号。为对捕获进行命名，须在左圆括号后跟随<code>?P&lt;name&gt;</code>，后面进行反向引用的语法是<code>(?P=name)</code>，比如，<code>(?P&lt;word&gt;\w+)\s+(?P=word)</code></li>
+<li>反义。有时候需要查找不属于某个字符类的字符，比如除了数字其他字符都可以的情况，这时需要用到反义。比如，<code>\S</code>匹配任意不是空白符的字符，<code>\D</code>匹配任意非数字的字符；还有一种描述反义的方式是使用<code>[]</code>，比如，<code>[^x]</code>表示除了x外的任意字符。</li>
+<li>断言。断言不会匹配任何文本，而是对断言所在的文本施加某些规定和约束，如果不使用断言的话可能会匹配到一些我们不需要的文本，使用断言可以提高正则表达式的清晰度。比如用正则表达式<code>jet</code>来匹配文本&quot;the jet and jetski are noisy&quot;会出现两次匹配，即jet和jetski中的jet，这可能不是我们想要的结果，但是使用正则表达式<code>\bjet\b</code>将只匹配一次，即单词jet。</li>
+</ul>
+<p>UPDATE:</p>
+<p>今天(2014.03.08)改了下自动发天气预报的脚本，终于知道自己之前用正则各种不顺手的原因了！！尼玛不是人家电脑不听话啊！是你自己没有搞懂好不好！！之前只知道用<code>.+?</code>来代表任意多个字符，可你仔细看看<code>.</code>是能代表任意字符吗？！人家不是说了<strong>换行符除外</strong>嘛？！然后加上re.S的编译标签后就可以了有木有！！还有就是使用多个括号捕获时，findall函数是以元组的形式返回捕获结果的。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2013-06-16
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2013/06/21/flash-openwrt-in-wr703n/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">在WR703N上刷openwrt</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2013/06/12/hello/">
+            <span class="next-text nav-default">Hello,World</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>database on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/database/</link>
+    <description>Recent content in database on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 09 May 2019 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/database/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>database with sqlx in Golang</title>
+      <link>http://localhost:1313/post/2019/05/09/database-with-sqlx-in-golang/</link>
+      <pubDate>Thu, 09 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/05/09/database-with-sqlx-in-golang/</guid>
+      <description>database with sqlx in Golang Parameterized Queries 翻译为参数化查询？是个什么概念呢？ Bind parameters—also called dynamic parameters or bind variables—are an alternative way to pass data to the database. Instead of putting</description>
+    </item>
+    
+  </channel>
+</rss>

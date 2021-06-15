@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>在WR703N上刷openwrt - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="买这个传说中很牛逼的路由器已经很久了，直到现在才想起来刷。。当初买它是因为一直用的一个无线路由老是罢工，一开始以为是学校网络的问题，后来发现" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2013/06/21/flash-openwrt-in-wr703n/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="在WR703N上刷openwrt" />
+<meta property="og:description" content="买这个传说中很牛逼的路由器已经很久了，直到现在才想起来刷。。当初买它是因为一直用的一个无线路由老是罢工，一开始以为是学校网络的问题，后来发现" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2013/06/21/flash-openwrt-in-wr703n/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2013-06-21T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2013-06-21T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="在WR703N上刷openwrt">
+<meta itemprop="description" content="买这个传说中很牛逼的路由器已经很久了，直到现在才想起来刷。。当初买它是因为一直用的一个无线路由老是罢工，一开始以为是学校网络的问题，后来发现"><meta itemprop="datePublished" content="2013-06-21T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2013-06-21T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2308">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="在WR703N上刷openwrt"/>
+<meta name="twitter:description" content="买这个传说中很牛逼的路由器已经很久了，直到现在才想起来刷。。当初买它是因为一直用的一个无线路由老是罢工，一开始以为是学校网络的问题，后来发现"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">在WR703N上刷openwrt</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2013-06-21 </span>
+        <div class="post-category">
+            <a href="/categories/wr703n/"> WR703N </a>
+            <a href="/categories/%E8%B7%AF%E7%94%B1%E5%99%A8/"> 路由器 </a>
+            <a href="/categories/openwrt/"> openwrt </a>
+            <a href="/categories/crontab/"> crontab </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>买这个传说中很牛逼的路由器已经很久了，直到现在才想起来刷。。当初买它是因为一直用的一个无线路由老是罢工，一开始以为是学校网络的问题，后来发现不是，是路由器的问题，于是想刷个开源固件玩玩，可惜上网一搜发现这个路由器刷不了开源固件。。于是一番搜索后发现大家对现在这款（WR703N）路由的评价不错，好多用它来刷开源固件的，看得心痒痒啊，特别是这篇：<a href="http://zihua.li/2012/03/about-tl-wr703n/">入手神器TL-WR703N一日谈</a>，害我直接又多买了个8G U盘！</p>
+<p>刷机教程看了很多篇，不过最后主要是参照这篇来的：<a href="http://www.imtxc.com/blog/2013/02/24/install-and-configure-openwrt-on-wr703n/">在wr703n下安装配置openwrt、openvpn</a>，写得很不错，我基本是按着他的步骤来的，一开始有一步没照着他的来，结果最后从USB启动后连接不上无线了。。。然后，晚上睡觉的时候突然想到会不会是因为没有做这一步导致的呢？于是早上起来后重新弄，因为无线和有线都连接不上了，所以一开始又折腾了好久，还好openwrt有安全模式，进入方式在上面的帖子里也有介绍，他说的这个方法是正确的，我一开始用的是openwrt文档里说的方法，说开机后要先等个2秒钟什么的，然后按住reset键，等指示灯快速闪烁后就ok了。可是我试了下根本不管用，还是那个帖子里说的靠谱些，正确的做法是：<strong>开机后立即持续的按reset键，不要按住就不放了，要不停的按住松开，间隔时间要短。</strong></p>
+<p>然后就是配置U盘扩展了，这真是一个绝佳的workaround，把系统装在U盘里，这真是太妙了啊！因为路由器的内存和flash都很低，可能刚刚够装开源固件的（这算好的，一些路由器没法装就是因为flash太小，装不下！），但要想玩点别的，比如装个vpn支持，装个python啥的就别想了。但一旦把系统装在U盘里就没有空间限制了，可以随便折腾。安装过程帖子里写的很详细了，有几点不明白：</p>
+<ul>
+<li>
+<p><code>mount -o bind / /tmp/root</code>的含义，我知道是把根目录绑定到/tmp/root下，但我想深入了解下，为什么需要先绑定再复制？为什么不直接复制呢？<br>
+解答：bind参数的意思是将已挂载的文件系统挂载到目录树的另一个位置，所以我猜这么做的原因是若直接<code>cp /* /mnt/usb -a</code>会引起歧义，因为<code>/*</code>也包括<code>/mnt/usb</code></p>
+</li>
+<li>
+<p><code>/etc/config/fstab</code>中的配置如何理解？为何需要1G的交换空间？有必要分这么多吗？<br>
+解答：<a href="http://wiki.openwrt.org/doc/techref/flash.layout">The OpenWrt Flash Layout</a>，这篇wiki详细讲了openwrt对存储结构的定义，特别是讲到了<code>/</code> <code>/rom</code> <code>/overlay</code>三个文件夹的作用。<br>
+根据这篇wiki<a href="http://wiki.openwrt.org/doc/uci/fstab">Fstab Configuration</a>，swap没必要设置这么大，内存512M以下设置为内存的2倍就可以了，所以重新分了区，把原来的1G swap分区删掉合并到原来的数据分区里，建了个64M的swap文件：</p>
+<pre><code>  $ dd if=/dev/zero of=/swapfile bs=1M count=64
+  $ mkswap /swapfile
+  $ swapon /swapfile
+</code></pre>
+</li>
+</ul>
+<p>但是这样需要手动激活swap空间，想了下，在<code>/etc/rc.local</code>里添加<code>swapon /swapfile</code>解决！</p>
+<ul>
+<li>
+<p>我没有照做的一步是设置/etc/config/network时，没有更改lan的ip地址为192.168.20.1（默认是192.168.1.1），虽然改了后重新配置后问题就解决了，但我还是不理解为什么。</p>
+</li>
+<li>
+<p>最后一个问题是pptp client的问题，安装很容易，按照官方文档很轻松设置完成后，ssh到路由器上ping外网已经可以ping通了，问题是在我的笔记本上ping外网却不行，总是提示network unreachable。。根据官方文档设置最后需要指定一下路由，之前都没有太关注过路由的概念，所以现在还是很迷糊。。不知道该怎么设置路由，按说路由器上能访问外网，那不用做什么设置客户端就应该能访问外网啊！折腾了好久也没搞明白，最后按照网上搜到的一个方法莫名其妙的搞定了。。不过，依然不太明白原理。具体做法如下，在<code>/etc/config/network</code>里添加：</p>
+<pre><code>  config 'zone'
+      option 'name'      'wan'
+      option 'network'   'wan vpn'
+      option 'input'     'REJECT'
+      option 'forward'   'REJECT'
+      option 'output'    'ACCEPT'
+      option 'masq'      '1' 
+</code></pre>
+</li>
+</ul>
+<p>不过，按上面设置后还是不起作用的，又到web界面的<code>network--&gt;firewall</code>里设置了下才ok的，就改了下covered network选项，原来就只有wan选上了，我看到上面的配置文件里network选项里有两个（wan和vpn），所以我把vpn也勾选上了，然后重启firewall后就ok了。。。</p>
+<p>####Crontab定时任务
+<code>crontab -l</code> 显示定时任务<br>
+<code>crontab -e</code> 编辑定时任务<br>
+<code>crontab -r</code> 删除定时任务<br>
+#####格式说明： <br>
+<code>* * * * * /command path</code>  前5个字段分别表示分钟（0-59），小时（1-23），日期（1-31），月份（1-12），星期（0-6，0表示周日）<br>
+#####特殊符号：<br>
+<code>*</code>表示任意时刻<br>
+<code>,</code>表示分割<br>
+<code>-</code>表示一个时间段<br>
+<code>/n</code>表示每n单位执行一次<br>
+如果不想让定时任务的执行信息打印到屏幕上的话，可以这样<code>0 2 * * * /u01/test.sh &gt;/dev/null 2&gt;&amp;1 &amp;</code>，这句话的意思就是在后台执行这条命令，并将错误输出2重定向到标准输出1，然后将标准输出1全部放到/dev/null 文件，也就是清空。 <br>
+#####<code>2&gt;&amp;1</code>写在后面的原因<br>
+首先是<code>command &gt; file</code>将标准输出重定向到file中，<code>2&gt;&amp;1</code>是标准错误拷贝了标准输出，也就是同样被重定向到file中，最终结果就是标准输出和错误都被重定向到file中。<br>
+如果改成： <code>command 2&gt;&amp;1 &gt;file</code>，<code>2&gt;&amp;1</code>标准错误拷贝了标准输出的行为，但此时标准输出还是在终端。<code>&gt;file</code>后输出才被重定向到file，但标准错误仍然保持在终端。</p>
+<p>###参考
+<a href="http://www.imtxc.com/blog/2013/02/24/install-and-configure-openwrt-on-wr703n/">在wr703n下安装配置openwrt、openvpn</a><br>
+<a href="http://dev.bjtu.edu.cn/ideal/2013/04/14/use-openwrt-as-bt-downloader/">使用tp-link tl-wr703n和openwrt作为bt下载机</a> <br>
+<a href="http://www.openwrt.org.cn/bbs/forum.php?mod=viewthread&amp;tid=1480">openwrt下pptp-vpn client的使用！！</a><br>
+<a href="http://blog.csdn.net/tianlesoftware/article/details/5315039">Linux Crontab 定时任务 命令详解 </a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2013-06-21
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2013/06/30/fuck-gfw/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">操蛋的GFW</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2013/06/16/regular-expressions/">
+            <span class="next-text nav-default">学习正则表达式</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

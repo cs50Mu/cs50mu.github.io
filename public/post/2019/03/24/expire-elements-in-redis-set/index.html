@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Redis中set元素设置过期？ - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="需求 项目中遇到一个需求，要实现一个黑白名单的服务，对外暴露向名单添加元素和检查元素是否在名单中的接口，这个用 Redis 实现是很容易的，有现成的类型支" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2019/03/24/expire-elements-in-redis-set/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Redis中set元素设置过期？" />
+<meta property="og:description" content="需求 项目中遇到一个需求，要实现一个黑白名单的服务，对外暴露向名单添加元素和检查元素是否在名单中的接口，这个用 Redis 实现是很容易的，有现成的类型支" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2019/03/24/expire-elements-in-redis-set/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-03-24T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2019-03-24T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="Redis中set元素设置过期？">
+<meta itemprop="description" content="需求 项目中遇到一个需求，要实现一个黑白名单的服务，对外暴露向名单添加元素和检查元素是否在名单中的接口，这个用 Redis 实现是很容易的，有现成的类型支"><meta itemprop="datePublished" content="2019-03-24T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-03-24T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="573">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Redis中set元素设置过期？"/>
+<meta name="twitter:description" content="需求 项目中遇到一个需求，要实现一个黑白名单的服务，对外暴露向名单添加元素和检查元素是否在名单中的接口，这个用 Redis 实现是很容易的，有现成的类型支"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Redis中set元素设置过期？</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-03-24 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#需求">需求</a></li>
+            <li><a href="#方案">方案</a></li>
+            <li><a href="#参考">参考</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h3 id="需求">需求</h3>
+<p>项目中遇到一个需求，要实现一个黑白名单的服务，对外暴露向名单添加元素和检查元素是否在名单中的接口，这个用 Redis 实现是很容易的，有现成的类型支持，但还有个
+需求是名单中的某些元素要支持自动过期，即过了一定时间后，元素自动从名单中消失了，再去 check 该元素是否在名单时，应该返回 false。Redis 是支持过期的，但它只
+支持 key 级别的过期。</p>
+<h3 id="方案">方案</h3>
+<p>看了下，早有人给 Redis 项目提出类似的issue：要求支持元素级别的过期。项目的维护者也早已指出：不可能支持这样的 feature，因为违背了 Redis 的设计理念：简单、高效。
+不过，在 Google Group 上看到 Redis 的作者针对这类需求给出了3个实现方案：</p>
+<ul>
+<li>
+<p>用 redis 的普通 set 类型实现。把时间戳 encode 进元素名称中，比如平常只是 add 一个元素 foo，现在需要 add 元素名：<code>foo:&lt;timestamp&gt;</code>。那么每次需要 check 这个元素
+的时候先获取一下当前的时间戳跟保存的时间戳比较一下，如果已经过期，则删除它。这个方案的缺点是：如果 add 了一个元素后，一直不再访问它，那么尽管给它设置了过期时间，
+那么它还是会一直存在。</p>
+</li>
+<li>
+<p>使用 redis 的 sorted set来实现。score 是元素过期的时间戳，value 是元素名。在代码中每秒执行一次<code>zremrangebyscore</code>来清除已过期的元素。</p>
+</li>
+<li>
+<p>第三种没看懂。。</p>
+</li>
+</ul>
+<p>在 stackoverflow 上看到有人给出了类似上面说的第二种方案的具体实现，参考文末链接。</p>
+<h3 id="参考">参考</h3>
+<ul>
+<li><a href="https://groups.google.com/forum/#!topic/redis-db/rXXMCLNkNSs">Pattern for expiring set members</a></li>
+<li><a href="https://stackoverflow.com/questions/11810020/how-to-handle-session-expire-basing-redis/11815594#11815594">how to handle session expire basing redis?</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-03-24
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2019/05/09/error-handling-in-go/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Error Handling in Go</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2019/02/01/golang-faq/">
+            <span class="next-text nav-default">Golang FAQ</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

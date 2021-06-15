@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>归并排序的非递归算法 - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="归并排序的效率很高，复杂度只有NlogN，但想起来很费劲啊。。尤其是递归算法，绕来绕去的被绕晕了。。今天在看《Python编程实践》（Pra" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2013/07/03/merge-sort/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="归并排序的非递归算法" />
+<meta property="og:description" content="归并排序的效率很高，复杂度只有NlogN，但想起来很费劲啊。。尤其是递归算法，绕来绕去的被绕晕了。。今天在看《Python编程实践》（Pra" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2013/07/03/merge-sort/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2013-07-03T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2013-07-03T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="归并排序的非递归算法">
+<meta itemprop="description" content="归并排序的效率很高，复杂度只有NlogN，但想起来很费劲啊。。尤其是递归算法，绕来绕去的被绕晕了。。今天在看《Python编程实践》（Pra"><meta itemprop="datePublished" content="2013-07-03T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2013-07-03T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="818">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="归并排序的非递归算法"/>
+<meta name="twitter:description" content="归并排序的效率很高，复杂度只有NlogN，但想起来很费劲啊。。尤其是递归算法，绕来绕去的被绕晕了。。今天在看《Python编程实践》（Pra"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">归并排序的非递归算法</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2013-07-03 </span>
+        <div class="post-category">
+            <a href="/categories/%E7%AE%97%E6%B3%95/"> 算法 </a>
+            <a href="/categories/merge-sort/"> merge sort </a>
+            <a href="/categories/python/"> python </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>归并排序的效率很高，复杂度只有NlogN，但想起来很费劲啊。。尤其是递归算法，绕来绕去的被绕晕了。。今天在看《Python编程实践》（Practical Programming-An Introduction to Computer Science Using Python）时看到一个归并排序的非递归算法，很好理解，记录下。<br>
+def merge(L1,L2):
+&ldquo;&ldquo;&ldquo;Merge sorted lists L1 and L2 and return the result.&rdquo;&rdquo;&rdquo;
+mergedlist = []
+i1 = i2 = 0
+while i1 != len(L1) and i2 != len(L2):
+if L1[i1] &lt;= L2[i2]:
+mergedlist.append(L1[i1])
+i1 += 1
+else:
+mergedlist.append(L2[i2])
+i2 += 1</p>
+<pre><code>    mergedlist.extend(L1[i1:])
+    mergedlist.extend(L2[i2:])
+    return mergedlist
+		
+def mergesort(L):
+    &quot;&quot;&quot;Sort L.&quot;&quot;&quot;
+
+    workspace = []
+    for i in range(len(L)):
+	workspace.append([L[i]])
+
+    count = 0
+    while count &lt; len(workspace)-1:
+	newList = merge(workspace[count],workspace[count+1])
+	print newList
+	workspace.append(newList)
+	count += 2
+
+    return workspace[-1][:]
+</code></pre>
+<p>归并排序的基本思想是这样的，从归并两个字来看我们知道这种算法是通过合并子序列来实现的，普通的乱序序列肯定是不行的，但对于两个已经排好序的序列，很容易把它们合并成一个有序的序列，这就是第一个函数merge的作用。你会问：这有什么用啊？离我们的目标还差很远嘛！我们怎么可能从一个无序的序列变出两个有序的序列嘛？别急，这里用到了二分法的思想（so-called devide and conquer），不断的把问题二分化，直到最简单的情形，在这里也就是单个元素了，两个单个元素肯定是两个有序的序列啊！可以用merge函数来合并它们为一个含有两个元素的有序序列，那么第二个函数mergesort的作用就是：首先把无序列表分解成含有N个含单个元素的小列表，然后依次两两合并这些小列表，并把合并后的有序列表添加到这个列表之后，直到最后合并成一个有序的列表。</p>
+<p>额，表达能力太差了。。还是没有讲清楚</p>
+<p>比如列表原来为[8,7,6,5,4]，那么它的变化为<code>[[8],[7],[6],[5],[4]]--&gt;[[8],[7],[6],[5],[4],[7,8]]--&gt;[[8],[7],[6],[5],[4],[7,8],[5,6]]--&gt;[[8],[7],[6],[5],[4],[7,8],[5,6],[4,7,8]]--&gt;[[8],[7],[6],[5],[4],[7,8],[5,6],[4,7,8],[4,5,6,7,8]]</code><br>
+结果列表的最后一个内嵌列表就是已排好序的序列了。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2013-07-03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2013/07/07/amazing-social-psychology/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">初读《社会心理学》</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2013/06/30/fuck-gfw/">
+            <span class="next-text nav-default">操蛋的GFW</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

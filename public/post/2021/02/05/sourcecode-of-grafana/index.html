@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Grafana源码分析 - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="Grafana源码分析 服务自动注入 / inject 代码里的service使用了一个包来实现自动注入：facebookarchive / inject 要实现这个自动，需" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2021/02/05/sourcecode-of-grafana/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Grafana源码分析" />
+<meta property="og:description" content="Grafana源码分析 服务自动注入 / inject 代码里的service使用了一个包来实现自动注入：facebookarchive / inject 要实现这个自动，需" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2021/02/05/sourcecode-of-grafana/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-02-05T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-02-05T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="Grafana源码分析">
+<meta itemprop="description" content="Grafana源码分析 服务自动注入 / inject 代码里的service使用了一个包来实现自动注入：facebookarchive / inject 要实现这个自动，需"><meta itemprop="datePublished" content="2021-02-05T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2021-02-05T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1631">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Grafana源码分析"/>
+<meta name="twitter:description" content="Grafana源码分析 服务自动注入 / inject 代码里的service使用了一个包来实现自动注入：facebookarchive / inject 要实现这个自动，需"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Grafana源码分析</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-02-05 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#grafana源码分析">Grafana源码分析</a>
+          <ul>
+            <li><a href="#服务自动注入--inject">服务自动注入 / inject</a></li>
+            <li><a href="#user-login是如何实现的">user login是如何实现的？</a></li>
+            <li><a href="#总线机制是如何工作的">总线机制是如何工作的？</a></li>
+            <li><a href="#setting是如何初始化的">setting是如何初始化的？</a></li>
+            <li><a href="#dto的运用">dto的运用</a></li>
+            <li><a href="#业务error到api-error的转换">业务error到api error的转换</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="grafana源码分析">Grafana源码分析</h2>
+<h3 id="服务自动注入--inject">服务自动注入 / inject</h3>
+<p>代码里的service使用了一个包来实现自动注入：<a href="https://github.com/facebookarchive/inject"><code>facebookarchive / inject</code></a></p>
+<p>要实现这个自动，需要做以下准备工作：</p>
+<p>打struct tag</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">HTTPServer</span> <span class="kd">struct</span> <span class="p">{</span>
+      <span class="nx">log</span>           <span class="nx">log</span><span class="p">.</span><span class="nx">Logger</span>
+      <span class="nx">macaron</span>       <span class="o">*</span><span class="nx">macaron</span><span class="p">.</span><span class="nx">Macaron</span>
+      <span class="nx">context</span>       <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span>
+      <span class="nx">streamManager</span> <span class="o">*</span><span class="nx">live</span><span class="p">.</span><span class="nx">StreamManager</span>
+      <span class="nx">httpSrv</span>       <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Server</span>
+
+      <span class="nx">RouteRegister</span>        <span class="nx">routing</span><span class="p">.</span><span class="nx">RouteRegister</span>            <span class="s">`inject:&#34;&#34;`</span>
+      <span class="nx">Bus</span>                  <span class="nx">bus</span><span class="p">.</span><span class="nx">Bus</span>                          <span class="s">`inject:&#34;&#34;`</span>
+      <span class="nx">RenderService</span>        <span class="nx">rendering</span><span class="p">.</span><span class="nx">Service</span>                <span class="s">`inject:&#34;&#34;`</span>
+      <span class="nx">Cfg</span>                  <span class="o">*</span><span class="nx">setting</span><span class="p">.</span><span class="nx">Cfg</span>                     <span class="s">`inject:&#34;&#34;`</span>
+      <span class="nx">HooksService</span>         <span class="o">*</span><span class="nx">hooks</span><span class="p">.</span><span class="nx">HooksService</span>              <span class="s">`inject:&#34;&#34;`</span>
+      <span class="nx">CacheService</span>         <span class="o">*</span><span class="nx">localcache</span><span class="p">.</span><span class="nx">CacheService</span>         <span class="s">`inject:&#34;&#34;`</span>
+      <span class="nx">DatasourceCache</span>      <span class="nx">datasources</span><span class="p">.</span><span class="nx">CacheService</span>         <span class="s">`inject:&#34;&#34;`</span>
+      <span class="nx">AuthTokenService</span>     <span class="nx">models</span><span class="p">.</span><span class="nx">UserTokenService</span>          <span class="s">`inject:&#34;&#34;`</span>
+      <span class="nx">QuotaService</span>         <span class="o">*</span><span class="nx">quota</span><span class="p">.</span><span class="nx">QuotaService</span>              <span class="s">`inject:&#34;&#34;`</span>
+      <span class="nx">RemoteCacheService</span>   <span class="o">*</span><span class="nx">remotecache</span><span class="p">.</span><span class="nx">RemoteCache</span>         <span class="s">`inject:&#34;&#34;`</span>
+      <span class="nx">ProvisioningService</span>  <span class="nx">provisioning</span><span class="p">.</span><span class="nx">ProvisioningService</span> <span class="s">`inject:&#34;&#34;`</span>
+      <span class="nx">Login</span>                <span class="o">*</span><span class="nx">login</span><span class="p">.</span><span class="nx">LoginService</span>              <span class="s">`inject:&#34;&#34;`</span>
+      <span class="nx">License</span>              <span class="nx">models</span><span class="p">.</span><span class="nx">Licensing</span>                 <span class="s">`inject:&#34;&#34;`</span>
+      <span class="nx">BackendPluginManager</span> <span class="nx">backendplugin</span><span class="p">.</span><span class="nx">Manager</span>            <span class="s">`inject:&#34;&#34;`</span>
+      <span class="nx">PluginManager</span>        <span class="o">*</span><span class="nx">plugins</span><span class="p">.</span><span class="nx">PluginManager</span>           <span class="s">`inject:&#34;&#34;`</span>
+      <span class="nx">SearchService</span>        <span class="o">*</span><span class="nx">search</span><span class="p">.</span><span class="nx">SearchService</span>            <span class="s">`inject:&#34;&#34;`</span>
+  <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>启动server时会build Service Graph:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 获取注册的服务，具体实现比较简单，分析略过
+</span><span class="c1"></span><span class="nx">services</span> <span class="o">:=</span> <span class="nx">registry</span><span class="p">.</span><span class="nf">GetServices</span><span class="p">()</span>
+<span class="k">if</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">s</span><span class="p">.</span><span class="nf">buildServiceGraph</span><span class="p">(</span><span class="nx">services</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+  <span class="k">return</span>
+<span class="p">}</span>
+
+
+<span class="c1">// 看看它做了啥呢，这里就是关键了
+</span><span class="c1"></span>  <span class="c1">// buildServiceGraph builds a graph of services and their dependencies.
+</span><span class="c1"></span>  <span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Server</span><span class="p">)</span> <span class="nf">buildServiceGraph</span><span class="p">(</span><span class="nx">services</span> <span class="p">[]</span><span class="o">*</span><span class="nx">registry</span><span class="p">.</span><span class="nx">Descriptor</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+      <span class="c1">// Specify service dependencies.
+</span><span class="c1"></span>      <span class="nx">objs</span> <span class="o">:=</span> <span class="p">[]</span><span class="kd">interface</span><span class="p">{}{</span>
+          <span class="nx">bus</span><span class="p">.</span><span class="nf">GetBus</span><span class="p">(),</span>
+          <span class="nx">s</span><span class="p">.</span><span class="nx">cfg</span><span class="p">,</span>
+          <span class="nx">routing</span><span class="p">.</span><span class="nf">NewRouteRegister</span><span class="p">(</span><span class="nx">middleware</span><span class="p">.</span><span class="nx">RequestMetrics</span><span class="p">,</span> <span class="nx">middleware</span><span class="p">.</span><span class="nx">RequestTracing</span><span class="p">),</span>
+          <span class="nx">localcache</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="mi">5</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Minute</span><span class="p">,</span> <span class="mi">10</span><span class="o">*</span><span class="nx">time</span><span class="p">.</span><span class="nx">Minute</span><span class="p">),</span>
+          <span class="nx">s</span><span class="p">,</span>
+      <span class="p">}</span>
+
+      <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">service</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">services</span> <span class="p">{</span>
+          <span class="nx">objs</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">objs</span><span class="p">,</span> <span class="nx">service</span><span class="p">.</span><span class="nx">Instance</span><span class="p">)</span>
+      <span class="p">}</span>
+
+      <span class="kd">var</span> <span class="nx">serviceGraph</span> <span class="nx">inject</span><span class="p">.</span><span class="nx">Graph</span>
+
+      <span class="c1">// Provide services and their dependencies to the graph.
+</span><span class="c1"></span>      <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">obj</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">objs</span> <span class="p">{</span>
+          <span class="c1">// 奥秘在这里了
+</span><span class="c1"></span>          <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">serviceGraph</span><span class="p">.</span><span class="nf">Provide</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">inject</span><span class="p">.</span><span class="nx">Object</span><span class="p">{</span><span class="nx">Value</span><span class="p">:</span> <span class="nx">obj</span><span class="p">});</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+              <span class="k">return</span> <span class="nx">errutil</span><span class="p">.</span><span class="nf">Wrapf</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="s">&#34;Failed to provide object to the graph&#34;</span><span class="p">)</span>
+          <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="c1">// Resolve services and their dependencies.
+</span><span class="c1"></span>      <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">serviceGraph</span><span class="p">.</span><span class="nf">Populate</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">errutil</span><span class="p">.</span><span class="nf">Wrapf</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="s">&#34;Failed to populate service dependency&#34;</span><span class="p">)</span>
+      <span class="p">}</span>
+
+      <span class="k">return</span> <span class="kc">nil</span>
+  <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="user-login是如何实现的">user login是如何实现的？</h3>
+<p>有个middleware，在处理业务请求之前会先验证user</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// pkg/middleware/middleware.go
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">GetContextHandler</span><span class="p">(</span>
+	<span class="nx">ats</span> <span class="nx">models</span><span class="p">.</span><span class="nx">UserTokenService</span><span class="p">,</span>
+	<span class="nx">remoteCache</span> <span class="o">*</span><span class="nx">remotecache</span><span class="p">.</span><span class="nx">RemoteCache</span><span class="p">,</span>
+	<span class="nx">renderService</span> <span class="nx">rendering</span><span class="p">.</span><span class="nx">Service</span><span class="p">,</span>
+<span class="p">)</span> <span class="nx">macaron</span><span class="p">.</span><span class="nx">Handler</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="kd">func</span><span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">macaron</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">ctx</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">models</span><span class="p">.</span><span class="nx">ReqContext</span><span class="p">{</span>
+			<span class="nx">Context</span><span class="p">:</span>        <span class="nx">c</span><span class="p">,</span>
+			<span class="nx">SignedInUser</span><span class="p">:</span>   <span class="o">&amp;</span><span class="nx">models</span><span class="p">.</span><span class="nx">SignedInUser</span><span class="p">{},</span>
+			<span class="nx">IsSignedIn</span><span class="p">:</span>     <span class="kc">false</span><span class="p">,</span>
+			<span class="nx">AllowAnonymous</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+			<span class="nx">SkipCache</span><span class="p">:</span>      <span class="kc">false</span><span class="p">,</span>
+			<span class="nx">Logger</span><span class="p">:</span>         <span class="nx">log</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;context&#34;</span><span class="p">),</span>
+		<span class="p">}</span>
+
+		<span class="nx">orgId</span> <span class="o">:=</span> <span class="nb">int64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+		<span class="nx">orgIdHeader</span> <span class="o">:=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Req</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="s">&#34;X-Grafana-Org-Id&#34;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">orgIdHeader</span> <span class="o">!=</span> <span class="s">&#34;&#34;</span> <span class="p">{</span>
+			<span class="nx">orgId</span><span class="p">,</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">strconv</span><span class="p">.</span><span class="nf">ParseInt</span><span class="p">(</span><span class="nx">orgIdHeader</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+		<span class="p">}</span>
+
+		<span class="c1">// the order in which these are tested are important
+</span><span class="c1"></span>		<span class="c1">// look for api key in Authorization header first
+</span><span class="c1"></span>		<span class="c1">// then init session and look for userId in session
+</span><span class="c1"></span>		<span class="c1">// then look for api key in session (special case for render calls via api)
+</span><span class="c1"></span>		<span class="c1">// then test if anonymous access is enabled
+</span><span class="c1"></span>		<span class="c1">// 这个写法可以学习一下
+</span><span class="c1"></span>		<span class="k">switch</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="nf">initContextWithRenderAuth</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">renderService</span><span class="p">):</span>
+		<span class="k">case</span> <span class="nf">initContextWithApiKey</span><span class="p">(</span><span class="nx">ctx</span><span class="p">):</span>
+		<span class="k">case</span> <span class="nf">initContextWithBasicAuth</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">orgId</span><span class="p">):</span>
+		<span class="k">case</span> <span class="nf">initContextWithAuthProxy</span><span class="p">(</span><span class="nx">remoteCache</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">,</span> <span class="nx">orgId</span><span class="p">):</span>
+		<span class="k">case</span> <span class="nf">initContextWithToken</span><span class="p">(</span><span class="nx">ats</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">,</span> <span class="nx">orgId</span><span class="p">):</span>
+		<span class="k">case</span> <span class="nf">initContextWithAnonymousUser</span><span class="p">(</span><span class="nx">ctx</span><span class="p">):</span>
+		<span class="p">}</span>
+
+		<span class="nx">ctx</span><span class="p">.</span><span class="nx">Logger</span> <span class="p">=</span> <span class="nx">log</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;context&#34;</span><span class="p">,</span> <span class="s">&#34;userId&#34;</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">UserId</span><span class="p">,</span> <span class="s">&#34;orgId&#34;</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">OrgId</span><span class="p">,</span> <span class="s">&#34;uname&#34;</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">Login</span><span class="p">)</span>
+		<span class="nx">ctx</span><span class="p">.</span><span class="nx">Data</span><span class="p">[</span><span class="s">&#34;ctx&#34;</span><span class="p">]</span> <span class="p">=</span> <span class="nx">ctx</span>
+
+		<span class="nx">c</span><span class="p">.</span><span class="nf">Map</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+
+		<span class="c1">// update last seen every 5min
+</span><span class="c1"></span>		<span class="k">if</span> <span class="nx">ctx</span><span class="p">.</span><span class="nf">ShouldUpdateLastSeenAt</span><span class="p">()</span> <span class="p">{</span>
+			<span class="nx">ctx</span><span class="p">.</span><span class="nx">Logger</span><span class="p">.</span><span class="nf">Debug</span><span class="p">(</span><span class="s">&#34;Updating last user_seen_at&#34;</span><span class="p">,</span> <span class="s">&#34;user_id&#34;</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">UserId</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">bus</span><span class="p">.</span><span class="nf">Dispatch</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">models</span><span class="p">.</span><span class="nx">UpdateUserLastSeenAtCommand</span><span class="p">{</span><span class="nx">UserId</span><span class="p">:</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">UserId</span><span class="p">});</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="nx">ctx</span><span class="p">.</span><span class="nx">Logger</span><span class="p">.</span><span class="nf">Error</span><span class="p">(</span><span class="s">&#34;Failed to update last_seen_at&#34;</span><span class="p">,</span> <span class="s">&#34;error&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// login接口的实现，它会调用下面的`AuthenticateUser`方法
+</span><span class="c1">// pkg/api/login.go
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">hs</span> <span class="o">*</span><span class="nx">HTTPServer</span><span class="p">)</span> <span class="nf">LoginPost</span><span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">models</span><span class="p">.</span><span class="nx">ReqContext</span><span class="p">,</span> <span class="nx">cmd</span> <span class="nx">dtos</span><span class="p">.</span><span class="nx">LoginCommand</span><span class="p">)</span> <span class="nx">Response</span> <span class="p">{</span>
+
+<span class="c1">// 这里的逻辑包括：验证user、写cookie（middleware.WriteSessionCookie）
+</span><span class="c1"></span><span class="p">}</span>
+
+
+<span class="c1">// pkg/login/auth.go
+</span><span class="c1">// AuthenticateUser authenticates the user via username &amp; password
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">AuthenticateUser</span><span class="p">(</span><span class="nx">query</span> <span class="o">*</span><span class="nx">models</span><span class="p">.</span><span class="nx">LoginUserQuery</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">validateLoginAttempts</span><span class="p">(</span><span class="nx">query</span><span class="p">.</span><span class="nx">Username</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">validatePasswordSet</span><span class="p">(</span><span class="nx">query</span><span class="p">.</span><span class="nx">Password</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+
+	<span class="nx">err</span> <span class="o">:=</span> <span class="nf">loginUsingGrafanaDB</span><span class="p">(</span><span class="nx">query</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="kc">nil</span> <span class="o">||</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!=</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrUserNotFound</span> <span class="o">&amp;&amp;</span> <span class="nx">err</span> <span class="o">!=</span> <span class="nx">ErrInvalidCredentials</span> <span class="o">&amp;&amp;</span> <span class="nx">err</span> <span class="o">!=</span> <span class="nx">ErrUserDisabled</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+
+	<span class="nx">ldapEnabled</span><span class="p">,</span> <span class="nx">ldapErr</span> <span class="o">:=</span> <span class="nf">loginUsingLDAP</span><span class="p">(</span><span class="nx">query</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">ldapEnabled</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">ldapErr</span> <span class="o">==</span> <span class="kc">nil</span> <span class="o">||</span> <span class="nx">ldapErr</span> <span class="o">!=</span> <span class="nx">ldap</span><span class="p">.</span><span class="nx">ErrInvalidCredentials</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">ldapErr</span>
+		<span class="p">}</span>
+
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="nx">ErrUserDisabled</span> <span class="o">||</span> <span class="nx">ldapErr</span> <span class="o">!=</span> <span class="nx">ldap</span><span class="p">.</span><span class="nx">ErrInvalidCredentials</span> <span class="p">{</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">ldapErr</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="nx">ErrInvalidCredentials</span> <span class="o">||</span> <span class="nx">err</span> <span class="o">==</span> <span class="nx">ldap</span><span class="p">.</span><span class="nx">ErrInvalidCredentials</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">saveInvalidLoginAttempt</span><span class="p">(</span><span class="nx">query</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">loginLogger</span><span class="p">.</span><span class="nf">Error</span><span class="p">(</span><span class="s">&#34;Failed to save invalid login attempt&#34;</span><span class="p">,</span> <span class="s">&#34;err&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+		<span class="p">}</span>
+
+		<span class="k">return</span> <span class="nx">ErrInvalidCredentials</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrUserNotFound</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">ErrInvalidCredentials</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="总线机制是如何工作的">总线机制是如何工作的？</h3>
+<p>到处都看到<code>bus.Dispatch</code>，那么bus是如何知道action对应的handler的呢？一定有一个register的机制，但没找到呢</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 这样注册
+</span><span class="c1"></span><span class="nx">bus</span><span class="p">.</span><span class="nf">AddHandler</span><span class="p">(</span><span class="s">&#34;sql&#34;</span><span class="p">,</span> <span class="nx">UpdateUserLastSeenAt</span><span class="p">)</span>
+
+<span class="c1">// 这里是handler的实现
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">UpdateUserLastSeenAt</span><span class="p">(</span><span class="nx">cmd</span> <span class="o">*</span><span class="nx">models</span><span class="p">.</span><span class="nx">UpdateUserLastSeenAtCommand</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nf">inTransaction</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">sess</span> <span class="o">*</span><span class="nx">DBSession</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+		<span class="nx">user</span> <span class="o">:=</span> <span class="nx">models</span><span class="p">.</span><span class="nx">User</span><span class="p">{</span>
+			<span class="nx">Id</span><span class="p">:</span>         <span class="nx">cmd</span><span class="p">.</span><span class="nx">UserId</span><span class="p">,</span>
+			<span class="nx">LastSeenAt</span><span class="p">:</span> <span class="nx">time</span><span class="p">.</span><span class="nf">Now</span><span class="p">(),</span>
+		<span class="p">}</span>
+
+		<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">sess</span><span class="p">.</span><span class="nf">ID</span><span class="p">(</span><span class="nx">cmd</span><span class="p">.</span><span class="nx">UserId</span><span class="p">).</span><span class="nf">Update</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">user</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">})</span>
+<span class="p">}</span>
+
+<span class="c1">// AddHandler的实现
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">InProcBus</span><span class="p">)</span> <span class="nf">AddHandler</span><span class="p">(</span><span class="nx">handler</span> <span class="nx">HandlerFunc</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">handlerType</span> <span class="o">:=</span> <span class="nx">reflect</span><span class="p">.</span><span class="nf">TypeOf</span><span class="p">(</span><span class="nx">handler</span><span class="p">)</span>
+	<span class="nx">queryTypeName</span> <span class="o">:=</span> <span class="nx">handlerType</span><span class="p">.</span><span class="nf">In</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="nf">Elem</span><span class="p">().</span><span class="nf">Name</span><span class="p">()</span>
+	<span class="c1">// 原来所谓注册就是一个map，key是handler的入参，val是handler
+</span><span class="c1"></span>	<span class="nx">b</span><span class="p">.</span><span class="nx">handlers</span><span class="p">[</span><span class="nx">queryTypeName</span><span class="p">]</span> <span class="p">=</span> <span class="nx">handler</span>
+<span class="p">}</span>
+
+<span class="c1">// Dispatch的实现
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">Dispatch</span><span class="p">(</span><span class="nx">msg</span> <span class="nx">Msg</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">globalBus</span><span class="p">.</span><span class="nf">Dispatch</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">InProcBus</span><span class="p">)</span> <span class="nf">DispatchCtx</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">msg</span> <span class="nx">Msg</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">msgName</span> <span class="p">=</span> <span class="nx">reflect</span><span class="p">.</span><span class="nf">TypeOf</span><span class="p">(</span><span class="nx">msg</span><span class="p">).</span><span class="nf">Elem</span><span class="p">().</span><span class="nf">Name</span><span class="p">()</span>
+
+	<span class="kd">var</span> <span class="nx">handler</span> <span class="p">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">handlersWithCtx</span><span class="p">[</span><span class="nx">msgName</span><span class="p">]</span>
+	<span class="k">if</span> <span class="nx">handler</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">ErrHandlerNotFound</span>
+	<span class="p">}</span>
+
+	<span class="kd">var</span> <span class="nx">params</span> <span class="p">=</span> <span class="p">[]</span><span class="nx">reflect</span><span class="p">.</span><span class="nx">Value</span><span class="p">{}</span>
+	<span class="nx">params</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">params</span><span class="p">,</span> <span class="nx">reflect</span><span class="p">.</span><span class="nf">ValueOf</span><span class="p">(</span><span class="nx">ctx</span><span class="p">))</span>
+	<span class="nx">params</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">params</span><span class="p">,</span> <span class="nx">reflect</span><span class="p">.</span><span class="nf">ValueOf</span><span class="p">(</span><span class="nx">msg</span><span class="p">))</span>
+    
+    <span class="c1">// 反射来调用
+</span><span class="c1"></span>	<span class="nx">ret</span> <span class="o">:=</span> <span class="nx">reflect</span><span class="p">.</span><span class="nf">ValueOf</span><span class="p">(</span><span class="nx">handler</span><span class="p">).</span><span class="nf">Call</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span>
+	<span class="nx">err</span> <span class="o">:=</span> <span class="nx">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nf">Interface</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span><span class="p">.(</span><span class="kt">error</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="setting是如何初始化的">setting是如何初始化的？</h3>
+<p>看到使用的时候是直接这样：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">if</span> <span class="p">!</span><span class="nx">setting</span><span class="p">.</span><span class="nx">BasicAuthEnabled</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">false</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="dto的运用">dto的运用</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// pkg/api/dashboard.go
+</span><span class="c1"></span>      <span class="nx">dashItem</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">dashboards</span><span class="p">.</span><span class="nx">SaveDashboardDTO</span><span class="p">{</span>
+          <span class="nx">Dashboard</span><span class="p">:</span> <span class="nx">dash</span><span class="p">,</span>
+          <span class="nx">Message</span><span class="p">:</span>   <span class="nx">cmd</span><span class="p">.</span><span class="nx">Message</span><span class="p">,</span>
+          <span class="nx">OrgId</span><span class="p">:</span>     <span class="nx">c</span><span class="p">.</span><span class="nx">OrgId</span><span class="p">,</span>
+          <span class="nx">User</span><span class="p">:</span>      <span class="nx">c</span><span class="p">.</span><span class="nx">SignedInUser</span><span class="p">,</span>
+          <span class="nx">Overwrite</span><span class="p">:</span> <span class="nx">cmd</span><span class="p">.</span><span class="nx">Overwrite</span><span class="p">,</span>
+      <span class="p">}</span>
+
+      <span class="nx">dashboard</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">dashboards</span><span class="p">.</span><span class="nf">NewService</span><span class="p">().</span><span class="nf">SaveDashboard</span><span class="p">(</span><span class="nx">dashItem</span><span class="p">,</span> <span class="nx">allowUiUpdate</span><span class="p">)</span>
+      <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nf">dashboardSaveErrorToApiResponse</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+      <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="业务error到api-error的转换">业务error到api error的转换</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">      <span class="nx">dashboard</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">dashboards</span><span class="p">.</span><span class="nf">NewService</span><span class="p">().</span><span class="nf">SaveDashboard</span><span class="p">(</span><span class="nx">dashItem</span><span class="p">,</span> <span class="nx">allowUiUpdate</span><span class="p">)</span>
+      <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nf">dashboardSaveErrorToApiResponse</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+      <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">dashboardSaveErrorToApiResponse</span><span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="nx">Response</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrDashboardTitleEmpty</span> <span class="o">||</span>
+		<span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrDashboardWithSameNameAsFolder</span> <span class="o">||</span>
+		<span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrDashboardFolderWithSameNameAsDashboard</span> <span class="o">||</span>
+		<span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrDashboardTypeMismatch</span> <span class="o">||</span>
+		<span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrDashboardInvalidUid</span> <span class="o">||</span>
+		<span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrDashboardUidToLong</span> <span class="o">||</span>
+		<span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrDashboardWithSameUIDExists</span> <span class="o">||</span>
+		<span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrFolderNotFound</span> <span class="o">||</span>
+		<span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrDashboardFolderCannotHaveParent</span> <span class="o">||</span>
+		<span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrDashboardFolderNameExists</span> <span class="o">||</span>
+		<span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrDashboardRefreshIntervalTooShort</span> <span class="o">||</span>
+		<span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrDashboardCannotSaveProvisionedDashboard</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nf">Error</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="nx">err</span><span class="p">.</span><span class="nf">Error</span><span class="p">(),</span> <span class="kc">nil</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrDashboardUpdateAccessDenied</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nf">Error</span><span class="p">(</span><span class="mi">403</span><span class="p">,</span> <span class="nx">err</span><span class="p">.</span><span class="nf">Error</span><span class="p">(),</span> <span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="nx">validationErr</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">err</span><span class="p">.(</span><span class="nx">alerting</span><span class="p">.</span><span class="nx">ValidationError</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nf">Error</span><span class="p">(</span><span class="mi">422</span><span class="p">,</span> <span class="nx">validationErr</span><span class="p">.</span><span class="nf">Error</span><span class="p">(),</span> <span class="kc">nil</span><span class="p">)</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrDashboardWithSameNameInFolderExists</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nf">JSON</span><span class="p">(</span><span class="mi">412</span><span class="p">,</span> <span class="nx">util</span><span class="p">.</span><span class="nx">DynMap</span><span class="p">{</span><span class="s">&#34;status&#34;</span><span class="p">:</span> <span class="s">&#34;name-exists&#34;</span><span class="p">,</span> <span class="s">&#34;message&#34;</span><span class="p">:</span> <span class="nx">err</span><span class="p">.</span><span class="nf">Error</span><span class="p">()})</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrDashboardVersionMismatch</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nf">JSON</span><span class="p">(</span><span class="mi">412</span><span class="p">,</span> <span class="nx">util</span><span class="p">.</span><span class="nx">DynMap</span><span class="p">{</span><span class="s">&#34;status&#34;</span><span class="p">:</span> <span class="s">&#34;version-mismatch&#34;</span><span class="p">,</span> <span class="s">&#34;message&#34;</span><span class="p">:</span> <span class="nx">err</span><span class="p">.</span><span class="nf">Error</span><span class="p">()})</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="nx">pluginErr</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">err</span><span class="p">.(</span><span class="nx">models</span><span class="p">.</span><span class="nx">UpdatePluginDashboardError</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
+		<span class="nx">message</span> <span class="o">:=</span> <span class="s">&#34;The dashboard belongs to plugin &#34;</span> <span class="o">+</span> <span class="nx">pluginErr</span><span class="p">.</span><span class="nx">PluginId</span> <span class="o">+</span> <span class="s">&#34;.&#34;</span>
+		<span class="c1">// look up plugin name
+</span><span class="c1"></span>		<span class="k">if</span> <span class="nx">pluginDef</span><span class="p">,</span> <span class="nx">exist</span> <span class="o">:=</span> <span class="nx">plugins</span><span class="p">.</span><span class="nx">Plugins</span><span class="p">[</span><span class="nx">pluginErr</span><span class="p">.</span><span class="nx">PluginId</span><span class="p">];</span> <span class="nx">exist</span> <span class="p">{</span>
+			<span class="nx">message</span> <span class="p">=</span> <span class="s">&#34;The dashboard belongs to plugin &#34;</span> <span class="o">+</span> <span class="nx">pluginDef</span><span class="p">.</span><span class="nx">Name</span> <span class="o">+</span> <span class="s">&#34;.&#34;</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="nf">JSON</span><span class="p">(</span><span class="mi">412</span><span class="p">,</span> <span class="nx">util</span><span class="p">.</span><span class="nx">DynMap</span><span class="p">{</span><span class="s">&#34;status&#34;</span><span class="p">:</span> <span class="s">&#34;plugin-dashboard&#34;</span><span class="p">,</span> <span class="s">&#34;message&#34;</span><span class="p">:</span> <span class="nx">message</span><span class="p">})</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="nx">models</span><span class="p">.</span><span class="nx">ErrDashboardNotFound</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nf">JSON</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="nx">util</span><span class="p">.</span><span class="nx">DynMap</span><span class="p">{</span><span class="s">&#34;status&#34;</span><span class="p">:</span> <span class="s">&#34;not-found&#34;</span><span class="p">,</span> <span class="s">&#34;message&#34;</span><span class="p">:</span> <span class="nx">err</span><span class="p">.</span><span class="nf">Error</span><span class="p">()})</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nf">Error</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s">&#34;Failed to save dashboard&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-02-05
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/2021/02/05/reading-notes-of-applying-uml-and-patterns/">
+            <span class="next-text nav-default">「Applying UML and Patterns」读书笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

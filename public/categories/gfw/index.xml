@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GFW on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/gfw/</link>
+    <description>Recent content in GFW on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 14 Jul 2014 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/gfw/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>捣鼓VPS翻墙</title>
+      <link>http://localhost:1313/post/2014/07/14/my-first-vps/</link>
+      <pubDate>Mon, 14 Jul 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2014/07/14/my-first-vps/</guid>
+      <description>在学校论坛上看到有人介绍在vps上搭建shadowsocks服务器来翻墙，看到他推荐的vps很便宜，一年才20多，于是立马也想买一个了，其实</description>
+    </item>
+    
+    <item>
+      <title>操蛋的GFW</title>
+      <link>http://localhost:1313/post/2013/06/30/fuck-gfw/</link>
+      <pubDate>Sun, 30 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/06/30/fuck-gfw/</guid>
+      <description>Google Reader要被Google关掉了，网上已经出了一堆替代品了，前段时间就试了试，可每次都没导入成功，每次都卡在google认证上了，能登录</description>
+    </item>
+    
+  </channel>
+</rss>

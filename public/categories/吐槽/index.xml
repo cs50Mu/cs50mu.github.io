@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>吐槽 on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/%E5%90%90%E6%A7%BD/</link>
+    <description>Recent content in 吐槽 on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 20 Nov 2013 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/%E5%90%90%E6%A7%BD/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>最近各种不顺</title>
+      <link>http://localhost:1313/post/2013/11/20/bad-days/</link>
+      <pubDate>Wed, 20 Nov 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/11/20/bad-days/</guid>
+      <description>最近一个月都不在状态。 也许是因为停止跑步了？天气一冷就懒得跑了。。唉，最终还是没有坚持下去。 最可恨的是买个谷歌5儿子，从月初就开始买，直到现</description>
+    </item>
+    
+  </channel>
+</rss>

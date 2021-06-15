@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>算法 on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/%E7%AE%97%E6%B3%95/</link>
+    <description>Recent content in 算法 on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 18 Sep 2014 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/%E7%AE%97%E6%B3%95/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>binary search and spreadsheet numeration</title>
+      <link>http://localhost:1313/post/2014/09/18/binary-search-and-spreadsheet-numeration/</link>
+      <pubDate>Thu, 18 Sep 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2014/09/18/binary-search-and-spreadsheet-numeration/</guid>
+      <description>昨天去知道创宇的面试失败了，很感谢他们能给我这个机会。通过这次面试，我总算迈出了一步，更加明确了自己应该努力的方向。这次面试反映出的一个很严</description>
+    </item>
+    
+    <item>
+      <title>归并排序的非递归算法</title>
+      <link>http://localhost:1313/post/2013/07/03/merge-sort/</link>
+      <pubDate>Wed, 03 Jul 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/07/03/merge-sort/</guid>
+      <description>归并排序的效率很高，复杂度只有NlogN，但想起来很费劲啊。。尤其是递归算法，绕来绕去的被绕晕了。。今天在看《Python编程实践》（Pra</description>
+    </item>
+    
+  </channel>
+</rss>

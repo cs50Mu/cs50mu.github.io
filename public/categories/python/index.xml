@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Python on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/python/</link>
+    <description>Recent content in Python on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 06 Jan 2020 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>「译」Asynchronous Python and Databases</title>
+      <link>http://localhost:1313/post/2020/01/06/asynchronous-python-and-databases/</link>
+      <pubDate>Mon, 06 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2020/01/06/asynchronous-python-and-databases/</guid>
+      <description>翻译一篇 SQLAlchemy 作者的博文，原文：Asynchronous Python and Databases 这篇文章给异步IO泼了点冷水，引导我们用正确的态度来看待这个技术(其实是任何技术)</description>
+    </item>
+    
+    <item>
+      <title>异步IO的威力</title>
+      <link>http://localhost:1313/post/2019/11/19/the-power-of-asyncio/</link>
+      <pubDate>Tue, 19 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/11/19/the-power-of-asyncio/</guid>
+      <description>what so, what&amp;rsquo;s the problem? 压测目标有提升 之前的压测没有考虑三方服务慢返回(通常为200ms左右)的问题，如果当前的压测仍用同步worker会死的佷惨 how 结合项</description>
+    </item>
+    
+    <item>
+      <title>Python的logging模块总结</title>
+      <link>http://localhost:1313/post/2015/02/02/logging-module-of-python/</link>
+      <pubDate>Mon, 02 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2015/02/02/logging-module-of-python/</guid>
+      <description>里面主要有这么几个类：logger handler formatter，其中logger类用于实例化logger对象，handler类负责指定log信息的发</description>
+    </item>
+    
+    <item>
+      <title>Structure and Interpretation of Computer Programs</title>
+      <link>http://localhost:1313/post/2014/07/26/sicp/</link>
+      <pubDate>Sat, 26 Jul 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2014/07/26/sicp/</guid>
+      <description>大名鼎鼎的SICP，下面是我在学习Berkeley的CS61A时做的笔记,非常有意思的一门课！ 高阶函数 理解这玩意儿有时候确实挺费脑筋。。。下</description>
+    </item>
+    
+    <item>
+      <title>统计浏览器历史记录</title>
+      <link>http://localhost:1313/post/2014/03/03/get-your-visit-internet-frequency-by-python/</link>
+      <pubDate>Mon, 03 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2014/03/03/get-your-visit-internet-frequency-by-python/</guid>
+      <description>又是好久没更新。 知乎是个好网站。那么多大牛分享自己的经验教训～涉及范围包罗万象，无所不有。对我而言，很重要的一点是它拓展了我的眼界，让我知道</description>
+    </item>
+    
+    <item>
+      <title>python复习</title>
+      <link>http://localhost:1313/post/2013/09/30/some-python-practices/</link>
+      <pubDate>Mon, 30 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/09/30/some-python-practices/</guid>
+      <description>发现了一本学python的好书，额，起码感觉很对我的口味。。名字叫The Practice of Computing Using Python，中译名很二，叫《Python入门经典》。。这本</description>
+    </item>
+    
+    <item>
+      <title>归并排序的非递归算法</title>
+      <link>http://localhost:1313/post/2013/07/03/merge-sort/</link>
+      <pubDate>Wed, 03 Jul 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/07/03/merge-sort/</guid>
+      <description>归并排序的效率很高，复杂度只有NlogN，但想起来很费劲啊。。尤其是递归算法，绕来绕去的被绕晕了。。今天在看《Python编程实践》（Pra</description>
+    </item>
+    
+  </channel>
+</rss>

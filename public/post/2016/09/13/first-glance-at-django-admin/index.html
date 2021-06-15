@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>first glance at django admin - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="主要是一些定制的问题，其实django admin已经集成的非常好了，该有的都有了，一般开箱即用就行了。 如果你对Django Admin不熟悉的" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2016/09/13/first-glance-at-django-admin/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="first glance at django admin" />
+<meta property="og:description" content="主要是一些定制的问题，其实django admin已经集成的非常好了，该有的都有了，一般开箱即用就行了。 如果你对Django Admin不熟悉的" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2016/09/13/first-glance-at-django-admin/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-09-13T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2016-09-13T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="first glance at django admin">
+<meta itemprop="description" content="主要是一些定制的问题，其实django admin已经集成的非常好了，该有的都有了，一般开箱即用就行了。 如果你对Django Admin不熟悉的"><meta itemprop="datePublished" content="2016-09-13T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-09-13T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="950">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="first glance at django admin"/>
+<meta name="twitter:description" content="主要是一些定制的问题，其实django admin已经集成的非常好了，该有的都有了，一般开箱即用就行了。 如果你对Django Admin不熟悉的"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">first glance at django admin</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-09-13 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>主要是一些定制的问题，其实django admin已经集成的非常好了，该有的都有了，一般开箱即用就行了。</p>
+<p>如果你对Django Admin不熟悉的话，<a href="http://dokelung-blog.logdown.com/posts/220832-django-notes-6-manage-your-system-admin">这里</a>有一篇很好的介绍。</p>
+<p>###dependent select fields
+其实就是子field的可选项是依赖它的父field的，这个需求在admin中没有找到配置方法，找到一个插件<a href="https://github.com/digi604/django-smart-selects"><code>django-smart-selects</code></a></p>
+<p>###model field options</p>
+<ul>
+<li>
+<p>blank=True，实际控制的form的validation，允许表单中该字段为空</p>
+</li>
+<li>
+<p>null=True，控制的DB中字段的属性，null或者not null</p>
+</li>
+</ul>
+<p>###控制某条记录的显示
+需要在model的定义中加入：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="fm">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+	<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>否则，记录显示出来的是Python object</p>
+<p>###在view中显示的model名称的自定义</p>
+<p>这个名称默认就是显示的是在代码中定义的model的名称，可以用以下代码来自定义：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+	<span class="n">verbose_name</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;商品子类&#39;</span>
+	<span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;商品子类&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>###自定义app名称</p>
+<p>参考<a href="http://stackoverflow.com/questions/612372/can-you-give-a-django-app-a-verbose-name-for-use-throughout-the-admin">这里</a></p>
+<p>###多个字段作为一个唯一键</p>
+<p>需要在该表对应的model类的Meta类中增加<code>unique_together</code>定义：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+	<span class="n">unique_together</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;parent_category&#39;</span><span class="p">,</span> <span class="s1">&#39;sub_category&#39;</span><span class="p">)</span>
+	<span class="n">verbose_name</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;商品&#39;</span>
+	<span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;商品&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>###对显示界面的定制
+比如，控制要显示的字段、哪几个字段是可以点击的、显示搜索框、分页等，这些都是可以配置的，不用自己来实现，非常方便。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">ProductAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;sku&#39;</span><span class="p">,</span> <span class="s1">&#39;barcode&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;create_time&#39;</span><span class="p">,</span> <span class="s1">&#39;update_time&#39;</span><span class="p">)</span>
+    <span class="n">list_display_links</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+    <span class="n">exclude</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;sku&#39;</span><span class="p">,)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,)</span>
+    <span class="n">list_per_page</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+    <span class="n">empty_value_display</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>参考：</p>
+<ul>
+<li><a href="https://brobin.me/blog/2015/03/customizing-the-django-admin/">https://brobin.me/blog/2015/03/customizing-the-django-admin/</a></li>
+<li><a href="https://www.webforefront.com/django/setupdjangomodelsindjangoadmin.html#prettyPhoto">https://www.webforefront.com/django/setupdjangomodelsindjangoadmin.html#prettyPhoto</a>  这篇讲的非常详尽，但其实都在官方文档里了，但有时候懒得一个一个去找了。</li>
+</ul>
+<p>###自定义方法（ModelAdmin methods）</p>
+<p>Django的admin提供了一系列的方法，支持你通过重写这些方法来定制它的默认行为，比如<code>save_model</code>方法可以让你自定义入库的操作，加入一些自己的逻辑。它提供了非常多的方法，具体可以看文档，我目前只用到了一个<code>save_model</code>方法。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">ProductAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;sku&#39;</span><span class="p">,</span> <span class="s1">&#39;barcode&#39;</span><span class="p">,</span> <span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;create_time&#39;</span><span class="p">,</span> <span class="s1">&#39;update_time&#39;</span><span class="p">)</span>
+    <span class="n">list_display_links</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+    <span class="n">exclude</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;sku&#39;</span><span class="p">,)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,)</span>
+    <span class="n">list_per_page</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+    <span class="n">empty_value_display</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+
+    <span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">change</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">change</span><span class="p">:</span>         <span class="c1"># Add</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>         <span class="c1">#  save in order to get the auto increment id</span>
+            <span class="n">generate_sku</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>         <span class="c1">#  save generated sku</span>
+        <span class="k">else</span><span class="p">:</span>                  <span class="c1"># Update</span>
+<span class="c1">#            generate_sku(obj) # sku should not be changed once the record is inserted, even if all the other fields have changed</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">generate_sku</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span>
+    <span class="n">parent_category</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">parent_category</span><span class="o">.</span><span class="n">code</span>
+    <span class="n">sub_category</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">sub_category</span><span class="o">.</span><span class="n">code</span>
+
+    <span class="n">sku_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;XLJ&#39;</span><span class="p">]</span>
+    <span class="n">sku_parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">parent_category</span><span class="p">,</span> <span class="n">sub_category</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">])</span>
+    <span class="n">today</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+    <span class="n">sku_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">today</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">))</span>
+    <span class="n">seq_id</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%06d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">id</span>
+    <span class="n">sku_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seq_id</span><span class="p">)</span>
+
+    <span class="n">sku</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[^a-zA-Z0-9]&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sku_parts</span><span class="p">))</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">sku</span> <span class="o">=</span> <span class="n">sku</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>参考：</p>
+<ul>
+<li><a href="https://docs.djangoproject.com/en/dev/ref/contrib/admin/#modeladmin-methods">https://docs.djangoproject.com/en/dev/ref/contrib/admin/#modeladmin-methods</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-09-13
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2017/01/14/thrift-server-error-caused-by-aliyun-health-check/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">thrift server error caused by aliyun health check</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2016/08/29/csapp-concurrent-programming/">
+            <span class="next-text nav-default">csapp concurrent programming</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

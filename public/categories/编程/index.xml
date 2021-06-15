@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>编程 on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/%E7%BC%96%E7%A8%8B/</link>
+    <description>Recent content in 编程 on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 03 Mar 2014 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/%E7%BC%96%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>统计浏览器历史记录</title>
+      <link>http://localhost:1313/post/2014/03/03/get-your-visit-internet-frequency-by-python/</link>
+      <pubDate>Mon, 03 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2014/03/03/get-your-visit-internet-frequency-by-python/</guid>
+      <description>又是好久没更新。 知乎是个好网站。那么多大牛分享自己的经验教训～涉及范围包罗万象，无所不有。对我而言，很重要的一点是它拓展了我的眼界，让我知道</description>
+    </item>
+    
+  </channel>
+</rss>

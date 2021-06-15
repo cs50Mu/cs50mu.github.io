@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>「Applying UML and Patterns」读书笔记 - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="「Applying UML and Patterns」读书笔记 Inception 前期评估 the idea is to do just enough investigation to form a rational, justifiable opinion of the overall purpose and feasibility of the potential new system, and decide if it is worthwhile to invest in deeper exploration It is to decide if" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2021/02/05/reading-notes-of-applying-uml-and-patterns/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="「Applying UML and Patterns」读书笔记" />
+<meta property="og:description" content="「Applying UML and Patterns」读书笔记 Inception 前期评估 the idea is to do just enough investigation to form a rational, justifiable opinion of the overall purpose and feasibility of the potential new system, and decide if it is worthwhile to invest in deeper exploration It is to decide if" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2021/02/05/reading-notes-of-applying-uml-and-patterns/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-02-05T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-02-05T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="「Applying UML and Patterns」读书笔记">
+<meta itemprop="description" content="「Applying UML and Patterns」读书笔记 Inception 前期评估 the idea is to do just enough investigation to form a rational, justifiable opinion of the overall purpose and feasibility of the potential new system, and decide if it is worthwhile to invest in deeper exploration It is to decide if"><meta itemprop="datePublished" content="2021-02-05T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2021-02-05T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="4951">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="「Applying UML and Patterns」读书笔记"/>
+<meta name="twitter:description" content="「Applying UML and Patterns」读书笔记 Inception 前期评估 the idea is to do just enough investigation to form a rational, justifiable opinion of the overall purpose and feasibility of the potential new system, and decide if it is worthwhile to invest in deeper exploration It is to decide if"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">「Applying UML and Patterns」读书笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-02-05 </span>
+        <div class="post-category">
+            <a href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"> 读书笔记 </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#applying-uml-and-patterns读书笔记">「Applying UML and Patterns」读书笔记</a>
+          <ul>
+            <li><a href="#inception">Inception</a></li>
+            <li><a href="#elaboration-iteration-1basics---domain-models">Elaboration Iteration 1Basics - Domain Models</a></li>
+            <li><a href="#elaboration-iteration-1basics---system-sequence-diagrams">Elaboration Iteration 1Basics - System Sequence Diagrams</a></li>
+            <li><a href="#elaboration-iteration-1basics---operation-contracts">Elaboration Iteration 1Basics - Operation Contracts</a></li>
+            <li><a href="#elaboration-iteration-1basics---requirements-to-designiteratively">Elaboration Iteration 1Basics - Requirements to DesignIteratively</a></li>
+            <li><a href="#elaboration-iteration-1basics---logical-architecture-and-uml-package-diagrams">Elaboration Iteration 1Basics - Logical Architecture and UML Package Diagrams</a></li>
+            <li><a href="#elaboration-iteration-1basics---on-to-object-design">Elaboration Iteration 1Basics - On to Object Design</a></li>
+            <li><a href="#elaboration-iteration-1basics---uml-interaction-diagrams">Elaboration Iteration 1Basics - UML Interaction Diagrams</a></li>
+            <li><a href="#elaboration-iteration-1basics---uml-class-diagrams">Elaboration Iteration 1Basics - UML Class Diagrams</a></li>
+            <li><a href="#elaboration-iteration-1basics---grasp-designing-objects-with-responsibilities">Elaboration Iteration 1Basics - GRASP: Designing Objects with Responsibilities</a></li>
+            <li><a href="#elaboration-iteration-1basics---object-design-examples-with-grasp">Elaboration Iteration 1Basics - Object Design Examples with GRASP</a></li>
+            <li><a href="#elaboration-iteration-1basics---designing-for-visibility">Elaboration Iteration 1Basics - Designing for Visibility</a></li>
+            <li><a href="#elaboration-iteration-1basics---mapping-designs-to-code">Elaboration Iteration 1Basics - Mapping Designs to Code</a></li>
+            <li><a href="#elaboration-iteration-1basics---test-driven-development-and-refactoring">Elaboration Iteration 1Basics - Test-Driven Development and Refactoring</a></li>
+            <li><a href="#elaboration-iteration-2-more-patterns---uml-tools-and-uml-as-blueprint">Elaboration Iteration 2 More Patterns - UML Tools and UML as Blueprint</a></li>
+            <li><a href="#elaboration-iteration-2-more-patterns---quick-analysis-update">Elaboration Iteration 2 More Patterns - Quick Analysis Update</a></li>
+            <li><a href="#elaboration-iteration-2-more-patterns---iteration-2more-patterns">Elaboration Iteration 2 More Patterns - Iteration 2More Patterns</a></li>
+            <li><a href="#elaboration-iteration-2-more-patterns---more-objects-with-responsibilities">Elaboration Iteration 2 More Patterns - More Objects with Responsibilities</a></li>
+            <li><a href="#elaboration-iteration-2-more-patterns---applying-gof-design-patterns">Elaboration Iteration 2 More Patterns - Applying GoF Design Patterns</a></li>
+            <li><a href="#elaboration-iteration-3---intermediate-topics">Elaboration Iteration 3 - Intermediate Topics</a></li>
+            <li><a href="#elaboration-iteration-3---uml-activity-diagrams-and-modeling">Elaboration Iteration 3 - UML Activity Diagrams and Modeling</a></li>
+            <li><a href="#elaboration-iteration-3---uml-state-machine-diagrams-and-modeling">Elaboration Iteration 3 - UML State Machine Diagrams and Modeling</a></li>
+            <li><a href="#elaboration-iteration-3---relating-use-cases">Elaboration Iteration 3 - Relating Use Cases</a></li>
+            <li><a href="#elaboration-iteration-3---more-ssds-and-contracts">Elaboration Iteration 3 - More SSDs and Contracts</a></li>
+            <li><a href="#elaboration-iteration-3---domain-model-refinement">Elaboration Iteration 3 - Domain Model Refinement</a></li>
+            <li><a href="#elaboration-iteration-3---architectural-analysis">Elaboration Iteration 3 - Architectural Analysis</a></li>
+            <li><a href="#elaboration-iteration-3---logical-architecture-refinement">Elaboration Iteration 3 - Logical Architecture Refinement</a></li>
+            <li><a href="#elaboration-iteration-3---more-object-design-with-gof-patterns">Elaboration Iteration 3 - More Object Design with GoF Patterns</a></li>
+            <li><a href="#elaboration-iteration-3---package-design">Elaboration Iteration 3 - Package Design</a></li>
+            <li><a href="#elaboration-iteration-3---designing-a-persistence-framework-with-patterns">Elaboration Iteration 3 - Designing a Persistence Framework with Patterns</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="applying-uml-and-patterns读书笔记">「Applying UML and Patterns」读书笔记</h2>
+<h3 id="inception">Inception</h3>
+<p>前期评估</p>
+<p>the idea is to do just enough investigation to form a rational, justifiable opinion of the overall purpose and feasibility of the potential new system, and decide if it is worthwhile to invest in deeper exploration</p>
+<p><strong>It is to decide if the project is worth a serious investigation (during elaboration), not to do that investigation.</strong></p>
+<h4 id="use-cases">Use Cases</h4>
+<p>Informally, use cases are text stories of some actor using a system to meet goals.</p>
+<p>the essence is discovering and recording functional requirements by writing stories of using a system to fulfill user goals; that is, cases of use</p>
+<h3 id="elaboration-iteration-1basics---domain-models">Elaboration Iteration 1Basics - Domain Models</h3>
+<h4 id="what-is-a-domain-model">What is a Domain Model?</h4>
+<p>A domain model is a visual representation of conceptual classes or real-situation objects in a domain.</p>
+<p>Domain models have also been called conceptual models (the term used in the first edition of this book), domain object models, and analysis object models.</p>
+<p>Applying UML notation, a domain model is illustrated <strong>with a set of class diagrams in which no operations (method signatures) are defined.</strong> It provides a conceptual perspective. It may show:</p>
+<ul>
+<li>domain objects or conceptual classes</li>
+<li>associations between conceptual classes</li>
+<li>attributes of conceptual classes</li>
+</ul>
+<p>A domain model shows real-situation conceptual classes, <strong>not software classes.</strong></p>
+<h4 id="how-to-find-conceptual-classes">How to Find Conceptual Classes?</h4>
+<ul>
+<li>Reuse or modify existing models.</li>
+<li>Use a category list. 一些默认建议，非常好</li>
+<li>Finding Conceptual Classes with Noun Phrase Identification. 通过名词来找灵感
+<ul>
+<li><strong>use cases</strong> are one rich source to mine for noun phrase identification.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Perhaps the most common mistake when creating a domain model is to represent something as an attribute when it should have been a conceptual class.</p>
+</blockquote>
+<p>If we do not think of some conceptual class X as a number or text in the real world, X is probably a conceptual class, not an attribute. 类比现实世界</p>
+<h4 id="why-use-description-classes">Why Use &lsquo;Description&rsquo; Classes?</h4>
+<p><img src="/images/post/description-class.jpg" alt=""></p>
+<p>item的描述是一直存在的，但item可能会卖光</p>
+<p>The need for description classes is common in sales, product, and service domains. It is also common in manufacturing, which requires a description of a manufactured thing that is distinct from the thing itself.</p>
+<h4 id="associations">Associations</h4>
+<p>An association is a relationship between classes (more precisely, instances of those classes) that indicates some meaningful and interesting connection</p>
+<p>Multiplicity defines how many instances of a class A can be associated with one instance of a class B</p>
+<p><img src="/images/post/association-multiplicity.jpg" alt=""></p>
+<h4 id="attributes">Attributes</h4>
+<p>An attribute is a logical data value of an object.</p>
+<p>Informally, most attribute types should be what are often thought of as &ldquo;primitive&rdquo; data types, such as numbers and booleans. The type of an attribute should not normally be a complex domain concept, such as a Sale or Airport. 类属性应该是基础类型，不应该是复杂的自定义领域类型（这种应该用Association来表达）</p>
+<p>Relate conceptual classes with an association, not with an attribute.</p>
+<h4 id="conclusion-is-the-domain-model-correct">Conclusion: Is the Domain Model Correct?</h4>
+<p>There is no such thing as a single correct domain model. All models are approximations of the domain we are attempting to understand; the domain model is primarily a tool of understanding and communication among a particular group. A useful domain model captures the essential abstractions and information required to understand the domain in the context of the current requirements, and aids people in understanding the domainits concepts, terminology, and relationships. 没有“正确”的模型</p>
+<h3 id="elaboration-iteration-1basics---system-sequence-diagrams">Elaboration Iteration 1Basics - System Sequence Diagrams</h3>
+<h4 id="what-are-system-sequence-diagrams">What are System Sequence Diagrams?</h4>
+<p>A system sequence diagram is a picture that shows, for one particular scenario of a use case, the events that external actors generate, their order, and inter-system events. All systems are treated as a <strong>black box</strong>; the emphasis of the diagram is events that cross the system boundary from actors to systems.</p>
+<p>System behavior is a description of what a system does, without explaining how it does it.  用于描述系统是做什么的，而不是如何做</p>
+<h3 id="elaboration-iteration-1basics---operation-contracts">Elaboration Iteration 1Basics - Operation Contracts</h3>
+<h3 id="elaboration-iteration-1basics---requirements-to-designiteratively">Elaboration Iteration 1Basics - Requirements to DesignIteratively</h3>
+<p>Iteratively Do the Right Thing, Do the Thing Right 做对的事 和 把事做对</p>
+<p>The requirements and object-oriented analysis has focused on learning to do the right thing; that is, understanding some of the outstanding goals for the case studies, and related rules and constraints. By contrast, the following design work will stress do the thing right; that is, skillfully designing a solution to satisfy the requirements for this iteration.</p>
+<h3 id="elaboration-iteration-1basics---logical-architecture-and-uml-package-diagrams">Elaboration Iteration 1Basics - Logical Architecture and UML Package Diagrams</h3>
+<h4 id="what-is-the-logical-architecture-and-layers">What is the Logical Architecture? And Layers?</h4>
+<p>The logical architecture is the large-scale organization of the software classes into packages (or namespaces), subsystems, and layers. <strong>It&rsquo;s called the logical architecture because there&rsquo;s no decision about how these elements are deployed across different operating system processes or across physical computers in a network</strong></p>
+<p>A layer is a very coarse-grained grouping of classes, packages, or subsystems that has cohesive responsibility for a major aspect of the system. Also, layers are organized such that &ldquo;higher&rdquo; layers (such as the UI layer) call upon services of &ldquo;lower&rdquo; layers, but not normally vice versa.</p>
+<p>Typically layers in an OO system include:</p>
+<ul>
+<li>User Interface.</li>
+<li>Application Logic and Domain Objects 领域层</li>
+<li>Technical Services
+<ul>
+<li>general purpose objects and subsystems that provide supporting technical services, such as interfacing with a database or error logging.</li>
+<li>These services are usually application-independent and reusable across several systems.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Guideline: Design with Layers</p>
+</blockquote>
+<p>Applied to information systems, <strong>typical layers</strong> are illustrated and explained as follows:</p>
+<ul>
+<li>UI</li>
+<li>Application
+<ul>
+<li>handles presentation layer request</li>
+<li>workflow</li>
+<li>session state</li>
+</ul>
+</li>
+<li>Domain (aka Business, Application logic)
+<ul>
+<li>implementation of domain rules</li>
+</ul>
+</li>
+<li>Business Infrasture
+<ul>
+<li>very general low-level business services</li>
+<li>used in many business domains</li>
+<li>eg, CurrencyConverter</li>
+</ul>
+</li>
+<li>Technial Services
+<ul>
+<li>(relatively) high-level technical services and frameworks</li>
+<li>eg, persistence, security</li>
+</ul>
+</li>
+<li>Foundation
+<ul>
+<li>low-level technical services, utilities and frameworks</li>
+<li>eg, data structures, threads, math, file, DB and network I/O</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Guideline: Cohesive Responsibilities; Maintain a Separation of Concerns</p>
+</blockquote>
+<p>每层干自己该干的事</p>
+<p>The responsibilities of the objects in a layer should be strongly related to each other and should not be mixed with responsibilities of other layers. For example, objects in the UI layer should focus on UI work, such as creating windows and widgets, capturing mouse and keyboard events, and so forth. Objects in the application logic or &ldquo;domain&rdquo; layer should focus on application logic, such as calculating a sales total or taxes, or moving a piece on a game board.</p>
+<p>UI objects should not do application logic. For example, a Java Swing JFrame (window) object should not contain logic to calculate taxes or move a game piece. And on the other hand, application logic classes should not trap UI mouse or keyboard events. That would violate a clear separation of concerns and maintaining high cohesion basic architectural principles.</p>
+<blockquote>
+<p>How do we design the application logic with objects?</p>
+</blockquote>
+<p>To create software objects with names and information similar to the real-world domain, and <strong>assign application logic responsibilities to them</strong>. For example, in the real world of POS, there are sales and payments. So, in software, we create a Sale and Payment class, and give them application logic responsibilities.</p>
+<blockquote>
+<p>Guideline: The Model-View Separation Principle</p>
+</blockquote>
+<p>In this context, model is a synonym for the domain layer of objects (it&rsquo;s an old OO term from the late 1970s). View is a synonym for UI objects, such as windows, Web pages, applets, and reports.</p>
+<p><strong>The Model-View Separation principle[2] states that model (domain) objects should not have direct knowledge of view (UI) objects, at least as view objects</strong>. So, for example, a Register or Sale object should not directly send a message to a GUI window object ProcessSaleFrame, asking it to display something, change color, close, and so forth.</p>
+<p>Model-View-Controller (MVC): The Model is the Domain Layer, the View is the UI Layer, and the Controllers are the workflow objects in the Application layer. 至今看到的对MVC的最完美的诠释吧</p>
+<h3 id="elaboration-iteration-1basics---on-to-object-design">Elaboration Iteration 1Basics - On to Object Design</h3>
+<h4 id="designing-objects-what-are-static-and-dynamic-modeling">Designing Objects: What are Static and Dynamic Modeling?</h4>
+<p>There are two kinds of object models: dynamic and static. <strong>Dynamic models, such as UML interaction diagrams (sequence diagrams or communication diagrams), help design the logic, the behavior of the code or the method bodies.</strong> They tend to be the more interesting, difficult, important diagrams to create. <strong>Static models, such as UML class diagrams, help design the definition of packages, class names, attributes, and method signatures (but not method bodies).</strong></p>
+<p>People new to UML tend to think that the important diagram is the static-view class diagram, but in fact, most of the challenging, interesting, useful design work happens while drawing the UML dynamic-view interaction diagrams. It&rsquo;s during dynamic object modeling (such as drawing sequence diagrams) that &ldquo;the rubber hits the road&rdquo; in terms of really thinking through the exact details of what objects need to exist and how they collaborate via messages and methods. 重点：先做Dynamic Modeling（新手会误认为要先做Static Modeling）</p>
+<p>What&rsquo;s important is knowing how to think and design in objects, and apply object design best-practice patterns, which is a very different and much more valuable skill than knowing UML notation. 重点是OO设计，而不是UML</p>
+<h3 id="elaboration-iteration-1basics---uml-interaction-diagrams">Elaboration Iteration 1Basics - UML Interaction Diagrams</h3>
+<p>The term interaction diagram is a generalization of two more specialized UML diagram types:</p>
+<ul>
+<li>sequence diagrams
+<ul>
+<li>illustrate interactions in a kind of fence format, in which each new object is added to the right</li>
+</ul>
+</li>
+<li>communication diagrams
+<ul>
+<li>illustrate object interactions in a graph or network format, in which objects can be placed anywhere on the diagram</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/post/sequence-diagram.jpg" alt="">
+<img src="/images/post/communication-diagram.jpg" alt=""></p>
+<h3 id="elaboration-iteration-1basics---uml-class-diagrams">Elaboration Iteration 1Basics - UML Class Diagrams</h3>
+<h3 id="elaboration-iteration-1basics---grasp-designing-objects-with-responsibilities">Elaboration Iteration 1Basics - GRASP: Designing Objects with Responsibilities</h3>
+<p><strong>The critical design tool for software development is a mind well educated in design principles.</strong> It is not the UML or any other technology.</p>
+<blockquote>
+<p>What Are Inputs to Object Design?</p>
+</blockquote>
+<p>开始设计的前提是已做好需求分析</p>
+<blockquote>
+<p>Responsibilities and Responsibility-Driven Design</p>
+</blockquote>
+<p>Basically, these responsibilities are of the following two types: doing and knowing.</p>
+<p>Doing responsibilities of an object include:</p>
+<ul>
+<li>doing something itself, such as creating an object or doing a calculation</li>
+<li>initiating action in other objects</li>
+<li>controlling and coordinating activities in other objects</li>
+</ul>
+<p>Knowing responsibilities of an object include:</p>
+<ul>
+<li>knowing about private encapsulated data</li>
+<li>knowing about related objects</li>
+<li>knowing about things it can derive or calculate</li>
+</ul>
+<blockquote>
+<p>What are Patterns?</p>
+</blockquote>
+<p>In OO design, a pattern is a named description of a problem and solution that can be applied to new contexts; ideally, a pattern advises us on how to apply its solution in varying circumstances and considers the forces and trade-offs.</p>
+<p>New pattern should be considered an oxymoron if it describes a new idea. The very term &ldquo;pattern&rdquo; suggests a long-repeating thing. <strong>The point of design patterns is not to express new design ideas. Quite the oppositegreat patterns attempt to codify existing tried-and-true knowledge, idioms, and principles</strong>; the more honed, old, and widely used, the better.</p>
+<blockquote>
+<p>A Short Example of Object Design with GRASP</p>
+</blockquote>
+<p>There are nine GRASP patterns:</p>
+<ul>
+<li>Creator</li>
+</ul>
+<p>关键词：mental model、low representational gap (LRG)</p>
+<p>原则是要尽量降低人的心理模型跟design model之间的认知差异</p>
+<ul>
+<li>Information Expert</li>
+</ul>
+<p>Problem： What is a basic principle by which to assign responsibilities to objects?</p>
+<p>Solution： Assign a responsibility to the class that has the information needed to fulfill it.</p>
+<ul>
+<li>Low Coupling</li>
+</ul>
+<p>Briefly and informally, coupling is a measure of how strongly one element is connected to, has knowledge of, or depends on other elements.</p>
+<p>If there is coupling or dependency, then when the depended-upon element changes, the dependant may be affected. For example, a subclass is strongly coupled to a superclass. An object A that calls on the operations of object B has coupling to B&rsquo;s services.</p>
+<p>It is not high coupling per se that is the problem; it is high coupling to elements that are unstable in some dimension, such as their interface, implementation, or mere presence.  不是耦合本身不好，而要看耦合的东西，若耦合的东西不稳定就不太好</p>
+<ul>
+<li>Controller</li>
+</ul>
+<p>Problem：What first object beyond the UI layer receives and coordinates (&ldquo;controls&rdquo;) a system operation?</p>
+<p>Solution： Assign the responsibility to an object representing one of these choices:</p>
+<ol>
+<li>Represents the overall &ldquo;system,&rdquo; a &ldquo;root object,&rdquo; a device that the software is running within, or a major subsystem (these are all variations of a facade controller).</li>
+<li>Represents a use case scenario within which the system operation occurs (a use case or session controller)</li>
+</ol>
+<p>有两种：</p>
+<p>Facade controllers：门面，一切全包，比如TelecommSwitch、Phone、ChessGame</p>
+<p>use case controller：按使用场景来分的，比如ProcessSaleHandler</p>
+<ul>
+<li>High Cohesion</li>
+</ul>
+<p>In software design a basic quality known as cohesion informally measures how <strong>functionally related</strong> the operations of a software element are, and also measures how much work a software element is doing. 做的事要有相关性，一个类的方法集中如果有很多关系不大的事情，则这个类不是cohesive的</p>
+<p>As a simple contrasting example, an object Big with 100 methods and 2,000 source lines of code (SLOC) is doing a lot more than an object Small with 10 methods and 200 source lines. <strong>And if the 100 methods of Big are covering many different areas of responsibility (such as database access and random number generation), then Big has less focus or functional cohesion than Small.</strong> In summary, both the amount of code and the relatedness of the code are an indicator of an object&rsquo;s cohesion.</p>
+<p>Problem: How to keep objects focused, understandable, and manageable, and as a side effect, support Low Coupling?</p>
+<p>Solution: Assign responsibilities so that cohesion remains high. Use this to evaluate alternatives.</p>
+<h3 id="elaboration-iteration-1basics---object-design-examples-with-grasp">Elaboration Iteration 1Basics - Object Design Examples with GRASP</h3>
+<p>I wish to exhaustively illustrate that no &ldquo;magic&rdquo; is needed in object design</p>
+<p>OO software design really can be <strong>more science than art</strong>, though there is plenty of room for creativity and elegant design.</p>
+<p>实例讲解，非常详尽！</p>
+<blockquote>
+<p>The Command-Query Separation Principle</p>
+</blockquote>
+<p>命令（有side effect的操作，比如update create等）与 查询 分离的原则</p>
+<p>要这样：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// style #1; used in the official solution
+</span><span class="c1"></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">roll</span><span class="o">()</span>
+<span class="o">{</span>
+<span class="n">faceValue</span> <span class="o">=</span> <span class="c1">// random num generation
+</span><span class="c1"></span><span class="o">}</span>
+<span class="kd">public</span> <span class="kt">int</span> <span class="nf">getFaceValue</span><span class="o">()</span> <span class="o">{</span>
+   <span class="k">return</span> <span class="n">faceValue</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>而不是这样：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">// style #2; why is this poor?
+</span><span class="c1"></span><span class="kd">public</span> <span class="kt">int</span> <span class="nf">roll</span><span class="o">()</span>
+<span class="o">{</span>
+<span class="n">faceValue</span> <span class="o">=</span> <span class="c1">// random num generation
+</span><span class="c1"></span>   <span class="k">return</span> <span class="n">faceValue</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>为什么呢？</p>
+<p>CQS is widely considered desirable in computer science theory <strong>because with it, you can more easily reason about a program&rsquo;s state without simultaneously modifying that state. And it makes designs simpler to understand and anticipate.</strong> For example, if an application consistently follows CQS, you know that a query or getter method isn&rsquo;t going to modify anything and a command isn&rsquo;t going to return anything. Simple pattern. This often turns out to be nice to rely on, as the alternative can be a nasty surpriseviolating the Principle of <strong>Least Surprise</strong> in software development</p>
+<h3 id="elaboration-iteration-1basics---designing-for-visibility">Elaboration Iteration 1Basics - Designing for Visibility</h3>
+<p>Visibility is the ability of one object to see or have reference to another</p>
+<p>There are four common ways that visibility can be achieved from object A to object B:</p>
+<ul>
+<li>Attribute visibility B is an attribute of A.</li>
+<li>Parameter visibility B is a parameter of a method of A.</li>
+<li>Local visibility B is a (non-parameter) local object in a method of A.</li>
+<li>Global visibility B is in some way globally visible.</li>
+</ul>
+<h3 id="elaboration-iteration-1basics---mapping-designs-to-code">Elaboration Iteration 1Basics - Mapping Designs to Code</h3>
+<h3 id="elaboration-iteration-1basics---test-driven-development-and-refactoring">Elaboration Iteration 1Basics - Test-Driven Development and Refactoring</h3>
+<p>Refactoring [Fowler99] is a structured, disciplined method to rewrite or restructure existing code without changing its external behavior, applying small transformation steps combined with re- executing tests each step.</p>
+<h3 id="elaboration-iteration-2-more-patterns---uml-tools-and-uml-as-blueprint">Elaboration Iteration 2 More Patterns - UML Tools and UML as Blueprint</h3>
+<h3 id="elaboration-iteration-2-more-patterns---quick-analysis-update">Elaboration Iteration 2 More Patterns - Quick Analysis Update</h3>
+<h3 id="elaboration-iteration-2-more-patterns---iteration-2more-patterns">Elaboration Iteration 2 More Patterns - Iteration 2More Patterns</h3>
+<h3 id="elaboration-iteration-2-more-patterns---more-objects-with-responsibilities">Elaboration Iteration 2 More Patterns - More Objects with Responsibilities</h3>
+<p>GRASP patterns:</p>
+<ul>
+<li>Polymorphism</li>
+</ul>
+<p>多态</p>
+<p>Alternatives based on type Conditional variation is a fundamental theme in programs. If a program is designed using if-then-else or case statement conditional logic, then if a new variation arises, it requires modification of the case logicoften in many places. This approach makes it difficult to easily extend a program with new variations because changes tend to be required in several placeswherever the conditional logic exists. if-else 问题</p>
+<p>原则：不要用if-else或者case来解决，而是用多态来解决</p>
+<ul>
+<li>Pure Fabrication</li>
+</ul>
+<p>Object-oriented designs are sometimes characterized by implementing as software classes representations of concepts in the real-world problem domain to lower the representational gap</p>
+<p>Problem: What object should have the responsibility, when you do not want to violate High Cohesion and Low Coupling, or other goals, but solutions offered by Expert (for example) are not appropriate? there are many situations in which assigning responsibilities only to domain layer software classes leads to problems in terms of poor cohesion or coupling, or low reuse potential. 没办法跟Domain model（现实模型）对应上的object怎么设计？</p>
+<p>Solution: Assign a highly cohesive set of responsibilities to <strong>an artificial or convenience class that does not represent a problem domain concept something made up</strong>, to support high cohesion, low coupling, and reuse.</p>
+<ul>
+<li>Indirection</li>
+</ul>
+<p>Most problems in computer science can be solved by another level of indirection</p>
+<ul>
+<li>Protected Variations</li>
+</ul>
+<p>Problem: How to design objects, subsystems, and systems so that the variations or instability in these elements does not have an undesirable impact on other elements?</p>
+<p>Solution: Identify points of predicted variation or instability; <strong>assign responsibilities to create a stable interface around them</strong>.</p>
+<p>虚拟机也是一个应用这个原则的例子</p>
+<blockquote>
+<p>The Liskov Substitution Principle (LSP)</p>
+</blockquote>
+<p>LSP [Liskov88] formalizes the principle of protection against variations in different implementations of an interface, or subclass extensions of a superclass.</p>
+<p>Informally, software (methods, classes, &hellip;) that refers to a type T (some interface or abstract superclass) should work properly or as expected with any substituted implementation or subclass of Tcall it S.</p>
+<blockquote>
+<p>Law of Demeter</p>
+</blockquote>
+<p>Don&rsquo;t Talk to Strangers</p>
+<p>违反<code>Law of Demeter</code>的代码示例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">doX</span><span class="o">()</span>
+<span class="o">{</span>
+<span class="n">F</span> <span class="n">someF</span> <span class="o">=</span> <span class="n">foo</span><span class="o">.</span><span class="na">getA</span><span class="o">().</span><span class="na">getB</span><span class="o">().</span><span class="na">getC</span><span class="o">().</span><span class="na">getD</span><span class="o">().</span><span class="na">getE</span><span class="o">().</span><span class="na">getF</span><span class="o">();</span>
+<span class="c1">// ... 
+</span><span class="c1"></span><span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>The design is coupled to a particular structure of how objects are connected.</strong> The farther along a path the program traverses, the more fragile it is. Why? Because the object structure (the connections) may change.</p>
+<p>Novice developers tend toward brittle designs, intermediate developers tend toward overly fancy and flexible, generalized ones (in ways that never get used). Expert designers choose with insight;  关键是这个度不好把握啊</p>
+<blockquote>
+<p>Open-Closed Principle</p>
+</blockquote>
+<p>OCP and PV are essentially two expressions of the same principle, with different emphasis</p>
+<h3 id="elaboration-iteration-2-more-patterns---applying-gof-design-patterns">Elaboration Iteration 2 More Patterns - Applying GoF Design Patterns</h3>
+<blockquote>
+<p>Adapter (GoF)</p>
+</blockquote>
+<p>Problem:  How to resolve incompatible interfaces, or provide a stable interface to similar components with different interfaces?</p>
+<p>Solution: Convert the original interface of a component into another interface, through an intermediate adapter object.</p>
+<blockquote>
+<p>Factory</p>
+</blockquote>
+<p>The adapter raises a new problem in the design:</p>
+<p>who creates the adapters? And how to determine which class of adapter to create, such as TaxMaster-Adapter or GoodAsGoldTaxProAdapter?</p>
+<p>答案就是Factory</p>
+<p>Problem: Who should be responsible for creating objects when there are special considerations, such as complex creation logic, a desire to separate the creation responsibilities for better cohesion, and so forth?</p>
+<p>Solution: Create a Pure Fabrication object called a Factory that handles the creation.</p>
+<p><img src="/images/post/factory.jpg" alt=""></p>
+<p>重点关注上图中，它是如何决定应该使用哪个Adapter的</p>
+<p>Note that in the ServicesFactory, the logic to decide which class to create is resolved <strong>by reading in the class name from an external source (for example, via a system property if Java is used) and then dynamically loading the class.</strong> This is an example of a partial data-driven design.</p>
+<blockquote>
+<p>Singleton (GoF)</p>
+</blockquote>
+<p>The ServicesFactory raises another new problem in the design: Who creates the factory itself, and how is it accessed? 汗死。。。  按下葫芦起了瓢的感觉</p>
+<p>观察</p>
+<p>First, observe that only one instance of the factory is needed within the process. Second, quick reflection suggests that the methods of this factory may need to be called from various places in the code, as different places need access to the adapters for calling on the external services.</p>
+<p>Problem: Exactly one instance of a class is allowedit is a &ldquo;singleton.&rdquo; Objects need a global and single point of access.</p>
+<p>Solution: Define a static method of the class that returns the singleton.</p>
+<p><img src="/images/post/singleton.jpg" alt=""></p>
+<blockquote>
+<p>Strategy (GoF)</p>
+</blockquote>
+<p>Problem: How to design for varying, but related, algorithms or policies? How to design for the ability to change these algorithms or policies?</p>
+<p>Solution: Define each algorithm/policy/strategy in a separate class, with a common interface.</p>
+<blockquote>
+<p>Composite (GoF)</p>
+</blockquote>
+<p>Problem：How to treat a group or composition structure of objects the same way (polymorphically) as a non-composite (atomic) object?</p>
+<p>Solution: Define classes for composite and atomic objects so that they implement the same interface.</p>
+<p>没有太理解清楚这个pattern</p>
+<blockquote>
+<p>Facade (GoF)</p>
+</blockquote>
+<p>Problem: A common, unified interface to a disparate set of implementations or interfacessuch as within a subsystemis required. There may be undesirable coupling to many things in the subsystem, or the implementation of the subsystem may change. What to do?</p>
+<p>Solution: Define a single point of contact to the subsystema facade object that wraps the subsystem. This facade object presents a single unified interface and is responsible for collaborating with the subsystem components.</p>
+<blockquote>
+<p>Observer (Publish-Subscribe)</p>
+</blockquote>
+<p>Problem: Different kinds of subscriber objects are interested in the state changes or events of a publisher object, and want to react in their own unique way when the publisher generates an event. Moreover, the publisher wants to maintain low coupling to the subscribers. What to do?</p>
+<p>Solution: Define a &ldquo;subscriber&rdquo; or &ldquo;listener&rdquo; interface. Subscribers implement this interface. The publisher can dynamically register subscribers who are interested in an event and notify them when an event occurs.</p>
+<blockquote>
+<p>Observer/Publish-Subscribe/Delegation Event Model (GoF)</p>
+</blockquote>
+<p>都是一个意思</p>
+<p>Problem：Different kinds of subscriber objects are interested in the state changes or events of a publisher object, and want to react in their own unique way when the publisher generates an event. Moreover, the publisher wants to maintain low coupling to the subscribers. What to do?</p>
+<p>Solution: Define a &ldquo;subscriber&rdquo; or &ldquo;listener&rdquo; interface. Subscribers implement this interface. The publisher can dynamically register subscribers who are interested in an event and notify them when an event occurs.</p>
+<p>Observer provides a way to loosely couple objects in terms of communication. Publishers know about subscribers only through an interface, and subscribers can register (or de-register) dynamically with the publisher.</p>
+<h3 id="elaboration-iteration-3---intermediate-topics">Elaboration Iteration 3 - Intermediate Topics</h3>
+<h3 id="elaboration-iteration-3---uml-activity-diagrams-and-modeling">Elaboration Iteration 3 - UML Activity Diagrams and Modeling</h3>
+<p>A UML activity diagram shows sequential and parallel activities in a process. They are useful for modeling business processes, workflows, data flows, and complex algorithms.</p>
+<p><img src="/images/post/activity-diagram.jpg" alt=""></p>
+<h3 id="elaboration-iteration-3---uml-state-machine-diagrams-and-modeling">Elaboration Iteration 3 - UML State Machine Diagrams and Modeling</h3>
+<p>A UML state machine diagram, illustrates the interesting events and states of an object, and the behavior of an object in reaction to an event.</p>
+<p>A state machine diagram shows the lifecycle of an object: what events it experiences, its transitions, and the states it is in between these events.</p>
+<p><img src="/images/post/state-machine.jpg" alt=""></p>
+<h3 id="elaboration-iteration-3---relating-use-cases">Elaboration Iteration 3 - Relating Use Cases</h3>
+<h3 id="elaboration-iteration-3---more-ssds-and-contracts">Elaboration Iteration 3 - More SSDs and Contracts</h3>
+<h3 id="elaboration-iteration-3---domain-model-refinement">Elaboration Iteration 3 - Domain Model Refinement</h3>
+<h3 id="elaboration-iteration-3---architectural-analysis">Elaboration Iteration 3 - Architectural Analysis</h3>
+<p>Architectural analysis can be viewed as a specialization of requirements analysis, with a focus on requirements that strongly influence the &ldquo;architecture.&rdquo; For example, identifying the need for a highly-secure system.</p>
+<p>The essence of architectural analysis is to <strong>identify factors that should influence the architecture, understand their variability and priority, and resolve them.</strong> The difficult part is knowing what questions to ask, weighing the trade-offs, and knowing the many ways to resolve an architecturally significant factor, ranging from benign neglect, to fancy designs, to third-party products</p>
+<ul>
+<li>variation point
+<ul>
+<li>Variations in the existing current system or requirements, such as the multiple tax calculator interfaces that must be supported.</li>
+</ul>
+</li>
+<li>evolution point
+<ul>
+<li>Speculative points of variation that may arise in the future, but which are not present in the existing requirements.</li>
+</ul>
+</li>
+</ul>
+<p>非功能性分析，比如安全、性能等</p>
+<h3 id="elaboration-iteration-3---logical-architecture-refinement">Elaboration Iteration 3 - Logical Architecture Refinement</h3>
+<p><img src="/images/post/view-of-layers.jpg" alt=""></p>
+<p>When the lower Application or Domain layer needs to communicate upward with the UI layer, it is usually via the Observer pattern.</p>
+<p>it is not coupling per se that is a problem, but unnecessary coupling to variation and evolution points that are unstable and expensive to fix.</p>
+<blockquote>
+<p>Is the Application Layer Optional?</p>
+</blockquote>
+<p>If present, the Application layer contains objects responsible for knowing the session state of clients, mediating between the UI and Domain layers, and controlling the flow of work.</p>
+<h3 id="elaboration-iteration-3---more-object-design-with-gof-patterns">Elaboration Iteration 3 - More Object Design with GoF Patterns</h3>
+<blockquote>
+<p>Handling Failure</p>
+</blockquote>
+<p>a common exception handling pattern:</p>
+<ul>
+<li>Convert Exceptions
+<ul>
+<li>Within a subsystem, avoid emitting lower level exceptions coming from lower subsystems or services. Rather, convert the lower level exception into one that is meaningful at the level of the subsystem. The higher level exception usually wraps the lower-level exception, and adds information, to make the exception more contextually meaningful to the higher level.</li>
+</ul>
+</li>
+</ul>
+<p>For example, the persistence subsystem catches a particular SQLException, and (assuming it can&rsquo;t handle it[2] ) throws a new DBUnavailableException, which contains the SQLException. Note that the DBProductAdapter is like a facade onto a logical subsystem for product information. Thus, the higher level DBProductAdapter (as the representative for a logical subsystem) catches the lower level DBUnavailableException and (assuming it can&rsquo;t handle it) throws a new ProductInfoUnavailableException, which wraps the DBUnavailableException.</p>
+<ul>
+<li>
+<p>Name The Problem Not The Thrower</p>
+<ul>
+<li>What to call an exception? Assign a name that describes why the exception is being thrown, not the thrower. The benefit is that it makes it easier for the programmer to understand the problem, and it the highlights the essential similarity of many classes of exceptions (in a way that naming the thrower does not).</li>
+</ul>
+</li>
+<li>
+<p>Centralized Error Logging</p>
+<ul>
+<li>Use a Singleton-accessed central error logging object and report all exceptions to it. If it is a distributed system, each local singleton will collaborate with a central error logger.</li>
+</ul>
+</li>
+<li>
+<p>Error Dialog</p>
+</li>
+</ul>
+<blockquote>
+<p>Proxy</p>
+</blockquote>
+<p>Problem: Direct access to a real subject object is not desired or possible. What to do?</p>
+<p>Solution: Add a level of indirection with a surrogate proxy object that implements the same interface as the subject object, and is responsibility for controlling or enhancing access to it.</p>
+<blockquote>
+<p>Abstract Factory</p>
+</blockquote>
+<p>Problem: How to create families of related classes that implement a common interface?</p>
+<p>Solution: Define a factory interface (the abstract factory). Define a concrete factory class for each family of things to create. Optionally, define a true abstract class that implements the factory interface and provides common services to the concrete factories that extend it.</p>
+<h3 id="elaboration-iteration-3---package-design">Elaboration Iteration 3 - Package Design</h3>
+<h3 id="elaboration-iteration-3---designing-a-persistence-framework-with-patterns">Elaboration Iteration 3 - Designing a Persistence Framework with Patterns</h3>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-02-05
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2021/02/05/sourcecode-of-grafana/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Grafana源码分析</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2021/02/05/reading-notes-of-influence/">
+            <span class="next-text nav-default">「影响力」读书笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

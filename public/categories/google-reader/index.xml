@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>google reader on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/google-reader/</link>
+    <description>Recent content in google reader on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 30 Jun 2013 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/google-reader/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>操蛋的GFW</title>
+      <link>http://localhost:1313/post/2013/06/30/fuck-gfw/</link>
+      <pubDate>Sun, 30 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/06/30/fuck-gfw/</guid>
+      <description>Google Reader要被Google关掉了，网上已经出了一堆替代品了，前段时间就试了试，可每次都没导入成功，每次都卡在google认证上了，能登录</description>
+    </item>
+    
+  </channel>
+</rss>

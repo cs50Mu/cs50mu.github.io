@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>thrift server error caused by aliyun health check - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="近期遇到一个thrift server方面的问题，记录一下。 ###Background server做的事情其实很简单，就是一个图片上传服务，别人把图片传过来，服务器上" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2017/01/14/thrift-server-error-caused-by-aliyun-health-check/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="thrift server error caused by aliyun health check" />
+<meta property="og:description" content="近期遇到一个thrift server方面的问题，记录一下。 ###Background server做的事情其实很简单，就是一个图片上传服务，别人把图片传过来，服务器上" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2017/01/14/thrift-server-error-caused-by-aliyun-health-check/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2017-01-14T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2017-01-14T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="thrift server error caused by aliyun health check">
+<meta itemprop="description" content="近期遇到一个thrift server方面的问题，记录一下。 ###Background server做的事情其实很简单，就是一个图片上传服务，别人把图片传过来，服务器上"><meta itemprop="datePublished" content="2017-01-14T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2017-01-14T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1974">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="thrift server error caused by aliyun health check"/>
+<meta name="twitter:description" content="近期遇到一个thrift server方面的问题，记录一下。 ###Background server做的事情其实很简单，就是一个图片上传服务，别人把图片传过来，服务器上"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">thrift server error caused by aliyun health check</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-01-14 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>近期遇到一个thrift server方面的问题，记录一下。</p>
+<p>###Background</p>
+<p>server做的事情其实很简单，就是一个图片上传服务，别人把图片传过来，服务器上传到阿里云的云上，再返回一个图片地址。</p>
+<p>问题暴露出来的现象是：这个服务每隔一段时间就会“挂掉”，重启服务后会好那么一段时间然后又会“挂掉”。客户端调用返回<code>TSocket: Could read 4 bytes from ....</code>，但去线上ps会发现，server进程其实是在的，
+也就是说服务器其实只是不响应了，并没有真正挂掉。</p>
+<p>###First guess</p>
+<p>分析后台日志发现，大量重复的报错信息<code>Connection reset by peer</code>，以及偶尔的错误信息<code>too many open files</code>（其实，这个偶尔也只是猜测，因为并没有完整的确认过），当时看到这个日志后，就猜测
+原因是：请求太多，导致该程序打开的文件描述符超过限制，从而拒绝服务。由于是线上服务，出现问题时为了及时恢复服务，当时就重启了服务，因此也并没有验证这个猜测。但看了下操作系统对单个程序
+打开文件数的限制:</p>
+<pre><code>$ ulimit -n 
+65535
+</code></pre>
+<p>基于too many open files这个错误加上这个thrift server使用的ThreadPoolServer类型，google了一番，找到几个类似问题的帖子：</p>
+<ul>
+<li><a href="http://blog.csdn.net/heavendai/article/details/8614941">http://blog.csdn.net/heavendai/article/details/8614941</a></li>
+<li><a href="http://web.archive.org/web/20110103083546/http://blog.rushcj.com/2010/12/20/thrift-close-wait/">http://web.archive.org/web/20110103083546/http://blog.rushcj.com/2010/12/20/thrift-close-wait/</a></li>
+<li><a href="http://blog.csdn.net/hwz119/article/details/1611182">http://blog.csdn.net/hwz119/article/details/1611182</a></li>
+</ul>
+<p>里面讲到，ThreadPoolServer来说，它使用的是定长线程池来服务的，当并发太多时使得现存的线程数无法满足要求时，就会出现很多<code>CLOSE_WAIT</code>状态的连接，最终会
+把当前程序的文件描述符占满，从而出现<code>too many open files</code>的错误。正好这个服务用的线程是默认的，只有10个，当时就认为问题就在这里了。</p>
+<p>###Second guess</p>
+<p>然后第二天又问了下服务调用方，其实这个服务的使用频率很低，只有在用户更改头像的时候才会调一下，按理说不会有太多并发量，所以这样看来，上面的猜测就不成立了。然后去线上看了下，该服务一共部署了两台机器，
+发现其中一台机器上的服务又“挂了”，抓住这个好机会，看了下这个服务的socket连接情况：</p>
+<pre><code># 先找到程序的进程id
+$ ps aux | grep 'xxx'
+# 然后再用lsof看
+$ lsof -i -P | grep 28719
+python  28719  www    4u  IPv4 261027973      0t0  TCP *:9455 (LISTEN)
+python  28719  www    5u  IPv4 261328458      0t0  TCP 10.171.20.131:9455-&gt;100.109.225.0:45587 (ESTABLISHED)
+python  28719  www    6u  IPv4 261327693      0t0  TCP 10.171.20.131:9455-&gt;100.109.221.128:23814 (ESTABLISHED)
+python  28719  www    7u  IPv4 261429153      0t0  TCP 10.171.20.131:9455-&gt;100.109.224.0:17384 (ESTABLISHED)
+python  28719  www    8u  IPv4 261717598      0t0  TCP 10.171.20.131:9455-&gt;100.109.225.0:23881 (ESTABLISHED)
+python  28719  www    9u  IPv4 261429722      0t0  TCP 10.171.20.131:9455-&gt;100.109.225.128:19752 (ESTABLISHED)
+python  28719  www   10u  IPv4 261470638      0t0  TCP 10.171.20.131:9455-&gt;100.109.220.128:14370 (ESTABLISHED)
+python  28719  www   11u  IPv4 261456259      0t0  TCP 10.171.20.131:9455-&gt;100.109.224.128:24267 (ESTABLISHED)
+python  28719  www   12u  IPv4 261714765      0t0  TCP 10.171.20.131:9455-&gt;100.109.220.0:8860 (ESTABLISHED)
+python  28719  www   13u  IPv4 261470701      0t0  TCP 10.171.20.131:9455-&gt;100.109.221.0:42186 (ESTABLISHED)
+python  28719  www   14u  IPv4 261717599      0t0  TCP 10.171.20.131:9455-&gt;100.109.224.0:3487 (ESTABLISHED)
+python  28719  www   98u  IPv4 261718019      0t0  TCP 10.171.20.131:9455-&gt;100.109.220.0:37454 (ESTABLISHED)
+python  28719  www  827u  IPv4 261722045      0t0  TCP 10.171.20.131:9455-&gt;10.44.155.227:24038 (CLOSE_WAIT)
+python  28719  www  914u  IPv4 261722497      0t0  TCP 10.171.20.131:9455-&gt;10.172.224.17:35876 (CLOSE_WAIT)
+python  28719  www 1309u  IPv4 261724582      0t0  TCP 10.171.20.131:9455-&gt;10.172.142.166:52953 (CLOSE_WAIT)
+python  28719  www 1329u  IPv4 261724675      0t0  TCP 10.171.20.131:9455-&gt;10.44.155.227:52921 (CLOSE_WAIT)
+python  28719  www 1672u  IPv4 261726365      0t0  TCP 10.171.20.131:9455-&gt;10.44.191.118:7070 (CLOSE_WAIT)
+python  28719  www 1694u  IPv4 261726531      0t0  TCP 10.171.20.131:9455-&gt;10.170.210.248:39802 (CLOSE_WAIT)
+</code></pre>
+<p>可以看到<code>CLOSE_WAIT</code>状态的连接并不多，但此时这台机器上部署的服务已经不能用了。同时又去现在还可用的机器上看了下，发现只有状态为<code>ESTABLISHED</code>的连接，并没有状态为<code>CLOSE_WAIT</code>的连接，
+同时发现日志在不停的报错：<code>Connection reset by peer</code>。但并没人反馈服务不可用啊，看了下图片上传还是可用的，正百思不得其解中，运维哥哥说，这不会是阿里云的健康检查导致的吧！于是，
+暂停了一下健康检查，果然日志的报错停止了。</p>
+<p>然后我的猜测又变成了：由于阿里云的持续不断的健康检查（2秒一次）把服务检查挂了。。显然，运维是不会认可这个猜测的，他们说报这个错是正常的，别的服务也有这个问题，只要不理会它就行了。
+说实话，光看这个，确实无法断定服务挂是由于健康检查的原因。况且我也查了下阿里云所谓的健康检查，找到了如下官方资料：</p>
+<ul>
+<li><a href="https://help.aliyun.com/knowledge_list/39451.html?spm=5176.7739464.6.753.FE0164">https://help.aliyun.com/knowledge_list/39451.html?spm=5176.7739464.6.753.FE0164</a></li>
+<li><a href="https://help.aliyun.com/knowledge_detail/39455.html?spm=5176.7839451.2.4.KKMkQd">https://help.aliyun.com/knowledge_detail/39455.html?spm=5176.7839451.2.4.KKMkQd</a></li>
+<li><a href="https://help.aliyun.com/knowledge_detail/39464.html?spm=5176.7839451.2.13.KKMkQd">https://help.aliyun.com/knowledge_detail/39464.html?spm=5176.7839451.2.13.KKMkQd</a></li>
+</ul>
+<p>看来阿里云官方确认认为这个错误是正常的。</p>
+<p>第二天，又去线上看了下，发现某一台机器上的服务又“挂了”，看了下这次的“车祸现场”，注意到了一点上次没有注意的细节：</p>
+<ul>
+<li>有11个状态为<code>ESTABLISHED</code>的连接</li>
+<li>这个11个状态为<code>ESTABLISHED</code>的连接的另一边都是来自阿里云健康检查的网段ip</li>
+<li>此时，如果调用该服务会返回错误，而且会增加一条状态为<code>CLOSE_WAIT</code>的socket连接</li>
+<li>对于目前可用的机器上的服务，没有状态为<code>CLOSE_WAIT</code>的连接，但有几个状态为<code>ESTABLISHED</code>的连接，而且尽管没有人调用它，状态为<code>ESTABLISHED</code>的连接数在慢慢增加。</li>
+</ul>
+<p>由此，可以基本断定，罪魁祸首就是阿里云的健康检查了。健康检查把当前服务的可用连接数（10个线程只能同时服务10个连接）用完了，并且没有释放，再进来的连接只能wait了。那么现在唯一的问题
+就是：Why？阿里云的健康检查为什么会对thrift服务造成这样的结果？我还没有找到原因。从阿里云的官方文档中看到，所谓的TCP健康检查，是对指定ip的指定端口进行了三次握手然后发送了RST断开了
+连接，没有看到他们说会造成连接一直不释放的情况。</p>
+<p>google到一篇阿里云上部署thrift server出问题的文章，里面也提到了健康检查：</p>
+<ul>
+<li><a href="http://www.concurrent.work/one-java-thrift-case-caused-by-default-parameters/">http://www.concurrent.work/one-java-thrift-case-caused-by-default-parameters/</a></li>
+</ul>
+<p>###反思</p>
+<ul>
+<li>不要急于下结论。先把日志完整分析下，服务的使用场景也要了解下，再下结论，而不要看到一点问题就瞎猜。</li>
+<li>需要了解下网络方面的基础知识了。</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-01-14
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2017/02/22/process-data-using-awk/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">process data using awk</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2016/09/13/first-glance-at-django-admin/">
+            <span class="next-text nav-default">first glance at django admin</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

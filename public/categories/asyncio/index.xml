@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>asyncio on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/asyncio/</link>
+    <description>Recent content in asyncio on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 06 Jan 2020 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/asyncio/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>「译」Asynchronous Python and Databases</title>
+      <link>http://localhost:1313/post/2020/01/06/asynchronous-python-and-databases/</link>
+      <pubDate>Mon, 06 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2020/01/06/asynchronous-python-and-databases/</guid>
+      <description>翻译一篇 SQLAlchemy 作者的博文，原文：Asynchronous Python and Databases 这篇文章给异步IO泼了点冷水，引导我们用正确的态度来看待这个技术(其实是任何技术)</description>
+    </item>
+    
+    <item>
+      <title>异步IO的威力</title>
+      <link>http://localhost:1313/post/2019/11/19/the-power-of-asyncio/</link>
+      <pubDate>Tue, 19 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/11/19/the-power-of-asyncio/</guid>
+      <description>what so, what&amp;rsquo;s the problem? 压测目标有提升 之前的压测没有考虑三方服务慢返回(通常为200ms左右)的问题，如果当前的压测仍用同步worker会死的佷惨 how 结合项</description>
+    </item>
+    
+  </channel>
+</rss>

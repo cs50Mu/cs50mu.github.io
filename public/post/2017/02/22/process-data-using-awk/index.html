@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>process data using awk - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="###AWK学习笔记 以下内容主要参考自《The AWK Programming Language》一书以及GNU的《The GNU Awk User’s Guide》。 the structure of an AWK program pattern { action" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2017/02/22/process-data-using-awk/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="process data using awk" />
+<meta property="og:description" content="###AWK学习笔记 以下内容主要参考自《The AWK Programming Language》一书以及GNU的《The GNU Awk User’s Guide》。 the structure of an AWK program pattern { action" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2017/02/22/process-data-using-awk/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2017-02-22T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2017-02-22T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="process data using awk">
+<meta itemprop="description" content="###AWK学习笔记 以下内容主要参考自《The AWK Programming Language》一书以及GNU的《The GNU Awk User’s Guide》。 the structure of an AWK program pattern { action"><meta itemprop="datePublished" content="2017-02-22T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2017-02-22T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1605">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="process data using awk"/>
+<meta name="twitter:description" content="###AWK学习笔记 以下内容主要参考自《The AWK Programming Language》一书以及GNU的《The GNU Awk User’s Guide》。 the structure of an AWK program pattern { action"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">process data using awk</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-02-22 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>###AWK学习笔记
+以下内容主要参考自《The AWK Programming Language》一书以及GNU的《The GNU Awk User’s Guide》。</p>
+<ul>
+<li>
+<p>the structure of an AWK program</p>
+<pre><code>  pattern { action }
+</code></pre>
+</li>
+</ul>
+<p>the basic operation of awk is to scan a sequence of input lines one after another, searching for lines that are matched by any of the patterns in the program. For each pattern that matches, the corresponding action is performed.</p>
+<ul>
+<li>
+<p>simple example</p>
+<ul>
+<li>
+<p>NF, the number of fields. Print the number of fields and the first and last fields of each input line.</p>
+<pre><code>  { print NF, $1, $NF }
+</code></pre>
+</li>
+<li>
+<p>NR, the number of lines read so far. Prefix each line of the file with its line number.</p>
+<pre><code>  { print NR, $0 }
+</code></pre>
+</li>
+<li>
+<p>Putting text in the output.</p>
+<pre><code>  { print &quot;this is&quot;,NR,&quot;line&quot;,$0 }
+</code></pre>
+</li>
+<li>
+<p>Fancier Output, use <code>printf</code> statement</p>
+</li>
+<li>
+<p>Selection by comparision</p>
+<pre><code>  $2 &gt;= 5
+</code></pre>
+</li>
+<li>
+<p>Selection by text content</p>
+<pre><code>  $1 == &quot;Susie&quot;
+</code></pre>
+</li>
+<li>
+<p>Combinations of patterns. <code>&amp;&amp;</code>,<code>||</code>,<code>!</code>, which stand for AND, OR, NOT</p>
+<pre><code>  $2 &gt;=4 || $3 &gt;= 20
+</code></pre>
+</li>
+<li>
+<p>BEGIN and END. The special pattern <code>BEGIN</code> matches before the first line of the first input file read, and <code>END</code> matches after the last line of the last file has been processed. The following example uses <code>BEGIN</code> to print a heading.</p>
+<pre><code>  BEGIN { print &quot;NAME  RATE  HOURS&quot;; print &quot;&quot; }
+  { print }
+</code></pre>
+<p>注意，第一个<code>print &quot;&quot;</code> 输出一个空行</p>
+</li>
+<li>
+<p>Exchange the first two fields of every line and then print the line</p>
+<pre><code>  { temp = $1; $1 = $2; $2 = temp; print }
+</code></pre>
+</li>
+<li>
+<p>Print in reverse order the fields of every line</p>
+<pre><code>  { for (i = NF; i &gt; 0; i = i - 1) printf(&quot;%s &quot;, $i)
+      printf(&quot;\n&quot;)
+  }
+</code></pre>
+</li>
+<li>
+<p>Print the sums of the fields of every line</p>
+<pre><code>  { sum = 0
+      for (i = 1; i &lt;= NF; i = i + 1) sum = sum + $i
+      print sum
+  }
+</code></pre>
+</li>
+<li>
+<p>Print every line after replacing each field by its absolute value</p>
+<pre><code>  { for (i = 1; i &lt;= NF; i = i + 1) if ($i &lt; 0) $i = -$i
+      print
+  }
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>Computing with AWK</p>
+<p>In awk, user-created variables are <strong>not</strong> declared.</p>
+<ul>
+<li>
+<p>Counting</p>
+<pre><code>  $3 &gt; 15 { emp = emp + 1 }
+  END   { print emp, &quot;employees worked more than 15 hours&quot; }
+</code></pre>
+<p>Awk varibales used as numbers begin life with the value 0, so we didn&rsquo;t need to initialize emp.</p>
+</li>
+<li>
+<p>String Concatenation</p>
+<pre><code>  { names = names $1 &quot; &quot; }
+  END { print names }
+</code></pre>
+<p>collects all the employee names into a single string, by appending each name and a blank to the previous value in the variable names.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Control-Flow Statements</p>
+<ul>
+<li>
+<p>if-else statement</p>
+<pre><code>  $2 &gt; 6 { n = n + 1; pay = pay + $2 * $3 }
+  END    { if (n &gt; 0)
+                  print n, &quot;employees, total pay is&quot;, pay,
+                              &quot;average pay is&quot;, pay/n
+          else
+              print &quot;no employees are paid more than $6/hour&quot;
+          }
+</code></pre>
+</li>
+<li>
+<p>While Statement</p>
+</li>
+<li>
+<p>For Statement</p>
+</li>
+</ul>
+</li>
+<li>
+<p>String-Matching Patterns</p>
+<ul>
+<li><code>[.]</code>matches a period and <code>^[^^]</code>matches any character except a caret at the beginning of a string</li>
+</ul>
+</li>
+<li>
+<p>String-Manipulation Functions</p>
+<ul>
+<li><code>gsub</code>
+<ul>
+<li>Search target for all of the longest, leftmost, nonoverlapping matching substrings it can find and replace them with replacement. The ‘g’ in gsub() stands for “global,” which means replace everywhere.</li>
+<li><code>gsub(&quot;^=\&quot;|\&quot;$&quot;, &quot;&quot;, $33)</code>  &mdash;&gt;  &ldquo;=1234567&rdquo; &mdash;&gt; 1234567</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Built-in Variables That Control awk</p>
+<ul>
+<li>
+<p>FS</p>
+<ul>
+<li>The input field separator.</li>
+</ul>
+</li>
+<li>
+<p>OFS</p>
+<ul>
+<li>The output field separator. It is output between the fields printed by a print statement. Its default value is &quot; &ldquo;, a string consisting of a single space.</li>
+<li>对<code>print</code>有效，会被<code>printf</code>忽略</li>
+</ul>
+</li>
+<li>
+<p>RS</p>
+<ul>
+<li>The input record separator. Its default value is a string containing a single newline character, which means that an input record consists of a single line of text.</li>
+<li>这个字段的用处是，可以手动指定行结束符，一般用不上，不过当在unix系统上处理windows生成的文件时，并且在某些字段中含有未转义的<code>\n</code>时。这时，指定<code>RS=&quot;\r\n&quot;</code>后，你就会感谢上帝给你提供了RS这个设置</li>
+</ul>
+</li>
+<li>
+<p>ORS</p>
+<ul>
+<li>The output record separator. It is output between the fields printed by a print statement. Its default value is &quot; &ldquo;, a string consisting of a single space.</li>
+<li>注意，该变量只对<code>print</code>语句有效，<code>printf</code>语句会忽略这个变量的设置，<strong>必须显式指定行分隔符</strong>，否则所有的记录都在一行上！</li>
+</ul>
+</li>
+<li>
+<p>FPAT</p>
+<ul>
+<li>gawk专有的</li>
+<li>A regular expression (as a string) that tells gawk to create the fields based on text that matches the regular expression. Assigning a value to FPAT overrides the use of FS and FIELDWIDTHS for field splitting.</li>
+<li>处理字段中含有<code>,</code>的csv文件的大杀器
+<ul>
+<li>比如这样的<code>Robbins,Arnold,&quot;1234 A Pretty Street, NE&quot;,MyTown,MyState,12345-6789,USA</code></li>
+<li>可以设置<code>FPAT = &quot;([^,]+)|(\&quot;[^\&quot;]+\&quot;)&quot;</code>来正确提取出相应的字段，否则若只用逗号分隔符的话，会提取出错</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Built-in Variables That Convey Information</p>
+<p>The following is an alphabetical list of variables that awk sets automatically on certain occasions in order to provide information to your program.</p>
+<ul>
+<li>ARGC, ARGV
+<ul>
+<li>The command-line arguments available to awk programs are stored in an array called ARGV. ARGC is the number of command-line arguments present.</li>
+</ul>
+</li>
+<li>ARGIND
+<ul>
+<li>
+<p>gawk专有，在处理多个文件时很有用</p>
+</li>
+<li>
+<p>The index in ARGV of the current file being processed. Every time gawk opens a new data file for processing, it sets ARGIND to the index in ARGV of the file name. When gawk is processing the input files, ‘FILENAME == ARGV[ARGIND]’ is always true.</p>
+<pre><code>  awk -F, 'ARGIND==1{data[$1]=1} ARGIND==2{if(!($1 in data)) print $1}' dedao_mall_transaction_uniq.csv gongzhonghao_caifutong_uniq.csv &gt; in_caifutong_not_in_dedao.csv
+</code></pre>
+<p>上面这个例子可用于比较两个文件的差异</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Array</p>
+<ul>
+<li>
+<p><a href="https://www.gnu.org/software/gawk/manual/gawk.html#Array-Basics">https://www.gnu.org/software/gawk/manual/gawk.html#Array-Basics</a></p>
+<pre><code>  awk -F, '{ data[$1][&quot;amount&quot;] += $5; data[$1][&quot;product_price*amount&quot;] += $3*$5; data[$1][&quot;refund&quot;] += $6; data[$1][&quot;pay_price*amount&quot;] += $4*$5; data[$1][&quot;discount_price&quot;] += ($3-$4)*$5;}\
+  END{for (d in data) printf(&quot;%s,%d,%.2f,%.2f,%.2f,%.2f\n&quot;, d, data[d][&quot;amount&quot;], data[d][&quot;product_price*amount&quot;], data[d][&quot;pay_price*amount&quot;], data[d][&quot;discount_price&quot;], data[d][&quot;refund&quot;])}' \
+  tt_new.csv | awk -F, 'BEGIN{printf(&quot;%s,%s,%s,%s,%s,%s\n&quot;, &quot;sku&quot;, &quot;amount&quot;, &quot;product_price*amount&quot;, &quot;pay_price*amount&quot;, &quot;discount_price&quot;, &quot;refund&quot;)} {print $0}' &gt; summary_by_sku.csv
+
+ 上面的例子用到了gawk扩展的多维array特性，不适用于unix下默认的awk
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<p>###避坑指南
+这几天用awk写了几个处理数据的小程序，顺便总结下遇到的坑：</p>
+<ul>
+<li>由于操作系统平台不同引起的问题
+<ul>
+<li>换行符
+<ul>
+<li>win平台为<code>\r\n</code>，*nix平台为<code>\n</code>。因此在比较两个文件时，切记先把换行符转换为一致再比较，否则会发生“明明看起来是一样的，但为啥不一样呢？”的令人困惑的情况。</li>
+</ul>
+</li>
+<li>文件编码问题
+<ul>
+<li>*nix系统下一般使用<code>utf-8</code>编码，win平台中文环境一般为gb18030编码。更需要注意的是中国人民的好朋友Excel，在编辑完csv文件再保存后，会把文件编码强制更改为gb18030，即使原来的文件编码是utf-8.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>###参考</p>
+<ul>
+<li>The GNU Awk User’s Guide
+<ul>
+<li><a href="https://www.gnu.org/software/gawk/manual/gawk.html#Index">https://www.gnu.org/software/gawk/manual/gawk.html</a></li>
+</ul>
+</li>
+<li>The AWK Programming Language</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2017-02-22
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2017/03/20/zhihu-authentication-analysis/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">zhihu authentication analysis</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2017/01/14/thrift-server-error-caused-by-aliyun-health-check/">
+            <span class="next-text nav-default">thrift server error caused by aliyun health check</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

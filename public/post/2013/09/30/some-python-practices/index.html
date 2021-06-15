@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>python复习 - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="发现了一本学python的好书，额，起码感觉很对我的口味。。名字叫The Practice of Computing Using Python，中译名很二，叫《Python入门经典》。。这本" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2013/09/30/some-python-practices/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="python复习" />
+<meta property="og:description" content="发现了一本学python的好书，额，起码感觉很对我的口味。。名字叫The Practice of Computing Using Python，中译名很二，叫《Python入门经典》。。这本" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2013/09/30/some-python-practices/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2013-09-30T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2013-09-30T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="python复习">
+<meta itemprop="description" content="发现了一本学python的好书，额，起码感觉很对我的口味。。名字叫The Practice of Computing Using Python，中译名很二，叫《Python入门经典》。。这本"><meta itemprop="datePublished" content="2013-09-30T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2013-09-30T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="3507">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="python复习"/>
+<meta name="twitter:description" content="发现了一本学python的好书，额，起码感觉很对我的口味。。名字叫The Practice of Computing Using Python，中译名很二，叫《Python入门经典》。。这本"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">python复习</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2013-09-30 </span>
+        <div class="post-category">
+            <a href="/categories/python/"> python </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>发现了一本学python的好书，额，起码感觉很对我的口味。。名字叫<strong>The Practice of Computing Using Python</strong>，中译名很二，叫《Python入门经典》。。这本书是美国密歇根州立大学的教材，这本书很好的一点是教会了我如何一点一点的来实现复杂的程序，也就是如何把一个看似很复杂的任务分拆成几个小任务，或者先实现一个很简略的版本，然后再一点一点的去优化，增加新功能，直至完成！</p>
+<p>书中在程序开发进阶一章中讲到了一点机器学习(machine learning)的东西，例子是一个预测乳腺癌的程序，基本的过程是这样的：首先，有一个数据样本，样本的参数是肿瘤的属性描述和是否为良性和恶性肿瘤的诊断结果，程序读入数据样本来构造分类器，构造的方法是，分别求出良性和恶性肿瘤的属性的平均值，然后再求这两个平均值的平均值，最后用这个分类器去预测一个肿瘤是良性还是恶性的。预测的方法是投票，若某个属性倾向于良性属性，则良性记一票，反之，恶性记一票，统计所有的属性，票数多者取胜。</p>
+<p>课后有一个类似的练习是预测成人的收入，用的还是UCI的机器学习资源库的数据集，不过不同的是这个数据样本里还有一些离散的属性，也就是不是一个具体的数值，是几个选项参数，比如，性别属性，当然只有男女了，国籍属性，当然就是那几个国家了，题目里没有说该怎么处理这类属性（或者说了我没有看懂），我想了个方法，根据收入大于5万和小于5万的分成两类，就某一类来说，对于某个离散属性，统计样本中该属性的分布情况，比如，国籍属性，就统计大于5万的人中美国的有多少个，加拿大的有多少个，英国的有多少个等等，然后找最大的作为这个属性的代表，也就是说在以后预测的时候，如果这个人这个属性的值是这个最大的值（或者说最流行的）的话就投一票。可惜实现起来有些问题，后来在写程序的过程中发现，有几个属性在两类中最大的那个都是一样的。。那这样就没什么意义了啊。。于是又想了一招，把那些离散属性的分布情况按从大到小排序，然后挨个比较，相同的话就继续往下找，直到找到最大的且不同的为止，恩，其它的非离散的参数跟例子是一样的处理，结果。。很不理想，预测的结果有20%的错误。。</p>
+<p>以下是在看书过程中做的笔记</p>
+<p>看到一篇讲编码的文章，来自<a href="http://ipie.blogbus.com/logs/19379694.html">这里</a>，看了后总算不那么迷糊了。</p>
+<p>首先要搞清楚，字符串在Python内部的表示是unicode编码，因此，在做编码转换时，通常需要以unicode作为中间编码，即先将其他编码的字符串解码（decode）成unicode，再从unicode编码（encode）成另一种编码。</p>
+<p>decode的作用是将其他编码的字符串转换成unicode编码，如str1.decode(&lsquo;gb2312&rsquo;)，表示将gb2312编码的字符串转换成unicode编码。</p>
+<p>encode的作用是将unicode编码转换成其他编码的字符串，如str2.encode(&lsquo;gb2312&rsquo;)，表示将unicode编码的字符串转换成gb2312编码。</p>
+<p>在某些IDE中，字符串的输出总是出现乱码，甚至错误，其实是由于IDE的结果输出控制台自身不能显示字符串的编码，而不是程序本身的问题。如在UliPad中运行如下代码：</p>
+<pre><code>s=u&quot;中文&quot;
+print s
+</code></pre>
+<p>会提示：UnicodeEncodeError: &lsquo;ascii&rsquo; codec can&rsquo;t encode characters in position 0-1: ordinal not in range(128)。这是因为UliPad在英文WindowsXP上的控制台信息输出窗口是按照ascii编码输出的（英文系统的默认编码是ascii），而上面代码中的字符串是Unicode编码的，所以输出时产生了错误。</p>
+<p>将最后一句改为：<code>print s.encode('gb2312')</code></p>
+<p>则能正确输出“中文”两个字。</p>
+<p>若最后一句改为：<code>print s.encode('utf8')</code></p>
+<p>则输出：<code>\xe4\xb8\xad\xe6\x96\x87</code>，这是控制台信息输出窗口按照ascii编码输出utf8编码的字符串的结果。</p>
+<p>另外，代码中字符串的默认编码与代码文件本身的编码一致，如：</p>
+<pre><code>s='中文'
+</code></pre>
+<p>如果是在utf8的文件中，该字符串就是utf8编码，如果是在gb2312的文件中，则其编码为gb2312。 这种情况下，要进行编码转换，都需要先用decode方法将其转换成unicode编码，再使用encode方法将其转换成其他编码。通常，在没有指定特定的编码方式时，都是使用的系统默认编码创建的代码文件，在这篇文章中可以看到如何获得系统的默认编码。</p>
+<p>如果字符串是这样定义：</p>
+<pre><code>s=u'中文'
+</code></pre>
+<p>则该字符串的编码就被指定为unicode了，即python的内部编码，而与代码文件本身的编码无关。因此，对于这种情况做编码转换，只需要直接使用encode方法将其转换成指定编码即可。</p>
+<p>如果一个字符串已经是unicode了，再进行解码则将出错，因此通常要对其编码方式是否为unicode进行判断：</p>
+<pre><code>isinstance(s, unicode)  #用来判断是否为unicode
+</code></pre>
+<p><strong>以下是才是读书笔记哦亲～～</strong></p>
+<p><em>关于复制</em>  <br>
+python中分为深copy和浅copy。只复制引用，而不复制对象本身的情况，称为浅copy。复制对象内容，称为深copy。对于单个列表，深copy可以用[:]分片复制来实现；而对于
+列表的列表等复杂列表结构需要用copy模块的deepcopy函数实现。</p>
+<p><em>关于split()函数</em> <br>
+它在分割字符串的时候会自动把结尾的换行(\n)删除掉</p>
+<p><em>关于参数传递  可变对象</em> <br>
+由于传递的只是对象的引用，所以若对象为可变对象，则若在函数中对可变对象进行了修改，变化会反应在主调函数的实参对象上，这很容易造成莫名其妙的结果，切记！
+相应的，对于设置默认值参数也有一个类似的问题，如果默认参数设置为可变对象的话，默认参数会随着函数的调用不断变化。。引发看似很诡异的问题，所以一定不要用可变对象做默认参数！</p>
+<p><em>关于字典的copy</em>  <br>
+newDict=myDict.copy()  注意，这依然是浅copy，会影响到字典中的可变对象。
+字典排序：先用列表解析转化为列表[(val,key) for key,val in d.items()]，然后再用列表的sort方法即可。
+键值交换：
+for (k,v) in d.items():
+d2[v]=k</p>
+<p><em>关于作用域</em> <br>
+作用域搜寻遵照LEGB规则(local/eclosing(指封闭在函数中的函数)/global/built-in)</p>
+<p><em>关于文件</em></p>
+<ul>
+<li>跳过第一行
+<ol>
+<li>先使用readline()，再用for循环</li>
+<li>用next(f)跳过</li>
+</ol>
+</li>
+<li>换行符：针对不同平台的不同标准，使用U修饰符可以由python统一解决，无需你操心。fd=open(&lsquo;file.txt&rsquo;,&lsquo;rU&rsquo;)文件内的移动：seek，fd.tell()报告当前位置，最常用的是fd.seek(0)，回到文件开头</li>
+</ul>
+<p><em>列表</em>  <br>
+[0]*9=[0,0,0,0,0,0,0,0,0]</p>
+<p><em>关于类</em>  <br>
+属性的名字前面有两条下划线时表示这是一个私有属性，不推荐在类外部更改私有属性。如果在类之外使用该属性，python会将属性名字改变，使得访问出错，比如会将<code>_attribute</code>改为<code>_className__attribute</code></p>
+<p><em>关于运算符重载</em>  <br>
+python首先会用自检来检查参数的类型，再确定操作方式，若没有合适的操作，则会报错。 <br>
+修复int+Rational的错误，Rational是新建的一个类，那么1+Rational(1,2)会报错，但又不可能修改int类为它添加针对Rational类的<code>__add__()</code>方法，那肿么办呢？答案是<code>__radd__()</code>方法，在Rational类中新加一个<code>__radd__()</code>方法，那么，python在计算1+Rational(1,2)时的步骤是这样的：首先尝试为int类型找到合适的带Rational参数的方法，可惜没找到，那么python开始在第二个操作类即Rational类查找<code>__radd__()</code>方法，如果找到的话，那么python将自动将表达式反转并调用<code>__add__()</code>方法，在这个例子中表达是变为<code>Rational(1,2).__radd__(1)</code>，这样在Rational类中再定义<code>__radd__()</code>方法直接返回<code>__add__()</code>的结果即可，因为加法是可交换的。</p>
+<p><em>捕获开发者犯的错误</em>  <br>
+try-except是用来捕获用户犯的错误，而assert是用来捕获用户犯的错误，assert函数有两个参数，第一个参数是布尔值，如果为真，代码继续；如果为假，则引发assertionError。第二个参数是用于显示错误提示信息的。</p>
+<p><em>测试模块</em>  <br>
+doctest  unittest</p>
+<p><em>递归</em></p>
+<ol>
+<li>递归的思想是通过调用自身的函数来实现的，递归的主要思想还是分治，把一个大问题不断的分解成小的问题，直到最小的问题，而最小的问题是有答案的，最后，再把较小的解决方案重新组合成整体方案。</li>
+<li>递归是如何实现的呢？是通过栈(stack)来实现的，栈是一种后进先出的数据结构，计算机通过栈来对函数的调用进行跟踪。</li>
+</ol>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2013-09-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2013/10/08/confused-about-cronie/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">confused about cronie</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2013/09/11/two-more-books-about-macro-economics/">
+            <span class="next-text nav-default">two more books about macro economics</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>octopress on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/octopress/</link>
+    <description>Recent content in octopress on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 12 Jul 2015 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/octopress/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>continue blogging on Mac OSX using octoress</title>
+      <link>http://localhost:1313/post/2015/07/12/continue-blogging-on-macosx-using-octoress/</link>
+      <pubDate>Sun, 12 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2015/07/12/continue-blogging-on-macosx-using-octoress/</guid>
+      <description>换了Mac，终于可以继续用Octopress写blog了，但首先得把原来的blog从git上同步过来，纪录下在此过程中遇到的坑。 clone sourc</description>
+    </item>
+    
+    <item>
+      <title>understand octopress</title>
+      <link>http://localhost:1313/post/2013/10/13/understand-octopress/</link>
+      <pubDate>Sun, 13 Oct 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/10/13/understand-octopress/</guid>
+      <description>好奇害死猫。 一开始是想着给现在的博客主题添加一个sidebar，再后来就想着搞清楚Octopress的原理，仔细一研究，原来里面用到了好多好</description>
+    </item>
+    
+    <item>
+      <title>A brand new blog</title>
+      <link>http://localhost:1313/post/2013/10/08/change-the-default-theme-for-octopress/</link>
+      <pubDate>Tue, 08 Oct 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/10/08/change-the-default-theme-for-octopress/</guid>
+      <description>终于忍不住了。 添加了disqus评论系统，还是挺简单的，Octopress内建了对disqus的支持，只要去disqus官网注册，然后在Oc</description>
+    </item>
+    
+    <item>
+      <title>Hello,World</title>
+      <link>http://localhost:1313/post/2013/06/12/hello/</link>
+      <pubDate>Wed, 12 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/06/12/hello/</guid>
+      <description>Hello,Octopress!This is my first post!</description>
+    </item>
+    
+    <item>
+      <title>Octopress搭建备忘</title>
+      <link>http://localhost:1313/post/2013/06/12/memo-about-octopress/</link>
+      <pubDate>Wed, 12 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/06/12/memo-about-octopress/</guid>
+      <description>缘由 突然想玩玩Octopress，于是开始搜索，发现在Archlinux上使用Octopress会有两个问题 Ruby版本问题。Arch上的R</description>
+    </item>
+    
+  </channel>
+</rss>

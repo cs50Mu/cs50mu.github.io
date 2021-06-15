@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>distributed system on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/distributed-system/</link>
+    <description>Recent content in distributed system on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 12 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/distributed-system/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>designing data intensive applications part1</title>
+      <link>http://localhost:1313/post/2020/11/12/designing-data-intensive-applications-part1/</link>
+      <pubDate>Thu, 12 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2020/11/12/designing-data-intensive-applications-part1/</guid>
+      <description>Part I - Foundations of Data Systems Chapter 1 - Reliable, Scalable, and Maintainable Applications Reliability / 可用性 The system should continue to work correctly (performing the correct function at the desired level of performance) even in the face of adversity (hardware or soft‐ ware faults, and even human error). Note that a fault is not the same as a failure [2]. A fault</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>sarama源码分析Part I - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="Shopify / sarama 以下代码分析基于此快照的代码：2a5254c26ef606cd9a587 生产者如何发送消息 这一篇帖子已经分析的非常好了：Sarama生" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2021/01/22/source-code-of-sarama-part-i/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="sarama源码分析Part I" />
+<meta property="og:description" content="Shopify / sarama 以下代码分析基于此快照的代码：2a5254c26ef606cd9a587 生产者如何发送消息 这一篇帖子已经分析的非常好了：Sarama生" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2021/01/22/source-code-of-sarama-part-i/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-01-22T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-01-22T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="sarama源码分析Part I">
+<meta itemprop="description" content="Shopify / sarama 以下代码分析基于此快照的代码：2a5254c26ef606cd9a587 生产者如何发送消息 这一篇帖子已经分析的非常好了：Sarama生"><meta itemprop="datePublished" content="2021-01-22T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2021-01-22T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="4694">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="sarama源码分析Part I"/>
+<meta name="twitter:description" content="Shopify / sarama 以下代码分析基于此快照的代码：2a5254c26ef606cd9a587 生产者如何发送消息 这一篇帖子已经分析的非常好了：Sarama生"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">sarama源码分析Part I</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-01-22 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#生产者如何发送消息">生产者如何发送消息</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p><a href="https://github.com/Shopify/sarama">Shopify / sarama</a></p>
+<p>以下代码分析基于此快照的代码：2a5254c26ef606cd9a587</p>
+<h3 id="生产者如何发送消息">生产者如何发送消息</h3>
+<p>这一篇帖子已经分析的非常好了：<a href="https://juejin.cn/post/6866316565348876296#heading-6">Sarama生产者是如何工作的</a></p>
+<p>在evernote的备份：<a href="https://www.evernote.com/shard/s112/nl/12260165/5ab3f175-2851-4069-b3b4-b6dc20f7f203/">Sarama生产者是如何工作的</a></p>
+<p>也可以看下官方wiki里关于producer实现的说明：<a href="https://github.com/Shopify/sarama/wiki/Producer-implementation">Producer implementation</a></p>
+<h4 id="从提问题中来学习">从提问题中来学习</h4>
+<blockquote>
+<p>kafka client 是如何与 broker server 交互的？</p>
+</blockquote>
+<p>以 获取 metadata 为例（一个client启动后先要做的就是获取metadata，比如，有哪些topic，某个topic有几个partition，哪个broker是leader等）：</p>
+<p>可以看到内部调用的是<code>sendAndReceive</code>这个方法</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//GetMetadata send a metadata request and returns a metadata response or error
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">Broker</span><span class="p">)</span> <span class="nf">GetMetadata</span><span class="p">(</span><span class="nx">request</span> <span class="o">*</span><span class="nx">MetadataRequest</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">MetadataResponse</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">response</span> <span class="o">:=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">MetadataResponse</span><span class="p">)</span>
+
+  <span class="nx">err</span> <span class="o">:=</span> <span class="nx">b</span><span class="p">.</span><span class="nf">sendAndReceive</span><span class="p">(</span><span class="nx">request</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">response</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">  <span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">Broker</span><span class="p">)</span> <span class="nf">sendAndReceive</span><span class="p">(</span><span class="nx">req</span> <span class="nx">protocolBody</span><span class="p">,</span> <span class="nx">res</span> <span class="nx">versionedDecoder</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+      <span class="c1">// send 返回一个 promise
+</span><span class="c1"></span>      <span class="nx">promise</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">b</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span> <span class="o">!=</span> <span class="kc">nil</span><span class="p">)</span>
+      <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">err</span>
+      <span class="p">}</span>
+
+      <span class="c1">// 当配置`RequiredAcks`=0(即不关注server返回)时，返回的promise会是nil
+</span><span class="c1"></span>      <span class="k">if</span> <span class="nx">promise</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="kc">nil</span>
+      <span class="p">}</span>
+
+      <span class="c1">// 然后就等待这个 promise
+</span><span class="c1"></span>      <span class="k">select</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="nx">buf</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">promise</span><span class="p">.</span><span class="nx">packets</span><span class="p">:</span>
+          <span class="k">return</span> <span class="nf">versionedDecode</span><span class="p">(</span><span class="nx">buf</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">req</span><span class="p">.</span><span class="nf">version</span><span class="p">())</span>
+      <span class="k">case</span> <span class="nx">err</span> <span class="p">=</span> <span class="o">&lt;-</span><span class="nx">promise</span><span class="p">.</span><span class="nx">errors</span><span class="p">:</span>
+          <span class="k">return</span> <span class="nx">err</span>
+      <span class="p">}</span>
+  <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>既然是返回了promise，说明<code>send</code>方法是异步的：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 为节省篇幅，省略了一些错误处理的展示
+</span><span class="c1"></span>  <span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">Broker</span><span class="p">)</span> <span class="nf">send</span><span class="p">(</span><span class="nx">rb</span> <span class="nx">protocolBody</span><span class="p">,</span> <span class="nx">promiseResponse</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">responsePromise</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">b</span><span class="p">.</span><span class="nx">lock</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+      <span class="k">defer</span> <span class="nx">b</span><span class="p">.</span><span class="nx">lock</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+
+<span class="o">...</span><span class="p">.</span>
+      <span class="c1">// request的correlationID
+</span><span class="c1"></span>      <span class="nx">req</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">request</span><span class="p">{</span><span class="nx">correlationID</span><span class="p">:</span> <span class="nx">b</span><span class="p">.</span><span class="nx">correlationID</span><span class="p">,</span> <span class="nx">clientID</span><span class="p">:</span> <span class="nx">b</span><span class="p">.</span><span class="nx">conf</span><span class="p">.</span><span class="nx">ClientID</span><span class="p">,</span> <span class="nx">body</span><span class="p">:</span> <span class="nx">rb</span><span class="p">}</span>
+      <span class="nx">buf</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">encode</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">b</span><span class="p">.</span><span class="nx">conf</span><span class="p">.</span><span class="nx">MetricRegistry</span><span class="p">)</span>
+      <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+      <span class="p">}</span>
+
+      <span class="nx">requestTime</span> <span class="o">:=</span> <span class="nx">time</span><span class="p">.</span><span class="nf">Now</span><span class="p">()</span>
+      <span class="c1">// Will be decremented in responseReceiver (except error or request with NoResponse)
+</span><span class="c1"></span>      <span class="nx">b</span><span class="p">.</span><span class="nf">addRequestInFlightMetrics</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+      <span class="c1">// 关键在这里了，这里把请求发出去了
+</span><span class="c1"></span>      <span class="c1">// 最终会调用`conn.Write`
+</span><span class="c1"></span>      <span class="nx">bytes</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">b</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span>
+      <span class="nx">b</span><span class="p">.</span><span class="nf">updateOutgoingCommunicationMetrics</span><span class="p">(</span><span class="nx">bytes</span><span class="p">)</span>
+      <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+          <span class="nx">b</span><span class="p">.</span><span class="nf">addRequestInFlightMetrics</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+          <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+      <span class="p">}</span>
+      <span class="nx">b</span><span class="p">.</span><span class="nx">correlationID</span><span class="o">++</span>
+
+      <span class="k">if</span> <span class="p">!</span><span class="nx">promiseResponse</span> <span class="p">{</span>
+          <span class="c1">// Record request latency without the response
+</span><span class="c1"></span>          <span class="nx">b</span><span class="p">.</span><span class="nf">updateRequestLatencyAndInFlightMetrics</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nf">Since</span><span class="p">(</span><span class="nx">requestTime</span><span class="p">))</span>
+          <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span>
+      <span class="p">}</span>
+
+      <span class="c1">// 组装了一个promise，然后把它发给了一个channel：b.responses
+</span><span class="c1"></span>      <span class="c1">// 注意这个promise里也有两个channel，它是用来返回结果的
+</span><span class="c1"></span>      
+      <span class="c1">// 关联上了req.correlationID
+</span><span class="c1"></span>      <span class="c1">// 通过这个correlationID来关联req和response
+</span><span class="c1"></span>      <span class="nx">promise</span> <span class="o">:=</span> <span class="nx">responsePromise</span><span class="p">{</span><span class="nx">requestTime</span><span class="p">,</span> <span class="nx">req</span><span class="p">.</span><span class="nx">correlationID</span><span class="p">,</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">),</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">error</span><span class="p">)}</span>
+      <span class="nx">b</span><span class="p">.</span><span class="nx">responses</span> <span class="o">&lt;-</span> <span class="nx">promise</span>
+
+      <span class="k">return</span> <span class="o">&amp;</span><span class="nx">promise</span><span class="p">,</span> <span class="kc">nil</span>
+  <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>那么，很明显的，一定有人在监听这个<code>b.responses</code>了，是在<code>responseReceiver</code>方法中：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">  <span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">Broker</span><span class="p">)</span> <span class="nf">responseReceiver</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">dead</span> <span class="kt">error</span>
+      <span class="nx">header</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+
+      <span class="c1">// 注意是一个循环读取消息，即使没有消息
+</span><span class="c1"></span>      <span class="c1">// 也会等待在这里，除非有人关闭了这个channel
+</span><span class="c1"></span>      <span class="k">for</span> <span class="nx">response</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">b</span><span class="p">.</span><span class="nx">responses</span> <span class="p">{</span>
+          <span class="o">...</span>
+          <span class="c1">// 读header
+</span><span class="c1"></span>          <span class="nx">bytesReadHeader</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">b</span><span class="p">.</span><span class="nf">readFull</span><span class="p">(</span><span class="nx">header</span><span class="p">)</span>
+          <span class="nx">requestLatency</span> <span class="o">:=</span> <span class="nx">time</span><span class="p">.</span><span class="nf">Since</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">requestTime</span><span class="p">)</span>
+          <span class="o">...</span><span class="p">.</span>
+
+          <span class="nx">decodedHeader</span> <span class="o">:=</span> <span class="nx">responseHeader</span><span class="p">{}</span>
+          <span class="nx">err</span> <span class="p">=</span> <span class="nf">decode</span><span class="p">(</span><span class="nx">header</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">decodedHeader</span><span class="p">)</span>
+          <span class="o">...</span>
+          
+          <span class="c1">// 这里会校验收到的消息是否是所预期的，若对不上直接抛弃，继续处理下一条
+</span><span class="c1"></span>          <span class="k">if</span> <span class="nx">decodedHeader</span><span class="p">.</span><span class="nx">correlationID</span> <span class="o">!=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">correlationID</span> <span class="p">{</span>
+              <span class="nx">b</span><span class="p">.</span><span class="nf">updateIncomingCommunicationMetrics</span><span class="p">(</span><span class="nx">bytesReadHeader</span><span class="p">,</span> <span class="nx">requestLatency</span><span class="p">)</span>
+              <span class="c1">// TODO if decoded ID &lt; cur ID, discard until we catch up
+</span><span class="c1"></span>              <span class="c1">// TODO if decoded ID &gt; cur ID, save it so when cur ID catches up we have a response
+</span><span class="c1"></span>              <span class="nx">dead</span> <span class="p">=</span> <span class="nx">PacketDecodingError</span><span class="p">{</span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;correlation ID didn&#39;t match, wanted %d, got %d&#34;</span><span class="p">,</span> <span class="nx">response</span><span class="p">.</span><span class="nx">correlationID</span><span class="p">,</span> <span class="nx">decodedHeader</span><span class="p">.</span><span class="nx">correlationID</span><span class="p">)}</span>
+              <span class="nx">response</span><span class="p">.</span><span class="nx">errors</span> <span class="o">&lt;-</span> <span class="nx">dead</span>
+              <span class="k">continue</span>
+          <span class="p">}</span>
+          
+          <span class="c1">// 读body
+</span><span class="c1"></span>          <span class="nx">buf</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">decodedHeader</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+          <span class="nx">bytesReadBody</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">b</span><span class="p">.</span><span class="nf">readFull</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span>
+          <span class="nx">b</span><span class="p">.</span><span class="nf">updateIncomingCommunicationMetrics</span><span class="p">(</span><span class="nx">bytesReadHeader</span><span class="o">+</span><span class="nx">bytesReadBody</span><span class="p">,</span> <span class="nx">requestLatency</span><span class="p">)</span>
+          <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+              <span class="nx">dead</span> <span class="p">=</span> <span class="nx">err</span>
+              <span class="nx">response</span><span class="p">.</span><span class="nx">errors</span> <span class="o">&lt;-</span> <span class="nx">err</span>
+              <span class="k">continue</span>
+          <span class="p">}</span>
+
+          <span class="c1">// 将读到的body字节通过 channel 返回
+</span><span class="c1"></span>          <span class="nx">response</span><span class="p">.</span><span class="nx">packets</span> <span class="o">&lt;-</span> <span class="nx">buf</span>
+      <span class="p">}</span>
+      <span class="nb">close</span><span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">done</span><span class="p">)</span>
+  <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>那么，这个<code>responseReceiver</code>方法是什么时候调用的呢？是在open 一个 broker 的时候：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">  <span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">Broker</span><span class="p">)</span> <span class="nf">Open</span><span class="p">(</span><span class="nx">conf</span> <span class="o">*</span><span class="nx">Config</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">!</span><span class="nx">atomic</span><span class="p">.</span><span class="nf">CompareAndSwapInt32</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">b</span><span class="p">.</span><span class="nx">opened</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">ErrAlreadyConnected</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="nx">conf</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+          <span class="nx">conf</span> <span class="p">=</span> <span class="nf">NewConfig</span><span class="p">()</span>
+      <span class="p">}</span>
+
+      <span class="nx">err</span> <span class="o">:=</span> <span class="nx">conf</span><span class="p">.</span><span class="nf">Validate</span><span class="p">()</span>
+      <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">err</span>
+      <span class="p">}</span>
+
+      <span class="nx">b</span><span class="p">.</span><span class="nx">lock</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+
+      <span class="k">go</span> <span class="nf">withRecover</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">defer</span> <span class="nx">b</span><span class="p">.</span><span class="nx">lock</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+
+          <span class="nx">dialer</span> <span class="o">:=</span> <span class="nx">net</span><span class="p">.</span><span class="nx">Dialer</span><span class="p">{</span>
+              <span class="nx">Timeout</span><span class="p">:</span>   <span class="nx">conf</span><span class="p">.</span><span class="nx">Net</span><span class="p">.</span><span class="nx">DialTimeout</span><span class="p">,</span>
+              <span class="nx">KeepAlive</span><span class="p">:</span> <span class="nx">conf</span><span class="p">.</span><span class="nx">Net</span><span class="p">.</span><span class="nx">KeepAlive</span><span class="p">,</span>
+              <span class="nx">LocalAddr</span><span class="p">:</span> <span class="nx">conf</span><span class="p">.</span><span class="nx">Net</span><span class="p">.</span><span class="nx">LocalAddr</span><span class="p">,</span>
+          <span class="p">}</span>
+
+          <span class="o">...</span>
+          
+          <span class="nx">b</span><span class="p">.</span><span class="nx">conn</span> <span class="p">=</span> <span class="nf">newBufConn</span><span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">conn</span><span class="p">)</span>
+
+          <span class="nx">b</span><span class="p">.</span><span class="nx">conf</span> <span class="p">=</span> <span class="nx">conf</span>
+          
+          <span class="o">...</span><span class="p">.</span>
+          
+          <span class="k">if</span> <span class="nx">b</span><span class="p">.</span><span class="nx">id</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">{</span>
+              <span class="nx">b</span><span class="p">.</span><span class="nf">registerMetrics</span><span class="p">()</span>
+          <span class="p">}</span>
+
+          <span class="o">...</span><span class="p">.</span>
+
+          <span class="nx">b</span><span class="p">.</span><span class="nx">done</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">bool</span><span class="p">)</span>
+          <span class="nx">b</span><span class="p">.</span><span class="nx">responses</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">responsePromise</span><span class="p">,</span> <span class="nx">b</span><span class="p">.</span><span class="nx">conf</span><span class="p">.</span><span class="nx">Net</span><span class="p">.</span><span class="nx">MaxOpenRequests</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+          <span class="k">if</span> <span class="nx">b</span><span class="p">.</span><span class="nx">id</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">{</span>
+              <span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Connected to broker at %s (registered as #%d)\n&#34;</span><span class="p">,</span> <span class="nx">b</span><span class="p">.</span><span class="nx">addr</span><span class="p">,</span> <span class="nx">b</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+              <span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Connected to broker at %s (unregistered)\n&#34;</span><span class="p">,</span> <span class="nx">b</span><span class="p">.</span><span class="nx">addr</span><span class="p">)</span>
+          <span class="p">}</span>
+          <span class="c1">// 这里单独起了一个协程来处理
+</span><span class="c1"></span>          <span class="k">go</span> <span class="nf">withRecover</span><span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">responseReceiver</span><span class="p">)</span>
+      <span class="p">})</span>          
+</code></pre></td></tr></table>
+</div>
+</div><p>什么时候会open broker呢？在新建Client的时候</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">NewClient</span><span class="p">(</span><span class="nx">addrs</span> <span class="p">[]</span><span class="kt">string</span><span class="p">,</span> <span class="nx">conf</span> <span class="o">*</span><span class="nx">Config</span><span class="p">)</span> <span class="p">(</span><span class="nx">Client</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">Logger</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Initializing new client&#34;</span><span class="p">)</span>
+    <span class="o">...</span>
+    <span class="k">if</span> <span class="nx">conf</span><span class="p">.</span><span class="nx">Metadata</span><span class="p">.</span><span class="nx">Full</span> <span class="p">{</span>
+        <span class="c1">// do an initial fetch of all cluster metadata by specifying an empty list of topics
+</span><span class="c1"></span>        <span class="c1">// 这里会从broker拉取一次metadata
+</span><span class="c1"></span>        <span class="c1">// 在此过程中首先会先open一个broker
+</span><span class="c1"></span>        <span class="nx">err</span> <span class="o">:=</span> <span class="nx">client</span><span class="p">.</span><span class="nf">RefreshMetadata</span><span class="p">()</span>
+        <span class="k">switch</span> <span class="nx">err</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="kc">nil</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">case</span> <span class="nx">ErrLeaderNotAvailable</span><span class="p">,</span> <span class="nx">ErrReplicaNotAvailable</span><span class="p">,</span> <span class="nx">ErrTopicAuthorizationFailed</span><span class="p">,</span> <span class="nx">ErrClusterAuthorizationFailed</span><span class="p">:</span>
+            <span class="c1">// indicates that maybe part of the cluster is down, but is not fatal to creating the client
+</span><span class="c1"></span>            <span class="nx">Logger</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="nb">close</span><span class="p">(</span><span class="nx">client</span><span class="p">.</span><span class="nx">closed</span><span class="p">)</span> <span class="c1">// we haven&#39;t started the background updater yet, so we have to do this manually
+</span><span class="c1"></span>            <span class="nx">_</span> <span class="p">=</span> <span class="nx">client</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// 这里启动后台定时拉取metadata的任务
+</span><span class="c1"></span>    <span class="k">go</span> <span class="nf">withRecover</span><span class="p">(</span><span class="nx">client</span><span class="p">.</span><span class="nx">backgroundMetadataUpdater</span><span class="p">)</span>
+
+    <span class="nx">Logger</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Successfully initialized new client&#34;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="nx">client</span><span class="p">,</span> <span class="kc">nil</span>    
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>总结一下，模式是：制造任务，扔进队列（channel），新启动一个协程来监听队列（channel），有新任务就做，任务的完成情况是通过任务结构体中的channel来跟调用方完成通信的</p>
+<blockquote>
+<p>通过 kafka client 生产(produce)一条消息，需要经过哪些步骤？</p>
+</blockquote>
+<p>sarama 有两种 producer: syncProducer 和 asyncProducer，syncProducer 只是 asyncProducer 的一个简单封装，下面只介绍 asyncProducer 的发送消息的流程：</p>
+<p>一条消息在真正被发到网络上之前，会流经以下结构：</p>
+<p>asyncProducer(singleton) &ndash;&gt; topicProducer(one per topic) &ndash;&gt; partitionProducer(one per partition) &ndash;&gt; brokerProducer(one per broker)</p>
+<p>消息的传递是通过 channel，每个结构体在处理完消息后，会将它丢进下一个结构体在监听的channel中。</p>
+<p>重点关注下<code>BrokerProducer</code>，这里起了两个goroutine，<code>bp.run</code>负责将消息打包（压缩）成一个set，另一个goroutine负责将打包好的set真正发出去</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// one per broker; also constructs an associated flusher
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">asyncProducer</span><span class="p">)</span> <span class="nf">newBrokerProducer</span><span class="p">(</span><span class="nx">broker</span> <span class="o">*</span><span class="nx">Broker</span><span class="p">)</span> <span class="o">*</span><span class="nx">brokerProducer</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="p">(</span>
+        <span class="nx">input</span>     <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="o">*</span><span class="nx">ProducerMessage</span><span class="p">)</span>
+        <span class="nx">bridge</span>    <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="o">*</span><span class="nx">produceSet</span><span class="p">)</span>
+        <span class="nx">responses</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="o">*</span><span class="nx">brokerProducerResponse</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="nx">bp</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">brokerProducer</span><span class="p">{</span>
+        <span class="nx">parent</span><span class="p">:</span>         <span class="nx">p</span><span class="p">,</span>
+        <span class="nx">broker</span><span class="p">:</span>         <span class="nx">broker</span><span class="p">,</span>
+        <span class="nx">input</span><span class="p">:</span>          <span class="nx">input</span><span class="p">,</span>
+        <span class="nx">output</span><span class="p">:</span>         <span class="nx">bridge</span><span class="p">,</span>
+        <span class="nx">responses</span><span class="p">:</span>      <span class="nx">responses</span><span class="p">,</span>
+        <span class="nx">stopchan</span><span class="p">:</span>       <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{}),</span>
+        <span class="nx">buffer</span><span class="p">:</span>         <span class="nf">newProduceSet</span><span class="p">(</span><span class="nx">p</span><span class="p">),</span>
+        <span class="nx">currentRetries</span><span class="p">:</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">map</span><span class="p">[</span><span class="kt">int32</span><span class="p">]</span><span class="kt">error</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">go</span> <span class="nf">withRecover</span><span class="p">(</span><span class="nx">bp</span><span class="p">.</span><span class="nx">run</span><span class="p">)</span>
+
+    <span class="c1">// minimal bridge to make the network response `select`able
+</span><span class="c1"></span>    <span class="c1">// 注意这里是按set来发的，消息走到这里时已经被整合成一个batch了
+</span><span class="c1"></span>    <span class="k">go</span> <span class="nf">withRecover</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="nx">set</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">bridge</span> <span class="p">{</span>
+            <span class="nx">request</span> <span class="o">:=</span> <span class="nx">set</span><span class="p">.</span><span class="nf">buildRequest</span><span class="p">()</span>
+
+            <span class="nx">response</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">broker</span><span class="p">.</span><span class="nf">Produce</span><span class="p">(</span><span class="nx">request</span><span class="p">)</span>
+
+            <span class="nx">responses</span> <span class="o">&lt;-</span> <span class="o">&amp;</span><span class="nx">brokerProducerResponse</span><span class="p">{</span>
+                <span class="nx">set</span><span class="p">:</span> <span class="nx">set</span><span class="p">,</span>
+                <span class="nx">err</span><span class="p">:</span> <span class="nx">err</span><span class="p">,</span>
+                <span class="nx">res</span><span class="p">:</span> <span class="nx">response</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="nb">close</span><span class="p">(</span><span class="nx">responses</span><span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nx">conf</span><span class="p">.</span><span class="nx">Producer</span><span class="p">.</span><span class="nx">Retry</span><span class="p">.</span><span class="nx">Max</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">{</span>
+        <span class="nx">bp</span><span class="p">.</span><span class="nx">abandoned</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{})</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">bp</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>参考：<a href="https://github.com/Shopify/sarama/wiki/Producer-implementation#message-flow">Message Flow</a></p>
+<blockquote>
+<p>如何保持发送的消息有序？</p>
+</blockquote>
+<p>基本思想是：需要重发的消息会被重新扔到队列中，不过producer对于重发的消息和正常的消息的处理策略不一样：</p>
+<ul>
+<li>从发现有重发的消息起，优先发送<code>retriedMsg</code></li>
+<li>正常的消息会被缓存起来</li>
+<li>当确认所有的<code>retriedMsg</code>都发送成功后，再将这期间缓存的正常消息一次性发送出去</li>
+</ul>
+<p>代码其实比刚刚的描述复杂多了，它还有一个“水位线(Watermark)”的概念，允许重试多次，对于重试同样次数的消息被放在同一个level的buffer中</p>
+<p>Maintaining Order</p>
+<p>Maintaining the order of messages when a retry occurs is an additional challenge. When a brokerProducer triggers a retry, the following events occur, strictly in this order:</p>
+<ul>
+<li>
+<p>the messages to retry are sent to the retryHandler</p>
+</li>
+<li>
+<p>the brokerProducer sets a flag for the given topic/partition; while this flag is set any further such messages (which may have already been in the pipeline) will be immediately sent to the retryHandler</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 此处逻辑位于 func (bp *brokerProducer) handleSuccess 方法中
+</span><span class="c1"></span>        <span class="nx">sent</span><span class="p">.</span><span class="nf">eachPartition</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">topic</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">partition</span> <span class="kt">int32</span><span class="p">,</span> <span class="nx">pSet</span> <span class="o">*</span><span class="nx">partitionSet</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">block</span> <span class="o">:=</span> <span class="nx">response</span><span class="p">.</span><span class="nf">GetBlock</span><span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">partition</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nx">block</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="c1">// handled in the previous &#34;eachPartition&#34; loop
+</span><span class="c1"></span>                <span class="k">return</span>
+            <span class="p">}</span>
+
+            <span class="k">switch</span> <span class="nx">block</span><span class="p">.</span><span class="nx">Err</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="nx">ErrInvalidMessage</span><span class="p">,</span> <span class="nx">ErrUnknownTopicOrPartition</span><span class="p">,</span> <span class="nx">ErrLeaderNotAvailable</span><span class="p">,</span> <span class="nx">ErrNotLeaderForPartition</span><span class="p">,</span>
+                <span class="nx">ErrRequestTimedOut</span><span class="p">,</span> <span class="nx">ErrNotEnoughReplicas</span><span class="p">,</span> <span class="nx">ErrNotEnoughReplicasAfterAppend</span><span class="p">:</span>
+                <span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;producer/broker/%d state change to [retrying] on %s/%d because %v\n&#34;</span><span class="p">,</span>
+                    <span class="nx">bp</span><span class="p">.</span><span class="nx">broker</span><span class="p">.</span><span class="nf">ID</span><span class="p">(),</span> <span class="nx">topic</span><span class="p">,</span> <span class="nx">partition</span><span class="p">,</span> <span class="nx">block</span><span class="p">.</span><span class="nx">Err</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nx">bp</span><span class="p">.</span><span class="nx">currentRetries</span><span class="p">[</span><span class="nx">topic</span><span class="p">]</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+                    <span class="nx">bp</span><span class="p">.</span><span class="nx">currentRetries</span><span class="p">[</span><span class="nx">topic</span><span class="p">]</span> <span class="p">=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">int32</span><span class="p">]</span><span class="kt">error</span><span class="p">)</span>
+                <span class="p">}</span>
+                <span class="c1">// 这里是所谓的`sets a flag for the given topic/partition`
+</span><span class="c1"></span>                <span class="c1">// 用于标识这个topic/partition是有问题的
+</span><span class="c1"></span>                <span class="nx">bp</span><span class="p">.</span><span class="nx">currentRetries</span><span class="p">[</span><span class="nx">topic</span><span class="p">][</span><span class="nx">partition</span><span class="p">]</span> <span class="p">=</span> <span class="nx">block</span><span class="p">.</span><span class="nx">Err</span>
+                <span class="c1">// 以下为将消息发送至 retryHandler
+</span><span class="c1"></span>                <span class="k">if</span> <span class="nx">bp</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">conf</span><span class="p">.</span><span class="nx">Producer</span><span class="p">.</span><span class="nx">Idempotent</span> <span class="p">{</span>
+                    <span class="k">go</span> <span class="nx">bp</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nf">retryBatch</span><span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">partition</span><span class="p">,</span> <span class="nx">pSet</span><span class="p">,</span> <span class="nx">block</span><span class="p">.</span><span class="nx">Err</span><span class="p">)</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="nx">bp</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nf">retryMessages</span><span class="p">(</span><span class="nx">pSet</span><span class="p">.</span><span class="nx">msgs</span><span class="p">,</span> <span class="nx">block</span><span class="p">.</span><span class="nx">Err</span><span class="p">)</span>
+                <span class="p">}</span>
+                <span class="c1">// dropping the following messages has the side effect of incrementing their retry count
+</span><span class="c1"></span>                <span class="nx">bp</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nf">retryMessages</span><span class="p">(</span><span class="nx">bp</span><span class="p">.</span><span class="nx">buffer</span><span class="p">.</span><span class="nf">dropPartition</span><span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">partition</span><span class="p">),</span> <span class="nx">block</span><span class="p">.</span><span class="nx">Err</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 此处逻辑位于 func (bp *brokerProducer) run 方法
+</span><span class="c1"></span>            <span class="k">if</span> <span class="nx">reason</span> <span class="o">:=</span> <span class="nx">bp</span><span class="p">.</span><span class="nf">needsRetry</span><span class="p">(</span><span class="nx">msg</span><span class="p">);</span> <span class="nx">reason</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="nx">bp</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nf">retryMessage</span><span class="p">(</span><span class="nx">msg</span><span class="p">,</span> <span class="nx">reason</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nx">bp</span><span class="p">.</span><span class="nx">closing</span> <span class="o">==</span> <span class="kc">nil</span> <span class="o">&amp;&amp;</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">flags</span><span class="o">&amp;</span><span class="nx">fin</span> <span class="o">==</span> <span class="nx">fin</span> <span class="p">{</span>
+                    <span class="c1">// we were retrying this partition but we can start processing again
+</span><span class="c1"></span>                    <span class="nb">delete</span><span class="p">(</span><span class="nx">bp</span><span class="p">.</span><span class="nx">currentRetries</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">Topic</span><span class="p">],</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">Partition</span><span class="p">)</span>
+                    <span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;producer/broker/%d state change to [closed] on %s/%d\n&#34;</span><span class="p">,</span>
+                        <span class="nx">bp</span><span class="p">.</span><span class="nx">broker</span><span class="p">.</span><span class="nf">ID</span><span class="p">(),</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">Topic</span><span class="p">,</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">Partition</span><span class="p">)</span>
+                <span class="p">}</span>
+
+                <span class="k">continue</span>
+            <span class="p">}</span>
+            
+<span class="kd">func</span> <span class="p">(</span><span class="nx">bp</span> <span class="o">*</span><span class="nx">brokerProducer</span><span class="p">)</span> <span class="nf">needsRetry</span><span class="p">(</span><span class="nx">msg</span> <span class="o">*</span><span class="nx">ProducerMessage</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nx">bp</span><span class="p">.</span><span class="nx">closing</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">bp</span><span class="p">.</span><span class="nx">closing</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">bp</span><span class="p">.</span><span class="nx">currentRetries</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">Topic</span><span class="p">][</span><span class="nx">msg</span><span class="p">.</span><span class="nx">Partition</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p>eventually the first retried message reaches its partitionProducer</p>
+</li>
+<li>
+<p>the partitionProducer sends off a special &ldquo;chaser&rdquo; message and releases its reference to the old broker</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 此处逻辑位于 func (pp *partitionProducer) dispatch 中
+</span><span class="c1"></span>        <span class="k">if</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">retries</span> <span class="p">&gt;</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">highWatermark</span> <span class="p">{</span>
+            <span class="c1">// a new, higher, retry level; handle it and then back off
+</span><span class="c1"></span>            <span class="nx">pp</span><span class="p">.</span><span class="nf">newHighWatermark</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">retries</span><span class="p">)</span>
+            <span class="nx">pp</span><span class="p">.</span><span class="nf">backoff</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">retries</span><span class="p">)</span>
+        <span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">pp</span> <span class="o">*</span><span class="nx">partitionProducer</span><span class="p">)</span> <span class="nf">newHighWatermark</span><span class="p">(</span><span class="nx">hwm</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;producer/leader/%s/%d state change to [retrying-%d]\n&#34;</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">partition</span><span class="p">,</span> <span class="nx">hwm</span><span class="p">)</span>
+    <span class="nx">pp</span><span class="p">.</span><span class="nx">highWatermark</span> <span class="p">=</span> <span class="nx">hwm</span>
+
+    <span class="c1">// send off a fin so that we know when everything &#34;in between&#34; has made it
+</span><span class="c1"></span>    <span class="c1">// back to us and we can safely flush the backlog (otherwise we risk re-ordering messages)
+</span><span class="c1"></span>    <span class="nx">pp</span><span class="p">.</span><span class="nx">retryState</span><span class="p">[</span><span class="nx">pp</span><span class="p">.</span><span class="nx">highWatermark</span><span class="p">].</span><span class="nx">expectChaser</span> <span class="p">=</span> <span class="kc">true</span>
+    <span class="nx">pp</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">inFlight</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1">// we&#39;re generating a fin message; track it so we don&#39;t shut down while it&#39;s still inflight
+</span><span class="c1"></span>    <span class="c1">// 注意此处的retries做了减一操作
+</span><span class="c1"></span>    <span class="c1">// 这样的话，当brokerProducer收到这个fin消息，并重新retry到partitionProducer中时
+</span><span class="c1"></span>    <span class="c1">// 才会满足msg.retries == highWatermark 从而被识别
+</span><span class="c1"></span>    <span class="nx">pp</span><span class="p">.</span><span class="nx">brokerProducer</span><span class="p">.</span><span class="nx">input</span> <span class="o">&lt;-</span> <span class="o">&amp;</span><span class="nx">ProducerMessage</span><span class="p">{</span><span class="nx">Topic</span><span class="p">:</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">Partition</span><span class="p">:</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">partition</span><span class="p">,</span> <span class="nx">flags</span><span class="p">:</span> <span class="nx">fin</span><span class="p">,</span> <span class="nx">retries</span><span class="p">:</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">highWatermark</span> <span class="o">-</span> <span class="mi">1</span><span class="p">}</span>
+
+    <span class="c1">// a new HWM means that our current broker selection is out of date
+</span><span class="c1"></span>    <span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;producer/leader/%s/%d abandoning broker %d\n&#34;</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">partition</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">leader</span><span class="p">.</span><span class="nf">ID</span><span class="p">())</span>
+    <span class="nx">pp</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nf">unrefBrokerProducer</span><span class="p">(</span><span class="nx">pp</span><span class="p">.</span><span class="nx">leader</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">brokerProducer</span><span class="p">)</span>
+    <span class="nx">pp</span><span class="p">.</span><span class="nx">brokerProducer</span> <span class="p">=</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>the partitionProducer updates its metadata, opens a connection to the new broker, and sends the retried message down the new path</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 依然在 func (pp *partitionProducer) dispatch 中
+</span><span class="c1"></span>        <span class="c1">// if we made it this far then the current msg contains real data, and can be sent to the next goroutine
+</span><span class="c1"></span>        <span class="c1">// without breaking any of our ordering guarantees
+</span><span class="c1"></span>
+        <span class="k">if</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">brokerProducer</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">pp</span><span class="p">.</span><span class="nf">updateLeader</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="nx">pp</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nf">returnError</span><span class="p">(</span><span class="nx">msg</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+                <span class="nx">pp</span><span class="p">.</span><span class="nf">backoff</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">retries</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="p">}</span>
+            <span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;producer/leader/%s/%d selected broker %d\n&#34;</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">partition</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">leader</span><span class="p">.</span><span class="nf">ID</span><span class="p">())</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Now that we know we have a broker to actually try and send this message to, generate the sequence
+</span><span class="c1"></span>        <span class="c1">// number for it.
+</span><span class="c1"></span>        <span class="c1">// All messages being retried (sent or not) have already had their retry count updated
+</span><span class="c1"></span>        <span class="c1">// Also, ignore &#34;special&#34; syn/fin messages used to sync the brokerProducer and the topicProducer.
+</span><span class="c1"></span>        <span class="k">if</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">conf</span><span class="p">.</span><span class="nx">Producer</span><span class="p">.</span><span class="nx">Idempotent</span> <span class="o">&amp;&amp;</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">retries</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">flags</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+            <span class="nx">msg</span><span class="p">.</span><span class="nx">sequenceNumber</span><span class="p">,</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">producerEpoch</span> <span class="p">=</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">txnmgr</span><span class="p">.</span><span class="nf">getAndIncrementSequenceNumber</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">Topic</span><span class="p">,</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">Partition</span><span class="p">)</span>
+            <span class="nx">msg</span><span class="p">.</span><span class="nx">hasSequence</span> <span class="p">=</span> <span class="kc">true</span>
+        <span class="p">}</span>
+
+        <span class="nx">pp</span><span class="p">.</span><span class="nx">brokerProducer</span><span class="p">.</span><span class="nx">input</span> <span class="o">&lt;-</span> <span class="nx">msg</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>the partitionProducer continues handling incoming messages - retried messages get sent to the new broker, while new messages are held in a queue to preserver ordering</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 依然在 func (pp *partitionProducer) dispatch 中
+</span><span class="c1"></span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">highWatermark</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+            <span class="c1">// we are retrying something (else highWatermark would be 0) but this message is not a *new* retry level
+</span><span class="c1"></span>            <span class="k">if</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">retries</span> <span class="p">&lt;</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">highWatermark</span> <span class="p">{</span>
+                <span class="c1">// in fact this message is not even the current retry level, so buffer it for now (unless it&#39;s a just a fin)
+</span><span class="c1"></span>                <span class="k">if</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">flags</span><span class="o">&amp;</span><span class="nx">fin</span> <span class="o">==</span> <span class="nx">fin</span> <span class="p">{</span>
+                    <span class="nx">pp</span><span class="p">.</span><span class="nx">retryState</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">retries</span><span class="p">].</span><span class="nx">expectChaser</span> <span class="p">=</span> <span class="kc">false</span>
+                    <span class="nx">pp</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">inFlight</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span> <span class="c1">// this fin is now handled and will be garbage collected
+</span><span class="c1"></span>                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="c1">// 新消息暂存在buffer中
+</span><span class="c1"></span>                    <span class="nx">pp</span><span class="p">.</span><span class="nx">retryState</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">retries</span><span class="p">].</span><span class="nx">buf</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">pp</span><span class="p">.</span><span class="nx">retryState</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">retries</span><span class="p">].</span><span class="nx">buf</span><span class="p">,</span> <span class="nx">msg</span><span class="p">)</span>
+                <span class="p">}</span>
+                <span class="k">continue</span>
+
+        
+        <span class="c1">// 重试的消息会发往新开启的broker中
+</span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>the brokerProducer sees the chaser message; it clears the flag it originally sent, and &ldquo;retries&rdquo; the chaser message</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 此处逻辑位于 func (bp *brokerProducer) run 方法
+</span><span class="c1"></span>            <span class="k">if</span> <span class="nx">reason</span> <span class="o">:=</span> <span class="nx">bp</span><span class="p">.</span><span class="nf">needsRetry</span><span class="p">(</span><span class="nx">msg</span><span class="p">);</span> <span class="nx">reason</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="c1">// ”重发”
+</span><span class="c1"></span>                <span class="nx">bp</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nf">retryMessage</span><span class="p">(</span><span class="nx">msg</span><span class="p">,</span> <span class="nx">reason</span><span class="p">)</span>
+                <span class="c1">// clear flag
+</span><span class="c1"></span>                <span class="k">if</span> <span class="nx">bp</span><span class="p">.</span><span class="nx">closing</span> <span class="o">==</span> <span class="kc">nil</span> <span class="o">&amp;&amp;</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">flags</span><span class="o">&amp;</span><span class="nx">fin</span> <span class="o">==</span> <span class="nx">fin</span> <span class="p">{</span>
+                    <span class="c1">// we were retrying this partition but we can start processing again
+</span><span class="c1"></span>                    <span class="nb">delete</span><span class="p">(</span><span class="nx">bp</span><span class="p">.</span><span class="nx">currentRetries</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">Topic</span><span class="p">],</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">Partition</span><span class="p">)</span>
+                    <span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;producer/broker/%d state change to [closed] on %s/%d\n&#34;</span><span class="p">,</span>
+                        <span class="nx">bp</span><span class="p">.</span><span class="nx">broker</span><span class="p">.</span><span class="nf">ID</span><span class="p">(),</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">Topic</span><span class="p">,</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">Partition</span><span class="p">)</span>
+                <span class="p">}</span>
+
+                <span class="k">continue</span>
+            <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p>the partitionProducer sees the retried chaser message (indicating that it has seen the last retried message)  这是最后一条 retried msg</p>
+</li>
+<li>
+<p>the partitionProducer flushes the backlog of &ldquo;new&rdquo; messages to the new broker and resumes normal processing</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 此处逻辑在 func (pp *partitionProducer) dispatch 中
+</span><span class="c1"></span>            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">flags</span><span class="o">&amp;</span><span class="nx">fin</span> <span class="o">==</span> <span class="nx">fin</span> <span class="p">{</span>
+                <span class="c1">// this message is of the current retry level (msg.retries == highWatermark) and the fin flag is set,
+</span><span class="c1"></span>                <span class="c1">// meaning this retry level is done and we can go down (at least) one level and flush that
+</span><span class="c1"></span>                <span class="nx">pp</span><span class="p">.</span><span class="nx">retryState</span><span class="p">[</span><span class="nx">pp</span><span class="p">.</span><span class="nx">highWatermark</span><span class="p">].</span><span class="nx">expectChaser</span> <span class="p">=</span> <span class="kc">false</span>
+                <span class="nx">pp</span><span class="p">.</span><span class="nf">flushRetryBuffers</span><span class="p">()</span>
+                <span class="nx">pp</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">inFlight</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span> <span class="c1">// this fin is now handled and will be garbage collected
+</span><span class="c1"></span>                <span class="k">continue</span>
+            <span class="p">}</span>
+
+<span class="c1">// 是怎么刷缓存的消息的            
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">pp</span> <span class="o">*</span><span class="nx">partitionProducer</span><span class="p">)</span> <span class="nf">flushRetryBuffers</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;producer/leader/%s/%d state change to [flushing-%d]\n&#34;</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">partition</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">highWatermark</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="nx">pp</span><span class="p">.</span><span class="nx">highWatermark</span><span class="o">--</span>
+
+        <span class="k">if</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">brokerProducer</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">pp</span><span class="p">.</span><span class="nf">updateLeader</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="nx">pp</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nf">returnErrors</span><span class="p">(</span><span class="nx">pp</span><span class="p">.</span><span class="nx">retryState</span><span class="p">[</span><span class="nx">pp</span><span class="p">.</span><span class="nx">highWatermark</span><span class="p">].</span><span class="nx">buf</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+                <span class="k">goto</span> <span class="nx">flushDone</span>
+            <span class="p">}</span>
+            <span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;producer/leader/%s/%d selected broker %d\n&#34;</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">partition</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">leader</span><span class="p">.</span><span class="nf">ID</span><span class="p">())</span>
+        <span class="p">}</span>
+        <span class="c1">// 可以看到是一层一层开始刷的
+</span><span class="c1"></span>        <span class="c1">// 从最外层（即重试次数最多的消息）开始刷起
+</span><span class="c1"></span>        <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">msg</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">retryState</span><span class="p">[</span><span class="nx">pp</span><span class="p">.</span><span class="nx">highWatermark</span><span class="p">].</span><span class="nx">buf</span> <span class="p">{</span>
+            <span class="nx">pp</span><span class="p">.</span><span class="nx">brokerProducer</span><span class="p">.</span><span class="nx">input</span> <span class="o">&lt;-</span> <span class="nx">msg</span>
+        <span class="p">}</span>
+
+    <span class="nx">flushDone</span><span class="p">:</span>
+        <span class="nx">pp</span><span class="p">.</span><span class="nx">retryState</span><span class="p">[</span><span class="nx">pp</span><span class="p">.</span><span class="nx">highWatermark</span><span class="p">].</span><span class="nx">buf</span> <span class="p">=</span> <span class="kc">nil</span>
+        <span class="k">if</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">retryState</span><span class="p">[</span><span class="nx">pp</span><span class="p">.</span><span class="nx">highWatermark</span><span class="p">].</span><span class="nx">expectChaser</span> <span class="p">{</span>
+            <span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;producer/leader/%s/%d state change to [retrying-%d]\n&#34;</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">partition</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">highWatermark</span><span class="p">)</span>
+            <span class="k">break</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">highWatermark</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+            <span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;producer/leader/%s/%d state change to [normal]\n&#34;</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">pp</span><span class="p">.</span><span class="nx">partition</span><span class="p">)</span>
+            <span class="k">break</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>同步发送与异步发送的区别？</p>
+</blockquote>
+<p>和一般的理解不一样，<code>同步发送</code>并不代表消息是同步发出去的，<code>异步发送</code>也只是提供了一个异步的表象。查看源码可以知道，消息的异步同步与否，最关键的是看<code>RequiredAcks</code>配置的是啥。</p>
+<p><code>RequiredAcks</code>有3种选择：</p>
+<ul>
+<li>0 表示不需要等待kafka server确认   # 完全的异步</li>
+<li>1 表示需要等待分区的Leader确认后才可以  # 依然可能丢消息</li>
+<li>-1 表示需要等待分区的所有副本都确认后才可以   # 完全的同步</li>
+</ul>
+<p>也就是说，即便你使用了<code>同步发送</code>，但<code>RequiredAcks</code>配置为0，那么也是可能丢消息的（因为client发送消息时并不关注server的返回）</p>
+<p>而若<code>RequiredAcks</code>配置为1或者-1，则不论使用同步还是异步，都会”等待“server端的返回。区别是，<code>同步发送</code>真的会同步等待返回，而<code>异步发送</code>则是给你一个选择，返回是在一个单独的channel里，你感兴趣的话，可以自己读取</p>
+<h4 id="可以借鉴学习的代码">可以借鉴学习的代码</h4>
+<p>从以下代码可以学习它的<code>重试</code>机制的实现，在函数内部实现了一个<code>retry</code>函数，在发生不需要retry的 error时函数直接return，当遇到需要重试的error时，直接调用<code>retry</code>，<code>retry</code>里封装了重试的策略以及次数等：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// client.go的tryRefreshMetadata方法
+</span><span class="c1">// 作用是刷新 Metadata
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">client</span> <span class="o">*</span><span class="nx">client</span><span class="p">)</span> <span class="nf">tryRefreshMetadata</span><span class="p">(</span><span class="nx">topics</span> <span class="p">[]</span><span class="kt">string</span><span class="p">,</span> <span class="nx">attemptsRemaining</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">deadline</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="nx">pastDeadline</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">backoff</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Duration</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">!</span><span class="nx">deadline</span><span class="p">.</span><span class="nf">IsZero</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="nx">time</span><span class="p">.</span><span class="nf">Now</span><span class="p">().</span><span class="nf">Add</span><span class="p">(</span><span class="nx">backoff</span><span class="p">).</span><span class="nf">After</span><span class="p">(</span><span class="nx">deadline</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// we are past the deadline
+</span><span class="c1"></span>            <span class="k">return</span> <span class="kc">true</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">false</span>
+    <span class="p">}</span>
+    <span class="nx">retry</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="nx">attemptsRemaining</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+            <span class="nx">backoff</span> <span class="o">:=</span> <span class="nx">client</span><span class="p">.</span><span class="nf">computeBackoff</span><span class="p">(</span><span class="nx">attemptsRemaining</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nf">pastDeadline</span><span class="p">(</span><span class="nx">backoff</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">Logger</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;client/metadata skipping last retries as we would go past the metadata timeout&#34;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nx">err</span>
+            <span class="p">}</span>
+            <span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;client/metadata retrying after %dms... (%d attempts remaining)\n&#34;</span><span class="p">,</span> <span class="nx">client</span><span class="p">.</span><span class="nx">conf</span><span class="p">.</span><span class="nx">Metadata</span><span class="p">.</span><span class="nx">Retry</span><span class="p">.</span><span class="nx">Backoff</span><span class="o">/</span><span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span><span class="p">,</span> <span class="nx">attemptsRemaining</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nx">backoff</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+                <span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">backoff</span><span class="p">)</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nx">client</span><span class="p">.</span><span class="nf">tryRefreshMetadata</span><span class="p">(</span><span class="nx">topics</span><span class="p">,</span> <span class="nx">attemptsRemaining</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nx">deadline</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">err</span>
+    <span class="p">}</span>
+
+    <span class="nx">broker</span> <span class="o">:=</span> <span class="nx">client</span><span class="p">.</span><span class="nf">any</span><span class="p">()</span>
+    <span class="k">for</span> <span class="p">;</span> <span class="nx">broker</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="o">&amp;&amp;</span> <span class="p">!</span><span class="nf">pastDeadline</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="nx">broker</span> <span class="p">=</span> <span class="nx">client</span><span class="p">.</span><span class="nf">any</span><span class="p">()</span> <span class="p">{</span>
+
+        <span class="o">...</span><span class="p">.</span>
+        
+        <span class="nx">req</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">MetadataRequest</span><span class="p">{</span><span class="nx">Topics</span><span class="p">:</span> <span class="nx">topics</span><span class="p">,</span> <span class="nx">AllowAutoTopicCreation</span><span class="p">:</span> <span class="nx">allowAutoTopicCreation</span><span class="p">}</span>
+        <span class="o">...</span><span class="p">.</span>
+        <span class="nx">response</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">broker</span><span class="p">.</span><span class="nf">GetMetadata</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span>
+        <span class="k">switch</span> <span class="nx">err</span><span class="p">.(</span><span class="kd">type</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="kc">nil</span><span class="p">:</span>
+            <span class="nx">allKnownMetaData</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="nx">topics</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="c1">// valid response, use it
+</span><span class="c1"></span>            <span class="nx">shouldRetry</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">client</span><span class="p">.</span><span class="nf">updateMetadata</span><span class="p">(</span><span class="nx">response</span><span class="p">,</span> <span class="nx">allKnownMetaData</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nx">shouldRetry</span> <span class="p">{</span>
+                <span class="nx">Logger</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;client/metadata found some partitions to be leaderless&#34;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nf">retry</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="c1">// note: err can be nil
+</span><span class="c1"></span>            <span class="p">}</span>
+            <span class="k">return</span> <span class="nx">err</span>
+        <span class="o">...</span><span class="p">.</span>
+
+        <span class="k">case</span> <span class="nx">KError</span><span class="p">:</span>
+            <span class="c1">// if SASL auth error return as this _should_ be a non retryable err for all brokers
+</span><span class="c1"></span>            <span class="k">if</span> <span class="nx">err</span><span class="p">.(</span><span class="nx">KError</span><span class="p">)</span> <span class="o">==</span> <span class="nx">ErrSASLAuthenticationFailed</span> <span class="p">{</span>
+                <span class="nx">Logger</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;client/metadata failed SASL authentication&#34;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nx">err</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="nx">err</span><span class="p">.(</span><span class="nx">KError</span><span class="p">)</span> <span class="o">==</span> <span class="nx">ErrTopicAuthorizationFailed</span> <span class="p">{</span>
+                <span class="nx">Logger</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;client is not authorized to access this topic. The topics were: &#34;</span><span class="p">,</span> <span class="nx">topics</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nx">err</span>
+            <span class="p">}</span>
+            <span class="c1">// else remove that broker and try again
+</span><span class="c1"></span>            <span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;client/metadata got error from broker %d while fetching metadata: %v\n&#34;</span><span class="p">,</span> <span class="nx">broker</span><span class="p">.</span><span class="nf">ID</span><span class="p">(),</span> <span class="nx">err</span><span class="p">)</span>
+            <span class="nx">_</span> <span class="p">=</span> <span class="nx">broker</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+            <span class="nx">client</span><span class="p">.</span><span class="nf">deregisterBroker</span><span class="p">(</span><span class="nx">broker</span><span class="p">)</span>
+
+        <span class="k">default</span><span class="p">:</span>
+            <span class="c1">// some other error, remove that broker and try again
+</span><span class="c1"></span>            <span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;client/metadata got error from broker %d while fetching metadata: %v\n&#34;</span><span class="p">,</span> <span class="nx">broker</span><span class="p">.</span><span class="nf">ID</span><span class="p">(),</span> <span class="nx">err</span><span class="p">)</span>
+            <span class="nx">_</span> <span class="p">=</span> <span class="nx">broker</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+            <span class="nx">client</span><span class="p">.</span><span class="nf">deregisterBroker</span><span class="p">(</span><span class="nx">broker</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="nx">broker</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">Logger</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;client/metadata not fetching metadata from broker %s as we would go past the metadata timeout\n&#34;</span><span class="p">,</span> <span class="nx">broker</span><span class="p">.</span><span class="nx">addr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nf">retry</span><span class="p">(</span><span class="nx">ErrOutOfBrokers</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">Logger</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;client/metadata no available broker to send metadata request to&#34;</span><span class="p">)</span>
+    <span class="nx">client</span><span class="p">.</span><span class="nf">resurrectDeadBrokers</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nf">retry</span><span class="p">(</span><span class="nx">ErrOutOfBrokers</span><span class="p">)</span>
+<span class="p">}</span>        
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-01-22
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2021/01/26/golang-best-practice/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Golang工程最佳实践</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2020/11/12/designing-data-intensive-applications-part1/">
+            <span class="next-text nav-default">designing data intensive applications part1</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

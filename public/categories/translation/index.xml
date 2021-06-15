@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>translation on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/translation/</link>
+    <description>Recent content in translation on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 06 Jan 2020 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/translation/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>「译」Asynchronous Python and Databases</title>
+      <link>http://localhost:1313/post/2020/01/06/asynchronous-python-and-databases/</link>
+      <pubDate>Mon, 06 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2020/01/06/asynchronous-python-and-databases/</guid>
+      <description>翻译一篇 SQLAlchemy 作者的博文，原文：Asynchronous Python and Databases 这篇文章给异步IO泼了点冷水，引导我们用正确的态度来看待这个技术(其实是任何技术)</description>
+    </item>
+    
+  </channel>
+</rss>

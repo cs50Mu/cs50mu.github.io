@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>crontab on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/crontab/</link>
+    <description>Recent content in crontab on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 21 Jun 2013 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/crontab/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>在WR703N上刷openwrt</title>
+      <link>http://localhost:1313/post/2013/06/21/flash-openwrt-in-wr703n/</link>
+      <pubDate>Fri, 21 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/06/21/flash-openwrt-in-wr703n/</guid>
+      <description>买这个传说中很牛逼的路由器已经很久了，直到现在才想起来刷。。当初买它是因为一直用的一个无线路由老是罢工，一开始以为是学校网络的问题，后来发现</description>
+    </item>
+    
+  </channel>
+</rss>

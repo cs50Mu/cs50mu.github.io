@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>best practice on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/best-practice/</link>
+    <description>Recent content in best practice on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 26 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/best-practice/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Golang工程最佳实践</title>
+      <link>http://localhost:1313/post/2021/01/26/golang-best-practice/</link>
+      <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2021/01/26/golang-best-practice/</guid>
+      <description>examples Building Go Web Applications and Microservices Using Gin 有实现，有测试，有重构 项目分层 model 所有的数据模型，被其它层所依赖 repo 数据层，屏蔽所有数据存取的细节 它的底层可以是数据库，也可以</description>
+    </item>
+    
+  </channel>
+</rss>

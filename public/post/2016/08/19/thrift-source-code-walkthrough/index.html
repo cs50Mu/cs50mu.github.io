@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>thrift source code walkthrough - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="准备学习一下thrift的源码，看的是Python版的，以下所有分析都是基于0.9.0版本的thrift thrift整个逻辑结构是分层的，类" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2016/08/19/thrift-source-code-walkthrough/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="thrift source code walkthrough" />
+<meta property="og:description" content="准备学习一下thrift的源码，看的是Python版的，以下所有分析都是基于0.9.0版本的thrift thrift整个逻辑结构是分层的，类" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2016/08/19/thrift-source-code-walkthrough/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2016-08-19T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2016-08-19T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="thrift source code walkthrough">
+<meta itemprop="description" content="准备学习一下thrift的源码，看的是Python版的，以下所有分析都是基于0.9.0版本的thrift thrift整个逻辑结构是分层的，类"><meta itemprop="datePublished" content="2016-08-19T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-08-19T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2448">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="thrift source code walkthrough"/>
+<meta name="twitter:description" content="准备学习一下thrift的源码，看的是Python版的，以下所有分析都是基于0.9.0版本的thrift thrift整个逻辑结构是分层的，类"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">thrift source code walkthrough</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-08-19 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>准备学习一下thrift的源码，看的是Python版的，以下所有分析都是基于0.9.0版本的thrift</p>
+<p>thrift整个逻辑结构是分层的，类似于网络模型的分层，从下到上依次为Transport层，它封装了底层的socket；Protocol层在Transport层的基础上实现了传输协议；</p>
+<p>###Transport
+先看是如何用的，thrift client端的正确打开方式是:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># Make socket</span>
+<span class="n">transport</span> <span class="o">=</span> <span class="n">TSocket</span><span class="o">.</span><span class="n">TSocket</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">9090</span><span class="p">)</span>
+
+<span class="c1"># Buffering is critical. Raw sockets are very slow</span>
+<span class="n">transport</span> <span class="o">=</span> <span class="n">TTransport</span><span class="o">.</span><span class="n">TBufferedTransport</span><span class="p">(</span><span class="n">transport</span><span class="p">)</span>
+
+<span class="c1"># Wrap in a protocol</span>
+<span class="n">protocol</span> <span class="o">=</span> <span class="n">TBinaryProtocol</span><span class="o">.</span><span class="n">TBinaryProtocol</span><span class="p">(</span><span class="n">transport</span><span class="p">)</span>
+
+<span class="c1"># Create a client to use the protocol encoder</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Calculator</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">protocol</span><span class="p">)</span>
+
+<span class="c1"># Connect!</span>
+<span class="n">transport</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">ping</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>先看transport的初始化，其实是创建了一个socket，我们去源码里看一下到底是如何创建的，定位到<code>thrift.transport.TSocket</code>的TSocket类：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span><span class="lnt">89
+</span><span class="lnt">90
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">TSocket</span><span class="p">(</span><span class="n">TSocketBase</span><span class="p">):</span>
+  <span class="s2">&#34;&#34;&#34;Socket implementation of TTransport base.&#34;&#34;&#34;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">9090</span><span class="p">,</span> <span class="n">unix_socket</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;Initialize a TSocket
+</span><span class="s2">
+</span><span class="s2">    @param host(str)  The host to connect to.
+</span><span class="s2">    @param port(int)  The (TCP) port to connect to.
+</span><span class="s2">    @param unix_socket(str)  The filename of a unix socket to connect to.
+</span><span class="s2">                             (host and port will be ignored.)
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">handle</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_unix_socket</span> <span class="o">=</span> <span class="n">unix_socket</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span> <span class="o">=</span> <span class="bp">None</span>
+
+  <span class="k">def</span> <span class="nf">setHandle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">handle</span> <span class="o">=</span> <span class="n">h</span>
+
+  <span class="k">def</span> <span class="nf">isOpen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
+
+  <span class="k">def</span> <span class="nf">setTimeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ms</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">ms</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span> <span class="o">=</span> <span class="n">ms</span> <span class="o">/</span> <span class="mf">1000.0</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">res0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolveAddr</span><span class="p">()</span>
+      <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">res0</span><span class="p">:</span>       <span class="c1">#   res is of structure:   (family, socktype, proto, canonname, sockaddr)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handle</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>    <span class="c1">#  make a socket</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>      <span class="c1">#    connect</span>
+        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">error</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">res0</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>    <span class="c1">#   if it&#39;s not the last, continue; or else raise exception</span>
+            <span class="k">continue</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">e</span>
+        <span class="k">break</span>                     <span class="c1">#    if there if one socket that can be connected, then we are happy</span>
+    <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">error</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unix_socket</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Could not connect to socket </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unix_socket</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Could not connect to </span><span class="si">%s</span><span class="s1">:</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+      <span class="k">raise</span> <span class="n">TTransportException</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">TTransportException</span><span class="o">.</span><span class="n">NOT_OPEN</span><span class="p">,</span>
+                                <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sz</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">buff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">sz</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">error</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">errno</span><span class="o">.</span><span class="n">ECONNRESET</span> <span class="ow">and</span>
+          <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;darwin&#39;</span> <span class="ow">or</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;freebsd&#39;</span><span class="p">))):</span>
+        <span class="c1"># freebsd and Mach don&#39;t follow POSIX semantic of recv</span>
+        <span class="c1"># and fail with ECONNRESET if peer performed shutdown.</span>
+        <span class="c1"># See corresponding comment and code in TSocket::read()</span>
+        <span class="c1"># in lib/cpp/src/transport/TSocket.cpp.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="c1"># Trigger the check to raise the END_OF_FILE exception below.</span>
+        <span class="n">buff</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">buff</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="n">TTransportException</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">TTransportException</span><span class="o">.</span><span class="n">END_OF_FILE</span><span class="p">,</span>
+                                <span class="n">message</span><span class="o">=</span><span class="s1">&#39;TSocket read 0 bytes&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">buff</span>
+
+  <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buff</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="n">TTransportException</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">TTransportException</span><span class="o">.</span><span class="n">NOT_OPEN</span><span class="p">,</span>
+                                <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Transport not open&#39;</span><span class="p">)</span>
+    <span class="n">sent</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">have</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">buff</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">sent</span> <span class="o">&lt;</span> <span class="n">have</span><span class="p">:</span>
+      <span class="n">plus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">buff</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">plus</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">TTransportException</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">TTransportException</span><span class="o">.</span><span class="n">END_OF_FILE</span><span class="p">,</span>
+                                  <span class="n">message</span><span class="o">=</span><span class="s1">&#39;TSocket sent 0 bytes&#39;</span><span class="p">)</span>
+      <span class="n">sent</span> <span class="o">+=</span> <span class="n">plus</span>
+      <span class="n">buff</span> <span class="o">=</span> <span class="n">buff</span><span class="p">[</span><span class="n">plus</span><span class="p">:]</span>
+
+  <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">pass</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>比较重要的方法是open、read和write。open会初始化一个socket并且connect；read和write分别封装了底层socket库的recv和send方法。</p>
+<p>再回到使用的角度上，注意它在初始的transport上又包了一个TBufferedTransport，这又是干嘛呢？正如注释中指出的那样，是给原始的socket接口包了一个buffer，
+这样会减少对socket的读写，效率会高些，依然看下源码，定位到thrift.transport.TTransport的TBufferedTransport类：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">TBufferedTransport</span><span class="p">(</span><span class="n">TTransportBase</span><span class="p">,</span> <span class="n">CReadableTransport</span><span class="p">):</span>
+  <span class="s2">&#34;&#34;&#34;Class that wraps another transport and buffers its I/O.
+</span><span class="s2">
+</span><span class="s2">  The implementation uses a (configurable) fixed-size read buffer
+</span><span class="s2">  but buffers all writes until a flush is performed.
+</span><span class="s2">  &#34;&#34;&#34;</span>
+  <span class="n">DEFAULT_BUFFER</span> <span class="o">=</span> <span class="mi">4096</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rbuf_size</span><span class="o">=</span><span class="n">DEFAULT_BUFFER</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__trans</span> <span class="o">=</span> <span class="n">trans</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__wbuf</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__rbuf</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="s2">&#34;&#34;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__rbuf_size</span> <span class="o">=</span> <span class="n">rbuf_size</span>
+
+  <span class="k">def</span> <span class="nf">isOpen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__trans</span><span class="o">.</span><span class="n">isOpen</span><span class="p">()</span>
+
+  <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__trans</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+
+  <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__trans</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+  <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sz</span><span class="p">):</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rbuf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">sz</span><span class="p">)</span>     <span class="c1">#  默认从buffer读，buffer里有数据的话直接返回</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">__rbuf</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__trans</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">sz</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rbuf_size</span><span class="p">)))</span>   <span class="c1"># 否则的话就从socket读出buffer-size大小的数据缓存在buffer里</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rbuf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">sz</span><span class="p">)</span>                                           <span class="c1"># 在从buffer里返回要求大小的数据量</span>
+
+  <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buf</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__wbuf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>       <span class="c1"># 写操作的话就是一直往buffer里写，并不自动flush</span>
+
+  <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wbuf</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+    <span class="c1"># reset wbuf before write/flush to preserve state on underlying failure</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__wbuf</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__trans</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__trans</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+  <span class="c1"># Implement the CReadableTransport interface.</span>
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">cstringio_buf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rbuf</span>
+
+  <span class="k">def</span> <span class="nf">cstringio_refill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">partialread</span><span class="p">,</span> <span class="n">reqlen</span><span class="p">):</span>
+    <span class="n">retstring</span> <span class="o">=</span> <span class="n">partialread</span>
+    <span class="k">if</span> <span class="n">reqlen</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rbuf_size</span><span class="p">:</span>
+      <span class="c1"># try to make a read of as much as we can.</span>
+      <span class="n">retstring</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__trans</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__rbuf_size</span><span class="p">)</span>
+
+    <span class="c1"># but make sure we do read reqlen bytes.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">retstring</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">reqlen</span><span class="p">:</span>
+      <span class="n">retstring</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__trans</span><span class="o">.</span><span class="n">readAll</span><span class="p">(</span><span class="n">reqlen</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">retstring</span><span class="p">))</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">__rbuf</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">retstring</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rbuf</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>再来看看给server端用的socket</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">TServerSocket</span><span class="p">(</span><span class="n">TSocketBase</span><span class="p">,</span> <span class="n">TServerTransportBase</span><span class="p">):</span>
+  <span class="s2">&#34;&#34;&#34;Socket implementation of TServerTransport base.&#34;&#34;&#34;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">9090</span><span class="p">,</span> <span class="n">unix_socket</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_unix_socket</span> <span class="o">=</span> <span class="n">unix_socket</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">handle</span> <span class="o">=</span> <span class="bp">None</span>
+
+  <span class="k">def</span> <span class="nf">listen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">res0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolveAddr</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">res0</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="n">socket</span><span class="o">.</span><span class="n">AF_INET6</span> <span class="ow">or</span> <span class="n">res</span> <span class="ow">is</span> <span class="n">res0</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">break</span>
+
+    <span class="c1"># We need remove the old unix socket if the file exists and</span>
+    <span class="c1"># nobody is listening on it.</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unix_socket</span><span class="p">:</span>
+      <span class="n">tmp</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+      <span class="k">try</span><span class="p">:</span>
+        <span class="n">tmp</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+      <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">error</span><span class="p">,</span> <span class="n">err</span><span class="p">:</span>
+        <span class="n">eno</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="n">err</span><span class="o">.</span><span class="n">args</span>
+        <span class="k">if</span> <span class="n">eno</span> <span class="o">==</span> <span class="n">errno</span><span class="o">.</span><span class="n">ECONNREFUSED</span><span class="p">:</span>
+          <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">handle</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">setsockopt</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">SOL_SOCKET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SO_REUSEADDR</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="s1">&#39;settimeout&#39;</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">accept</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>     <span class="c1">#  accept会把返回的socket再用TSocket包一下</span>
+    <span class="n">client</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">TSocket</span><span class="p">()</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">setHandle</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>###Protocol
+这个模块定义的是传输协议，代码都放在protocol目录下。关于这一部分的作用，官网已经说的很清楚了，直接引用过来：</p>
+<blockquote>
+<p>The Protocol abstraction defines a mechanism to map in-memory data structures to a wire-format. In other words, a protocol specifies how datatypes use the underlying Transport to encode/decode themselves. Thus the protocol implementation governs the encoding scheme and is responsible for (de)serialization. Some examples of protocols in this sense include JSON, XML, plain text, compact binary etc.</p>
+</blockquote>
+<p>这个模块的接口如下：</p>
+<blockquote>
+<p>writeMessageBegin(name, type, seq) <br>
+writeMessageEnd() <br>
+writeStructBegin(name)<br>
+writeStructEnd()<br>
+writeFieldBegin(name, type, id)  <br>
+writeFieldEnd()   <br>
+writeFieldStop()  <br>
+writeMapBegin(ktype, vtype, size)  <br>
+writeMapEnd()   <br>
+writeListBegin(etype, size)  <br>
+writeListEnd()  <br>
+writeSetBegin(etype, size)   <br>
+writeSetEnd()    <br>
+writeBool(bool)    <br>
+writeByte(byte)    <br>
+writeI16(i16)    <br>
+writeI32(i32)   <br>
+writeI64(i64)   <br>
+writeDouble(double)     <br>
+writeString(string)</p>
+<p>name, type, seq = readMessageBegin()      <br>
+readMessageEnd()      <br>
+name = readStructBegin()    <br>
+readStructEnd()       <br>
+name, type, id = readFieldBegin()    <br>
+readFieldEnd()     <br>
+k, v, size = readMapBegin()    <br>
+readMapEnd()    <br>
+etype, size = readListBegin()    <br>
+readListEnd()   <br>
+etype, size = readSetBegin()    <br>
+readSetEnd()   <br>
+bool = readBool()     <br>
+byte = readByte()   <br>
+i16 = readI16()    <br>
+i32 = readI32()   <br>
+i64 = readI64()   <br>
+double = readDouble()   <br>
+string = readString()</p>
+</blockquote>
+<p>一个可能的使用例子：</p>
+<p>写</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python">  <span class="k">def</span> <span class="nf">send_addPlan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">plan</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_oprot</span><span class="o">.</span><span class="n">writeMessageBegin</span><span class="p">(</span><span class="s1">&#39;addPlan&#39;</span><span class="p">,</span> <span class="n">TMessageType</span><span class="o">.</span><span class="n">CALL</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seqid</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">addPlan_args</span><span class="p">()</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">header</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">plan</span> <span class="o">=</span> <span class="n">plan</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_oprot</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_oprot</span><span class="o">.</span><span class="n">writeMessageEnd</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_oprot</span><span class="o">.</span><span class="n">trans</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>读</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python">  <span class="k">def</span> <span class="nf">recv_addPlan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">):</span>
+    <span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">rseqid</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iprot</span><span class="o">.</span><span class="n">readMessageBegin</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">mtype</span> <span class="o">==</span> <span class="n">TMessageType</span><span class="o">.</span><span class="n">EXCEPTION</span><span class="p">:</span>
+      <span class="n">x</span> <span class="o">=</span> <span class="n">TApplicationException</span><span class="p">()</span>
+      <span class="n">x</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_iprot</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_iprot</span><span class="o">.</span><span class="n">readMessageEnd</span><span class="p">()</span>
+      <span class="k">raise</span> <span class="n">x</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">addPlan_result</span><span class="p">()</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_iprot</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_iprot</span><span class="o">.</span><span class="n">readMessageEnd</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span>
+    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">e</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="n">result</span><span class="o">.</span><span class="n">e</span>
+    <span class="k">raise</span> <span class="n">TApplicationException</span><span class="p">(</span><span class="n">TApplicationException</span><span class="o">.</span><span class="n">MISSING_RESULT</span><span class="p">,</span> <span class="s2">&#34;addPlan failed: unknown result&#34;</span><span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>先看write，它首先会调用writeMessageBegin方法，然后写入相应的内容，最后调用writeMessageEnd方法来结束写操作。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python">  <span class="k">def</span> <span class="nf">writeMessageBegin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">seqid</span><span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strictWrite</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">writeI32</span><span class="p">(</span><span class="n">TBinaryProtocol</span><span class="o">.</span><span class="n">VERSION_1</span> <span class="o">|</span> <span class="nb">type</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">writeString</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">writeI32</span><span class="p">(</span><span class="n">seqid</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">writeString</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">writeByte</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">writeI32</span><span class="p">(</span><span class="n">seqid</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>调用writeMessageBegin的时候分为两种情况，严格写和普通写。严格写的时候需要先写入版本号和消息的类型，然后是消息名称、消息序列号。普通写只要依次写入消息名称、消息类型
+和消息序列号即可。这其实只是相当于把header信息（也就是元信息）写进去了，写完这些以后才会写具体的数据，最后调用一下writeMessageEnd表示写消息结束（这个方法根据各个具体的协议会有不同的
+实现，像在TBinaryProtocol里这个方法其实是空的，什么都不做）。</p>
+<p>再看read，与写的过程类似，不过是反的，会先调用readMessageBegin，它会返回一个(name, type, seqid)的三元组，标识了收到的这条消息的名称、类型和序列号。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python">  <span class="k">def</span> <span class="nf">readMessageBegin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">sz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readI32</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">sz</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="n">version</span> <span class="o">=</span> <span class="n">sz</span> <span class="o">&amp;</span> <span class="n">TBinaryProtocol</span><span class="o">.</span><span class="n">VERSION_MASK</span>
+      <span class="k">if</span> <span class="n">version</span> <span class="o">!=</span> <span class="n">TBinaryProtocol</span><span class="o">.</span><span class="n">VERSION_1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">TProtocolException</span><span class="p">(</span>
+          <span class="nb">type</span><span class="o">=</span><span class="n">TProtocolException</span><span class="o">.</span><span class="n">BAD_VERSION</span><span class="p">,</span>
+          <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Bad version in readMessageBegin: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sz</span><span class="p">))</span>
+      <span class="nb">type</span> <span class="o">=</span> <span class="n">sz</span> <span class="o">&amp;</span> <span class="n">TBinaryProtocol</span><span class="o">.</span><span class="n">TYPE_MASK</span>
+      <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readString</span><span class="p">()</span>
+      <span class="n">seqid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readI32</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strictRead</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">TProtocolException</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">TProtocolException</span><span class="o">.</span><span class="n">BAD_VERSION</span><span class="p">,</span>
+                                 <span class="n">message</span><span class="o">=</span><span class="s1">&#39;No protocol version header&#39;</span><span class="p">)</span>
+      <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trans</span><span class="o">.</span><span class="n">readAll</span><span class="p">(</span><span class="n">sz</span><span class="p">)</span>
+      <span class="nb">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readByte</span><span class="p">()</span>
+      <span class="n">seqid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readI32</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">seqid</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>类似的，读出header信息后，会继续读出具体的返回数据，视情况决定是否返回exception。</p>
+<p>这一部分的分析有一个巨牛的资源，写的非常清楚：<br>
+<a href="http://houjixin.blog.163.com/blog/static/35628410201501654039437/">由浅入深了解Thrift（二）——Thrift的工作原理</a></p>
+<p>###Processor
+这一块儿的代码是由thrift compiler自动生成的</p>
+<p>###Server</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2016-08-19
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2016/08/26/csapp-exceptional-control-flow/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">csapp exceptional control flow</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2016/03/06/baidu-ife/">
+            <span class="next-text nav-default">baidu ife</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

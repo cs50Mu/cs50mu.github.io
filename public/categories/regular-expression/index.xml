@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>regular expression on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/regular-expression/</link>
+    <description>Recent content in regular expression on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 16 Jun 2013 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/regular-expression/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>学习正则表达式</title>
+      <link>http://localhost:1313/post/2013/06/16/regular-expressions/</link>
+      <pubDate>Sun, 16 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/06/16/regular-expressions/</guid>
+      <description>正则表达式真的很强大啊！ 但我在用的过程中写的表达式总是不能达到期望的效果，今天又认真看了下，对它又有了一些新的理解。 贪婪模式Vs非贪婪模式。</description>
+    </item>
+    
+  </channel>
+</rss>

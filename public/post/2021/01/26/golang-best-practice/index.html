@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Golang工程最佳实践 - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="examples Building Go Web Applications and Microservices Using Gin 有实现，有测试，有重构 项目分层 model 所有的数据模型，被其它层所依赖 repo 数据层，屏蔽所有数据存取的细节 它的底层可以是数据库，也可以" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2021/01/26/golang-best-practice/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Golang工程最佳实践" />
+<meta property="og:description" content="examples Building Go Web Applications and Microservices Using Gin 有实现，有测试，有重构 项目分层 model 所有的数据模型，被其它层所依赖 repo 数据层，屏蔽所有数据存取的细节 它的底层可以是数据库，也可以" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2021/01/26/golang-best-practice/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-01-26T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-01-26T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="Golang工程最佳实践">
+<meta itemprop="description" content="examples Building Go Web Applications and Microservices Using Gin 有实现，有测试，有重构 项目分层 model 所有的数据模型，被其它层所依赖 repo 数据层，屏蔽所有数据存取的细节 它的底层可以是数据库，也可以"><meta itemprop="datePublished" content="2021-01-26T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2021-01-26T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1906">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Golang工程最佳实践"/>
+<meta name="twitter:description" content="examples Building Go Web Applications and Microservices Using Gin 有实现，有测试，有重构 项目分层 model 所有的数据模型，被其它层所依赖 repo 数据层，屏蔽所有数据存取的细节 它的底层可以是数据库，也可以"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Golang工程最佳实践</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-01-26 </span>
+        <div class="post-category">
+            <a href="/categories/golang/"> Golang </a>
+            <a href="/categories/best-practice/"> best practice </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#examples">examples</a></li>
+            <li><a href="#项目分层">项目分层</a></li>
+            <li><a href="#代码lint">代码Lint</a></li>
+            <li><a href="#go-design-patterns">go design patterns</a></li>
+            <li><a href="#cmd--临时脚本">cmd / 临时脚本？</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h3 id="examples">examples</h3>
+<ul>
+<li><a href="https://semaphoreci.com/community/tutorials/building-go-web-applications-and-microservices-using-gin">Building Go Web Applications and Microservices Using Gin</a> 有实现，有测试，有重构</li>
+</ul>
+<h3 id="项目分层">项目分层</h3>
+<ul>
+<li>model
+<ul>
+<li>所有的数据模型，被其它层所依赖</li>
+</ul>
+</li>
+<li>repo
+<ul>
+<li>数据层，屏蔽所有数据存取的细节</li>
+<li>它的底层可以是数据库，也可以是<strong>其它服务</strong></li>
+</ul>
+</li>
+<li>business
+<ul>
+<li>业务逻辑层，依赖数据层</li>
+</ul>
+</li>
+<li>controller
+<ul>
+<li>负责参数输入的验证、统一返回结果，依赖业务逻辑层</li>
+</ul>
+</li>
+</ul>
+<p>思考：</p>
+<p>理想情况下，一个项目应该有上面几层，但又想到，其实应该按照一个项目的复杂度来决定它的分层，当项目的复杂度不高时，非要分成上述这么多层，反而会比较繁琐（毕竟，逻辑写在一个文件里最清楚了。。）。</p>
+<p>还有一个问题值得思考，就是我们是否应该将每层都定义成接口，然后层与层之间只是接口依赖，不依赖于具体的实现？这样做，</p>
+<ul>
+<li>好处：
+<ul>
+<li>更灵活，每一层的实现都是可随便替换的；</li>
+<li>更容易写单元测试，基于接口可以很容易写一个测试专用的mock实现。</li>
+</ul>
+</li>
+<li>坏处：
+<ul>
+<li>如果不需要写单元测试（写针对接口的集成测试），上面的好处也没多大意义了</li>
+<li>如果实现（比如MySQL &ndash;&gt; PG）基本不可能换，上面的好处也没多大意义</li>
+</ul>
+</li>
+</ul>
+<p>单纯从易于测试这个问题来说，基于接口的集成测试所需的时间肯定比mock依赖的单元测试要长，但感觉目前遇到的项目的复杂度并不高，执行一次集成测试的时间也还可以接受，因此暂且仅仅使用针对接口的集成测试看看效果，后续如果感觉需要加单元测试再慢慢迭代吧，随着认知的成长，越来越认识到，任何事物（项目、个人、公司等）的发展都有一个过程，迭代是个美妙的词，我不应该苛求每次工作刚开始做就要达到一个很高的标准，应该慢慢迭代，第一期达到基本可用，第二期增加xx功能，等等等等。</p>
+<p>参考：</p>
+<ul>
+<li><a href="https://deliveroo.engineering/2019/05/17/testing-go-services-using-interfaces.html">Testing Go services using interfaces</a></li>
+<li><a href="https://itnext.io/beautify-your-golang-project-f795b4b453aa">一个例子</a></li>
+<li><a href="https://hackernoon.com/golang-clean-archithecture-efd6d7c43047">Trying Clean Architecture on Golang</a>  非常好的一个示例，典范，应当时不时回过头来看看</li>
+<li><a href="https://github.com/bxcodec/go-clean-arch">go-clean-arch</a>  上面帖子对应的代码</li>
+<li><a href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html">The Clean Architecture</a> Uncle Bob</li>
+</ul>
+<h4 id="repo--数据层如何支持数据库事务">repo / 数据层如何支持数据库事务？</h4>
+<p>想了好久，参考了一些别人的做法，总算有了一个相对完美的方案。关键点如下：</p>
+<ul>
+<li>需要抽象一个接口<code>queryUpdater</code>来代表<code>sql.DB</code>和<code>sql.TX</code></li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// queryer make sql query
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">queryer</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nf">NamedExec</span><span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="kd">interface</span><span class="p">{})</span> <span class="p">(</span><span class="nx">sql</span><span class="p">.</span><span class="nx">Result</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+    <span class="nf">Get</span><span class="p">(</span><span class="kd">interface</span><span class="p">{},</span> <span class="kt">string</span><span class="p">,</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span> <span class="kt">error</span>
+    <span class="nf">Select</span><span class="p">(</span><span class="kd">interface</span><span class="p">{},</span> <span class="kt">string</span><span class="p">,</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span> <span class="kt">error</span>
+<span class="p">}</span>
+
+<span class="c1">// execer execute a sql
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">execer</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nf">Exec</span><span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span> <span class="p">(</span><span class="nx">sql</span><span class="p">.</span><span class="nx">Result</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">queryExecer</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nx">queryer</span>
+    <span class="nx">execer</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>dao对象里既有底层的sql.DB也有这个抽象的接口</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// DAO dao
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">DAO</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">db</span>     <span class="o">*</span><span class="nx">sqlx</span><span class="p">.</span><span class="nx">DB</span>
+    <span class="nx">dbConn</span> <span class="nx">queryExecer</span>
+<span class="p">}</span>
+
+<span class="c1">// NewDAO new DAO
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">NewDAO</span><span class="p">()</span> <span class="o">*</span><span class="nx">DAO</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">DAO</span><span class="p">{</span>
+        <span class="nx">db</span><span class="p">:</span>     <span class="nx">db</span><span class="p">,</span>
+        <span class="nx">dbConn</span><span class="p">:</span> <span class="nx">db</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>提供一个<code>WithTx</code> wrapper函数，只要是包在这个函数里的都是在一个数据库事务里执行</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// WithTx wrap txFunc in a db transaction
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">dao</span> <span class="o">*</span><span class="nx">DAO</span><span class="p">)</span> <span class="nf">WithTx</span><span class="p">(</span><span class="nx">txFunc</span> <span class="kd">func</span><span class="p">(</span><span class="nx">dao</span> <span class="o">*</span><span class="nx">DAO</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">tx</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">dao</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nf">Beginx</span><span class="p">()</span>
+
+    <span class="nx">txDAO</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">DAO</span><span class="p">{</span>
+        <span class="nx">dbConn</span><span class="p">:</span> <span class="nx">tx</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// TODO: what if err in defer?
+</span><span class="c1"></span>        <span class="c1">// eg, tx.Rollback returns error
+</span><span class="c1"></span>        <span class="k">if</span> <span class="nx">r</span> <span class="o">:=</span> <span class="nb">recover</span><span class="p">();</span> <span class="nx">r</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="nx">err</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;%v&#34;</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span>
+            <span class="c1">// err := r.(error)
+</span><span class="c1"></span>            <span class="nx">txErr</span> <span class="o">:=</span> <span class="nx">tx</span><span class="p">.</span><span class="nf">Rollback</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nx">txErr</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;tx rollback failed: %+v\n&#34;</span><span class="p">,</span> <span class="nx">txErr</span><span class="p">)</span>
+            <span class="p">}</span>
+            <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;tx rollback&#34;</span><span class="p">)</span>
+            <span class="c1">// re-panic
+</span><span class="c1"></span>            <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nx">tx</span><span class="p">.</span><span class="nf">Commit</span><span class="p">()</span>
+            <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;tx committed&#34;</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+
+    <span class="nf">txFunc</span><span class="p">(</span><span class="nx">txDAO</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>事务的用法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">    <span class="nx">jccoinDAO</span> <span class="o">:=</span> <span class="nx">dao</span><span class="p">.</span><span class="nf">NewDAO</span><span class="p">()</span>
+
+    <span class="kd">var</span> <span class="nx">topup</span> <span class="o">*</span><span class="nx">model</span><span class="p">.</span><span class="nx">TopUp</span>
+
+    <span class="nx">jccoinDAO</span><span class="p">.</span><span class="nf">WithTx</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">dao</span> <span class="o">*</span><span class="nx">dao</span><span class="p">.</span><span class="nx">DAO</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// https://stackoverflow.com/questions/31981592/assign-struct-with-another-struct
+</span><span class="c1"></span>        <span class="nx">topup</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">model</span><span class="p">.</span><span class="nx">TopUp</span><span class="p">{</span>
+            <span class="nx">BaseTopUp</span><span class="p">:</span>   <span class="nx">req</span><span class="p">.</span><span class="nx">BaseTopUp</span><span class="p">,</span>
+            <span class="nx">PaidTotal</span><span class="p">:</span>   <span class="nx">req</span><span class="p">.</span><span class="nx">TopUpAmount</span><span class="p">,</span>
+            <span class="nx">TimeCreated</span><span class="p">:</span> <span class="nx">time</span><span class="p">.</span><span class="nf">Now</span><span class="p">(),</span>
+            <span class="nx">Remark</span><span class="p">:</span>      <span class="nx">req</span><span class="p">.</span><span class="nx">Remark</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="c1">// new topup
+</span><span class="c1"></span>        <span class="c1">// idempotence support
+</span><span class="c1"></span>        <span class="k">if</span> <span class="nx">isDup</span> <span class="o">:=</span> <span class="nx">dao</span><span class="p">.</span><span class="nf">NewTopUp</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">topup</span><span class="p">);</span> <span class="nx">isDup</span> <span class="p">{</span>
+            <span class="nx">topup</span> <span class="p">=</span> <span class="nx">dao</span><span class="p">.</span><span class="nf">GetTopUpByOrderNo</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">topup</span><span class="p">.</span><span class="nx">TopUpNo</span><span class="p">,</span> <span class="nx">topup</span><span class="p">.</span><span class="nx">Channel</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="p">}</span>
+
+        <span class="c1">// get buyer_account, update balance
+</span><span class="c1"></span>        <span class="nx">buyerAccount</span> <span class="o">:=</span> <span class="nx">model</span><span class="p">.</span><span class="nx">Account</span><span class="p">{</span>
+            <span class="nx">UserID</span><span class="p">:</span>            <span class="nx">topup</span><span class="p">.</span><span class="nx">BuyerID</span><span class="p">,</span>
+            <span class="nx">AccountType</span><span class="p">:</span>       <span class="s">&#34;BUYER&#34;</span><span class="p">,</span>
+            <span class="nx">DeviceType</span><span class="p">:</span>        <span class="nx">topup</span><span class="p">.</span><span class="nx">DeviceType</span><span class="p">,</span>
+            <span class="nx">SystemCode</span><span class="p">:</span>        <span class="nx">topup</span><span class="p">.</span><span class="nx">SysCode</span><span class="p">,</span>
+            <span class="nx">IsPlatformAccount</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="nx">AccountNumber</span><span class="p">:</span>     <span class="s">&#34;&#34;</span><span class="p">,</span>
+            <span class="nx">Status</span><span class="p">:</span>            <span class="s">&#34;OPEN&#34;</span><span class="p">,</span>
+            <span class="nx">Currency</span><span class="p">:</span>          <span class="s">&#34;JCC&#34;</span><span class="p">,</span>
+            <span class="nx">TimeCreated</span><span class="p">:</span>       <span class="nf">nowFunc</span><span class="p">(),</span>
+            <span class="nx">TimeUpdated</span><span class="p">:</span>       <span class="nf">nowFunc</span><span class="p">(),</span>
+        <span class="p">}</span>
+        <span class="nx">buyerGiftAccount</span> <span class="o">:=</span> <span class="nx">buyerAccount</span>
+        <span class="nx">buyerGiftAccount</span><span class="p">.</span><span class="nx">AccountType</span> <span class="p">=</span> <span class="s">&#34;BUYERGIFT&#34;</span>
+
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;buyerAccount: %+v\n&#34;</span><span class="p">,</span> <span class="nx">buyerAccount</span><span class="p">)</span>
+        <span class="nx">ba</span> <span class="o">:=</span> <span class="nx">dao</span><span class="p">.</span><span class="nf">GetOrCreateBuyerAccount</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">buyerAccount</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">!</span><span class="nx">topup</span><span class="p">.</span><span class="nx">TopUpAmount</span><span class="p">.</span><span class="nf">IsZero</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">buyerBalance</span> <span class="o">:=</span> <span class="nx">ba</span><span class="p">.</span><span class="nx">Balance</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="nx">topup</span><span class="p">.</span><span class="nx">TopUpAmount</span><span class="p">)</span>
+            <span class="nx">dao</span><span class="p">.</span><span class="nf">UpdateAccountBalance</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">ba</span><span class="p">.</span><span class="nx">ID</span><span class="p">,</span> <span class="nx">buyerBalance</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="c1">// get buyer_gift_account, update balance
+</span><span class="c1"></span>        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;giftAccount: %+v\n&#34;</span><span class="p">,</span> <span class="nx">buyerGiftAccount</span><span class="p">)</span>
+        <span class="nx">ga</span> <span class="o">:=</span> <span class="nx">dao</span><span class="p">.</span><span class="nf">GetOrCreateBuyerAccount</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">buyerGiftAccount</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">!</span><span class="nx">topup</span><span class="p">.</span><span class="nx">GiftAmount</span><span class="p">.</span><span class="nf">IsZero</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">giftBalance</span> <span class="o">:=</span> <span class="nx">ga</span><span class="p">.</span><span class="nx">Balance</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="nx">topup</span><span class="p">.</span><span class="nx">GiftAmount</span><span class="p">)</span>
+            <span class="nx">dao</span><span class="p">.</span><span class="nf">UpdateAccountBalance</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">ga</span><span class="p">.</span><span class="nx">ID</span><span class="p">,</span> <span class="nx">giftBalance</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">})</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>非事务的查询就是直接在dao上查就行：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">    <span class="nx">buyerBalance</span> <span class="o">:=</span> <span class="nx">jccoinDAO</span><span class="p">.</span><span class="nf">GetBuyerTotalBalance</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">req</span><span class="p">.</span><span class="nx">BuyerID</span><span class="p">,</span> <span class="nx">req</span><span class="p">.</span><span class="nx">DeviceType</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">req</span><span class="p">.</span><span class="nx">CoinsAmount</span><span class="p">.</span><span class="nf">GreaterThan</span><span class="p">(</span><span class="nx">buyerBalance</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">err</span> <span class="p">=</span> <span class="nx">ErrInsufficientBalance</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>完美实现了代码的复用，如果不这样的话，使用事务和不使用事务时同样的查询函数要写两遍。。或者需要在参数里把<code>sql.DB</code>和<code>sql.Tx</code>都带上</p>
+<p>参考：</p>
+<ul>
+<li><a href="https://medium.com/@jfeng45/go-microservice-with-clean-architecture-transaction-support-61eb0f886a36">Go Microservice with Clean Architecture: Transaction Support</a>  这也是个完整的方案，但感觉太复杂了。。</li>
+<li><a href="https://stackoverflow.com/questions/26593867/db-transaction-in-golang">db transaction in golang</a></li>
+<li><a href="https://stackoverflow.com/questions/16184238/database-sql-tx-detecting-commit-or-rollback/23502629#23502629">database/sql Tx - detecting Commit or Rollback</a></li>
+<li><a href="https://github.com/agungdwiprasetyo/agungdpcms/blob/master/src/resume/usecase/usecase_impl.go#L77">agungdwiprasetyo/agungdpcms</a> 起初是这位大哥的代码给了我希望</li>
+<li><a href="https://github.com/bxcodec/go-clean-arch/issues/27">Transaction #27</a> 而起初是在go-clean-arch的这个issue里看到他的回复的</li>
+</ul>
+<h4 id="cache--缓存层">cache / 缓存层？</h4>
+<p>利用 <a href="https://github.com/tmrts/go-patterns/blob/master/structural/proxy.md">Proxy Pattern</a>，cache 层也实现repo层的接口，把repo包在里面，具体参考这个<a href="https://github.com/bxcodec/go-clean-arch/issues/11#issuecomment-594679205">回答</a></p>
+<h3 id="代码lint">代码Lint</h3>
+<p>当前使用了<a href="https://github.com/mgechev/revive">revive</a>，号称 drop-in replacement for golint，确实名副其实，比golint强大多了~ 支持lint指定文件（夹）、排除文件夹等，支持lint参数定制化。当前支持的lint项在<a href="https://revive.run/r#redefines-builtin-id">这里</a>能看到，而且它还暴露了接口让你能自定义lint项</p>
+<p>参考：</p>
+<ul>
+<li><a href="https://remy.io/blog/simple-tools-to-improve-your-go-code/">Simple tools to improve your Go code</a></li>
+<li><a href="https://github.com/golangci/awesome-go-linters">awesome-go-linters</a></li>
+<li><a href="https://github.com/mgechev/revive">revive</a>  当前使用的，非常不错</li>
+</ul>
+<h3 id="go-design-patterns">go design patterns</h3>
+<p>Curated list of Go design patterns, recipes and idioms</p>
+<p><a href="https://github.com/tmrts/go-patterns">go-patterns</a></p>
+<h3 id="cmd--临时脚本">cmd / 临时脚本？</h3>
+<p>常常有这样的需求，有一些脚本性质的任务，偶尔需要临时执行一下，这种需求在Golang项目中该怎么做呢？</p>
+<p>参考了几个大型项目，比如 k8s，可以这么来做，此类任务统统放在<code>cmd</code>目录下，这个目录下可以继续建子目录，脚本就写在子目录中，但注意脚本里声明的<code>package</code>需要是<code>main</code>，如果需要执行脚本的话，可以直接执行<code>go run &lt;脚本路径&gt;</code>即可（或者把它build成一个可执行文件）</p>
+<p>比如在项目中我有如下脚本：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">cmd
+└── kafka
+    └── kafka_consume.go
+</code></pre></td></tr></table>
+</div>
+</div><p>那么，可以直接这样来执行它：</p>
+<p><code>go run cmd/kafka/kafka_consume.go</code></p>
+<blockquote>
+<p>学到的</p>
+</blockquote>
+<p><code>package</code>的名字可以跟包含它的文件夹的名字不一样</p>
+<p>参考：</p>
+<ul>
+<li><a href="https://github.com/golang-standards/project-layout/tree/master/cmd">golang-standards / project-layout</a></li>
+<li><a href="https://github.com/kubernetes/kubernetes/tree/master/cmd">kubernetes/cmd</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-01-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2021/01/26/error-code-vs-exception/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">error code vs exception</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2021/01/22/source-code-of-sarama-part-i/">
+            <span class="next-text nav-default">sarama源码分析Part I</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

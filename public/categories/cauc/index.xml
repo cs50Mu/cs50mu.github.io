@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cauc on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/cauc/</link>
+    <description>Recent content in cauc on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 11 Oct 2013 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/cauc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ipv6 in cauc?</title>
+      <link>http://localhost:1313/post/2013/10/11/ipv6-in-cauc/</link>
+      <pubDate>Fri, 11 Oct 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/10/11/ipv6-in-cauc/</guid>
+      <description>经过我将近一天的折腾后，结论是ipv6在CAUC根本不可行。 没来这个学校之前还一直期待教育网的ipv6的呢，来了后才发现，悲剧了。。不要说i</description>
+    </item>
+    
+  </channel>
+</rss>

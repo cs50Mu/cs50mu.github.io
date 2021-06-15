@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>vps on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/categories/vps/</link>
+    <description>Recent content in vps on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 14 Jul 2014 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/vps/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>捣鼓VPS翻墙</title>
+      <link>http://localhost:1313/post/2014/07/14/my-first-vps/</link>
+      <pubDate>Mon, 14 Jul 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2014/07/14/my-first-vps/</guid>
+      <description>在学校论坛上看到有人介绍在vps上搭建shadowsocks服务器来翻墙，看到他推荐的vps很便宜，一年才20多，于是立马也想买一个了，其实</description>
+    </item>
+    
+  </channel>
+</rss>

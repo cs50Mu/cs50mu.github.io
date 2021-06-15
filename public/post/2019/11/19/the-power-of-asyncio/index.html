@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>异步IO的威力 - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="what so, what&amp;rsquo;s the problem? 压测目标有提升 之前的压测没有考虑三方服务慢返回(通常为200ms左右)的问题，如果当前的压测仍用同步worker会死的佷惨 how 结合项" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2019/11/19/the-power-of-asyncio/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="异步IO的威力" />
+<meta property="og:description" content="what so, what&rsquo;s the problem? 压测目标有提升 之前的压测没有考虑三方服务慢返回(通常为200ms左右)的问题，如果当前的压测仍用同步worker会死的佷惨 how 结合项" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2019/11/19/the-power-of-asyncio/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-11-19T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2019-11-19T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="异步IO的威力">
+<meta itemprop="description" content="what so, what&rsquo;s the problem? 压测目标有提升 之前的压测没有考虑三方服务慢返回(通常为200ms左右)的问题，如果当前的压测仍用同步worker会死的佷惨 how 结合项"><meta itemprop="datePublished" content="2019-11-19T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-11-19T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="5117">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="异步IO的威力"/>
+<meta name="twitter:description" content="what so, what&rsquo;s the problem? 压测目标有提升 之前的压测没有考虑三方服务慢返回(通常为200ms左右)的问题，如果当前的压测仍用同步worker会死的佷惨 how 结合项"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">异步IO的威力</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-19 </span>
+        <div class="post-category">
+            <a href="/categories/python/"> Python </a>
+            <a href="/categories/asyncio/"> asyncio </a>
+            </div>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#what">what</a></li>
+            <li><a href="#how">how</a></li>
+            <li><a href="#why">why</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h3 id="what">what</h3>
+<p>so, what&rsquo;s the problem?</p>
+<ul>
+<li>压测目标有提升</li>
+<li>之前的压测没有考虑三方服务慢返回(通常为200ms左右)的问题，如果当前的压测仍用同步worker会死的佷惨</li>
+</ul>
+<h3 id="how">how</h3>
+<p>结合项目的实际情况，问题转化为如何在<code>Python + Django 1.8 + Gunicorn</code>这一组合下使用异步IO。</p>
+<p>首先，需要让Gunicorn使用异步worker：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">gunicorn demo.wsgi --workers <span class="m">3</span> -k gevent
+</code></pre></td></tr></table>
+</div>
+</div><p>其次，安装异步worker所需的依赖以及使用与gevent兼容的mysql client库：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="c1"># cat requirements.txt</span>
+
+...
+<span class="nv">gevent</span><span class="o">==</span>1.4.0
+<span class="nv">PyMySQL</span><span class="o">==</span>0.9.3
+...
+</code></pre></td></tr></table>
+</div>
+</div><p>最后，压测标识的处理。之前项目使用的是进程worker，收到压测请求后，是放在threadLocal中的；现在换用异步worker后，worker的scope不再是进程和线程级别的，而是协程级别的。协程级别的local实现也有很多，我们直接使用了werkzeug的实现替换掉了当前的threadLocal</p>
+<p>使用同样的硬件资源情况，在请求外部资源耗时200ms的场景下，结果对比：</p>
+<p>使用同步worker</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">Running 20s <span class="nb">test</span> @ http://payment2-asyncio.test.svc.luojilab.dc
+  <span class="m">10</span> threads and <span class="m">40</span> connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.03s   119.85ms   1.92s    92.64%
+    Req/Sec     6.45      5.33    30.00     69.53%
+  Latency Distribution
+     50%    1.01s
+     75%    1.05s
+     90%    1.09s
+     99%    1.67s
+  <span class="m">761</span> requests in 20.10s, 756.54KB <span class="nb">read</span>
+Requests/sec:     37.86
+Transfer/sec:     37.64KB
+</code></pre></td></tr></table>
+</div>
+</div><p>使用gevent worker</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">Running 20s <span class="nb">test</span> @ http://payment2-asyncio.test.svc.luojilab.dc
+  <span class="m">10</span> threads and <span class="m">40</span> connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   395.56ms   55.53ms 672.69ms   71.48%
+    Req/Sec    10.74      5.78    30.00     62.64%
+  Latency Distribution
+     50%  387.63ms
+     75%  424.52ms
+     90%  468.89ms
+     99%  564.88ms
+  <span class="m">2002</span> requests in 20.08s, 1.94MB <span class="nb">read</span>
+Requests/sec:     99.70
+Transfer/sec:     99.12KB
+</code></pre></td></tr></table>
+</div>
+</div><p>不仅qps有了近3倍的提升，而且耗时也明显好很多了。</p>
+<h3 id="why">why</h3>
+<p>我想从两个方面来阐述：</p>
+<ul>
+<li>异步IO的底层原理</li>
+<li>具体到Python + Gevent + gunicorn的原理</li>
+</ul>
+<h4 id="操作系统的io模型">操作系统的I/O模型</h4>
+<p>我们首先要区分这几种基本的I/O模型，这样才可能理解后续的问题。</p>
+<p>对一个socket的读取过程一般分为两个阶段：</p>
+<ul>
+<li>等待数据准备好（数据到达网卡以及从网卡buffer复制到内核buffer）</li>
+<li>数据从内核buffer复制到应用进程的buffer</li>
+</ul>
+<p>根据系统调用在两个阶段的不同行为，可以定义下面5种I/O模型：</p>
+<blockquote>
+<p>Blocking I/O Model / 阻塞 I/O 模型</p>
+</blockquote>
+<p>这是大家最熟悉的 I/O 模型，也是socket的默认行为，在两个阶段都是阻塞的</p>
+<p><img src="https://i.imgur.com/uAxGXLe.png" alt=""></p>
+<blockquote>
+<p>Nonblocking I/O Model / 非阻塞 I/O 模型</p>
+</blockquote>
+<p>我们可以将socket设置为非阻塞的模式，意思是，告诉操作系统，当应用发起一个I/O请求时，如果这个请求无法立即返回（即数据还没准备好），直接返回一个特定的错误就好了，不要让应用一直等待。</p>
+<p>这种模型看似是将主动权放到了应用这边，但也意味着应用需要不停的轮询操作系统来确认数据是否已经准备好了。</p>
+<p><img src="https://i.imgur.com/Yq9Kiib.png" alt=""></p>
+<blockquote>
+<p>I/O Multiplexing Model / I/O 多路复用模型</p>
+</blockquote>
+<p>先发起一个阻塞的系统调用(select / poll / epoll)，当有数据可读后，它会返回，然后应用继续发起recvfrom调用开始读取数据。这种模型乍一看并没有多少优势，反而还比阻塞的模型多了一次系统调用，但它的优点是可以一次监控多个socket（阻塞模型中一次只能等待一个socket）</p>
+<p><img src="https://i.imgur.com/vsCsyoE.png" alt=""></p>
+<blockquote>
+<p>Signal-Driven I/O Model / 信号驱动 I/O 模型</p>
+</blockquote>
+<p>在这个模型下，我们可以向操作系统注册一个信号处理器（signal handler），当数据准备好后，操作系统会发送一个信号来通知我们，此时我们可以开始发起recvfrom来读取数据。注意，第一个阶段是非阻塞的，第二个阶段是阻塞的</p>
+<p><img src="https://i.imgur.com/CFr5zb1.png" alt=""></p>
+<blockquote>
+<p>Asynchronous I/O Model / 异步I/O模型</p>
+</blockquote>
+<p>这个模型下，两个阶段的调用都是阻塞的。应用只需发起一个<code>aio_read</code>的调用，然后等着操作系统的通知即可，如果收到了通知，说明此时数据一定是准备好的。</p>
+<p>这种模型看起来是最理想的，但不幸的是并没有多少操作系统支持这种 I/O 模型</p>
+<p><img src="https://i.imgur.com/vOkfZam.png" alt=""></p>
+<p>小结：</p>
+<p>根据 POSIX 的定义：</p>
+<ul>
+<li>同步I/O操作(synchronous I/O operation)指本次I/O操作会导致请求方阻塞，直至本次I/O操作完成</li>
+<li>异步I/O操作(asynchronous I/O operation)指本次I/O操作不会阻塞请求方</li>
+</ul>
+<p>上述列出的5种I/O模型，前4种都是同步I/O操作，只有最后一种属于异步I/O操作</p>
+<h4 id="epoll">epoll</h4>
+<p>epoll是linux平台上的 I/O 多路复用模型的实现中的佼佼者。它的性能很好，可以支持大量的并发连接，现在高性能的webserver一般底层都有epoll的功劳（比如Nginx）。</p>
+<p>我们首先来看一下它的基本用法，它对外只暴露了3个接口：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">int epoll_create<span class="o">(</span>int size<span class="o">)</span>；
+int epoll_ctl<span class="o">(</span>int epfd, int op, int fd, struct epoll_event *event<span class="o">)</span>；
+int epoll_wait<span class="o">(</span>int epfd, struct epoll_event * events, int maxevents, int timeout<span class="o">)</span><span class="p">;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>其中，</p>
+<ul>
+<li><code>epoll_create</code>用于创建一个epoll实例，后续的操作都是基于它；</li>
+<li><code>epoll_ctl</code>用于告诉epoll你想关心哪些文件描述符的哪种行为（比如可写、可读）；
+<ul>
+<li>epfd即为<code>epoll_create</code>返回的epoll实例</li>
+<li>op为要对文件描述符监听类别，分为新增（<code>EPOLL_CTL_ADD</code>）、删除（<code>EPOLL_CTL_DEL</code>）和修改（<code>EPOLL_CTL_MOD</code>）</li>
+<li>fd即想要监听的文件描述符</li>
+<li><code>epoll_event</code>主要用于表示想关注这个fd的哪些状态，比如可写、可读等</li>
+</ul>
+</li>
+<li><code>epoll_wait</code>是等待I/O事件发生，它是一个阻塞请求，但它只要返回了文件描述符，那这些文件描述符就一定是ready的（即数据已准备好，可立即读写，不会阻塞）
+<ul>
+<li>events 是调用方初始化后传入的，如果有ready的文件描述符，epoll会写入到这里，调用方在<code>epoll_wait</code>返回后处理events即可</li>
+<li>timeout，等待的时候可以指定一个超时时间，表示最多只等待这么长时间，若此期间没有任何I/O 事件发生也会返回</li>
+</ul>
+</li>
+</ul>
+<p>一个简单的使用示例，伪代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">epfd</span> <span class="o">=</span> <span class="n">epoll_init1</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">event</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">EPOLLET</span> <span class="o">|</span> <span class="n">EPOLLIN</span><span class="p">;</span>
+<span class="n">event</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fd</span> <span class="o">=</span> <span class="n">serverfd</span><span class="p">;</span>
+<span class="n">epoll_ctl</span><span class="p">(</span><span class="n">epfd</span><span class="p">,</span> <span class="n">EPOLL_CTL_ADD</span><span class="p">,</span> <span class="n">serverfd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">event</span><span class="p">);</span>
+<span class="o">//</span> <span class="err">主循环</span>
+<span class="k">while</span><span class="p">(</span><span class="n">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">//</span> <span class="err">等待事件</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">epoll_wait</span><span class="p">(</span><span class="n">epfd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">events</span><span class="p">,</span> <span class="n">MAXEVENTS</span><span class="p">,</span> <span class="n">timeout</span><span class="p">);</span>
+    <span class="o">//</span> <span class="err">遍历</span><span class="n">ready的事件</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">count</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">events</span> <span class="o">&amp;</span> <span class="n">EPOLLERR</span> <span class="o">||</span> <span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">events</span> <span class="o">&amp;</span> <span class="n">EPOLLHUP</span><span class="p">)</span>
+            <span class="o">//</span> <span class="err">处理错误</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fd</span> <span class="o">==</span> <span class="n">serverfd</span><span class="p">)</span>
+            <span class="o">//</span> <span class="err">为接入的连接注册事件</span>
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">events</span> <span class="o">&amp;</span> <span class="n">EPOLLIN</span><span class="p">)</span>
+            <span class="o">//</span> <span class="err">处理可读的缓冲区</span>
+            <span class="n">read</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fd</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="nb">len</span><span class="p">);</span>
+            <span class="o">//</span> <span class="err">向</span><span class="n">epoll注册一个该fd可写的</span><span class="err">“关注点”</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">EPOLLET</span> <span class="o">|</span> <span class="n">EPOLLOUT</span><span class="p">;</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fd</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fd</span><span class="p">;</span>
+            <span class="n">epoll_ctl</span><span class="p">(</span><span class="n">epfd</span><span class="p">,</span> <span class="n">EPOLL_CTL_MOD</span><span class="p">,</span> <span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">event</span><span class="p">);</span>
+        <span class="k">else</span>
+            <span class="o">//</span> <span class="err">处理可写的缓冲区</span>
+            <span class="n">write</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fd</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="nb">len</span><span class="p">);</span>
+            <span class="o">//</span> <span class="err">后续可以关闭</span><span class="n">fd或者MOD至EPOLLOUT</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>值得注意的是，里面有一个loop forever的循环，因为需要不停的通过发起<code>epoll_wait</code>调用来询问操作系统哪些fd是ready状态了，以便进行处理。记住这一点，我们后面还会提到这个循环。</p>
+<p>下面简单说一下epoll为什么效率这么高，要想知道epoll为啥快就得先知道它的先驱者们（select
+/ poll）为啥慢，有对比才有伤害嘛。</p>
+<p>select 和 poll 的实现原理基本是一样的，细节略有差别。它们的基本思想是调用方提供一批文件描述符给它，假设为n个，它帮你遍历一遍，逐个查看一下这个文件描述符是否可写可读，所以它的实现复杂度是O(n)的，连接数少的时候还好，当连接数数量上来的时候，效率就很差了。</p>
+<p>再说说epoll，它在内部维护了一个就绪列表（ready list），代表了当前可读可写的文件描述符集合，因此当应用调用<code>epoll_wait</code>来问当前有哪些文件描述符可用时，它直接返回这个list即可，一般在同一时间可读可写的I/O数量是很少的，因此它的时间复杂度是O(当前可读可写的文件描述符数量)，甚至可以说是O(1)，当然是非常快的。</p>
+<p>我们可以再追问一句，这个就绪列表是如何实现的呢？它是如何能够反映某一个时刻的文件描述符的可用情况的呢？这里就要讲到epoll的另一个函数<code>epoll_ctl</code>，记得我们上面说它的作用是用于告诉epoll我们关心哪些文件描述符的可读可写，guess what？当你在调用这个函数的时候，epoll会向内核注册一个回调函数，当某个我们关心的文件描述符变为可读 / 可写状态时，内核就通过这个回调函数讲这个文件描述符写入就绪列表了，可见它的实现机制是事件驱动的，这也是epoll名字的由来（event poll）</p>
+<p>参考：</p>
+<ul>
+<li><a href="https://studygolang.com/articles/22460">从源码角度看Golang的TCP Socket(epoll)实现</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/87843750?utm_source=wechat_session&amp;utm_medium=social&amp;utm_oi=26858074669056">深入理解IO复用之epoll</a> 非常好</li>
+<li><a href="http://gityuan.com/2019/01/06/linux-epoll/">源码解读epoll内核机制</a>  代码讲的6</li>
+<li><a href="http://www.hulkdev.com/posts/epoll-io">论epoll的实现</a></li>
+<li><a href="http://linbo.github.io/2019/03/01/epoll-fundamental">epoll的那些事</a></li>
+<li><a href="http://blog.lucode.net/linux/epoll-tutorial.html">Linux epoll 详解</a></li>
+<li><a href="http://luodw.cc/2016/01/24/epoll/">谈谈epoll实现原理</a></li>
+</ul>
+<h4 id="event-looplibev--libuv">event loop（libev / libuv）</h4>
+<p>记得我们上面在介绍epoll时说，它的使用一般是通过一个循环（loop），libev就是这样一种事件循环库，它帮用户屏蔽了很多细节，用户只需要告诉它想要关心的文件描述符，然后启动一个事件循环等待回调即可。</p>
+<p>来自 libev 官方文档的介绍：</p>
+<blockquote>
+<p>Libev is an event loop: you register interest in certain events (such as a file descriptor being readable or a timeout occurring), and it will manage these event sources and provide your program with events.</p>
+<p>To do this, it must take more or less <strong>complete control over your process</strong> (or thread) by executing the event loop handler, and will then <strong>communicate events via a callback mechanism</strong>.</p>
+</blockquote>
+<p>可以看到，它不仅仅支持I/O事件，更重要的是它支持跨平台使用，支持了 Linux 平台的 epoll 和 BSD 平台上的kqueue，使用它开发的应用可以在无需更改代码的情况下在几个平台之间无缝切换。</p>
+<p>参考：</p>
+<ul>
+<li><a href="https://jin-yang.github.io/post/linux-libev.html">libev 使用简介</a></li>
+<li><a href="https://juejin.im/post/5d412865e51d4561e84fcba7">事件驱动异步IO的真正奥秘之Libuv入门</a></li>
+<li><a href="https://www.jianshu.com/p/2c78f7ec7c7f">libev 介绍</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/aix/library/au-libev/index.html">使用 libevent 和 libev 提高网络应用性能</a></li>
+<li><a href="https://metacpan.org/pod/distribution/EV/libev/ev.pod">libev官方文档</a></li>
+</ul>
+<h4 id="协程--coroutine">协程 / coroutine</h4>
+<p>简单的说，协程就是可以暂时中断，之后可以再继续执行的程序。它跟线程、进程是一个概念上的东西，但又有很大的区别：</p>
+<ul>
+<li>线程的上下文切换成本很高，但协程之间的切换成本很低，轻易可以产生大量的协程</li>
+<li>协程的切换必须发生在一个线程内，不能跨线程切换</li>
+<li>线程的切换是由操作系统来控制的，不受程序员控制，即它是抢占式的；而协程的切换是由程序员控制的</li>
+</ul>
+<p>一个简单的例子来了解下协程是个什么东西：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">import time
+
+def consumer():
+    r = &#39;&#39;
+    while True:
+        n = yield r
+        if not n:
+            return
+        print(&#39;[CONSUMER] Consuming %s...&#39; % n)
+        time.sleep(1)
+        r = &#39;200 OK&#39;
+
+def produce(c):
+    c.next()
+    n = 0
+    while n &lt; 3:
+        n = n + 1
+        print(&#39;[PRODUCER] Producing %s...&#39; % n)
+        r = c.send(n)
+        print(&#39;[PRODUCER] Consumer return: %s&#39; % r)
+    c.close()
+
+if __name__==&#39;__main__&#39;:
+    c = consumer()
+    produce(c)
+</code></pre></td></tr></table>
+</div>
+</div><p>执行结果如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="o">[</span>PRODUCER<span class="o">]</span> Producing 1...
+<span class="o">[</span>CONSUMER<span class="o">]</span> Consuming 1...
+<span class="o">[</span>PRODUCER<span class="o">]</span> Consumer <span class="k">return</span>: <span class="m">200</span> OK
+<span class="o">[</span>PRODUCER<span class="o">]</span> Producing 2...
+<span class="o">[</span>CONSUMER<span class="o">]</span> Consuming 2...
+<span class="o">[</span>PRODUCER<span class="o">]</span> Consumer <span class="k">return</span>: <span class="m">200</span> OK
+<span class="o">[</span>PRODUCER<span class="o">]</span> Producing 3...
+<span class="o">[</span>CONSUMER<span class="o">]</span> Consuming 3...
+<span class="o">[</span>PRODUCER<span class="o">]</span> Consumer <span class="k">return</span>: <span class="m">200</span> OK
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到，我们实现了简单的生产者消费者模式，但我们没有使用多线程，而是在一个线程内使用协程的模式实现的，程序的控制权在生产者和消费者之间轮流切换</p>
+<p>参考：</p>
+<ul>
+<li><a href="http://blog.ez2learn.com/2010/07/17/talk-about-coroutine-and-gevent/">淺談coroutine與gevent</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Coroutine">Coroutine</a></li>
+</ul>
+<h4 id="greenlet">Greenlet</h4>
+<p>Python2 只支持简单的协程机制(semicoroutine)，Greenlet是一个第三方的 Python 协程实现，它实现了完善的协程机制。</p>
+<p>来自官方文档的一个简单例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">greenlet</span> <span class="kn">import</span> <span class="n">greenlet</span>
+
+<span class="k">def</span> <span class="nf">test1</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">gr2</span><span class="o">.</span><span class="n">switch</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="mi">34</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test2</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="mi">56</span><span class="p">)</span>
+    <span class="n">gr1</span><span class="o">.</span><span class="n">switch</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="mi">78</span><span class="p">)</span>
+
+<span class="n">gr1</span> <span class="o">=</span> <span class="n">greenlet</span><span class="p">(</span><span class="n">test1</span><span class="p">)</span>
+<span class="n">gr2</span> <span class="o">=</span> <span class="n">greenlet</span><span class="p">(</span><span class="n">test2</span><span class="p">)</span>
+<span class="n">gr1</span><span class="o">.</span><span class="n">switch</span><span class="p">()</span>
+
+<span class="c1"># 输出结果</span>
+<span class="mi">12</span>
+<span class="mi">56</span>
+<span class="mi">34</span>
+<span class="c1"># 注意，78并没有机会输出</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>参考：</p>
+<ul>
+<li><a href="https://greenlet.readthedocs.io/en/latest/">greenlet: Lightweight concurrent programming</a></li>
+</ul>
+<h4 id="gevent">gevent</h4>
+<p>讲完了上面的铺垫，终于可以说说我们今天的主角了。</p>
+<p>来自官网的介绍：</p>
+<blockquote>
+<p>gevent is a <strong>coroutine-based</strong> Python networking library that uses greenlet to provide a high-level synchronous API on top of the libev or libuv event loop.</p>
+</blockquote>
+<p>它是构建于协程(greenlet)、事件循环(libev / libuv)之上的一个网络库，可以让你用同步的写法来做异步的事情（而不是js中的那种变态的callback hell写法）。那么问题来了，它是怎么做到的呢？</p>
+<ul>
+<li>基于协程，可以在用户态控制协程的切换（而不是由操作系统强制切换）</li>
+<li>基于事件循环，从而能够快速感知I/O事件</li>
+<li>基于上述两者将Python标准库中所有涉及到I/O的库全部重写了一遍（所有对外API保持不变，这是关键），然后提供了一个monkey patch方法可以让用户很便利的一键替换</li>
+</ul>
+<p>那么重写的库的逻辑是什么呢？无非是当遇到I/O需要等待时，就将控制流切换到别的协程上，等I/O准备好后再伺机切换回来，程序的执行模式大概是这个样子的：</p>
+<p><img src="https://i.imgur.com/ElFdb46.png" alt=""></p>
+<p>参考：</p>
+<ul>
+<li><a href="https://sdiehl.github.io/gevent-tutorial/">gevent For the Working Python Developer</a></li>
+<li><a href="https://engineering.mixpanel.com/2010/10/29/gevent-the-good-the-bad-the-ugly/">gevent: the Good, the Bad, the Ugly</a></li>
+<li><a href="https://zapier.com/engineering/why-zapier-doesnt-use-gevent-yet/">Why Zapier Doesn&rsquo;t Use Gevent (Yet)</a></li>
+<li><a href="https://tech.wayfair.com/2018/07/blocking-io-in-gunicorn-gevent-workers/">Blocking IO in Gunicorn Gevent Workers</a></li>
+<li><a href="https://blog.mirumee.com/django-fast-part-2-d73a4ecd61f3">Django, fast: part 2</a></li>
+<li><a href="https://medium.com/@bfirsh/squeezing-every-drop-of-performance-out-of-a-django-app-on-heroku-4b5b1e5a3d44">Squeezing every drop of performance out of a Django app on Heroku</a></li>
+<li><a href="https://www.slideshare.net/mahendram/scaling-django-with-gevent">Scaling Django with gevent</a></li>
+</ul>
+<h4 id="gunicorn-的异步-worker">gunicorn 的异步 worker</h4>
+<p>在计算机科学中有一句“名言”，没有什么问题不能通过增加一层封装来解决的，如果没解决，那就再封装一层&hellip; 所以，欢迎来到我们的最后一层封装，有了它，我们的工作进一步简化成“通过参数指定一个异步worker类型来启动gunicorn”即可享受异步IO的好处。那么，它做了什么呢？</p>
+<ul>
+<li>帮我们执行了monkey patch替换掉了标准库中的阻塞实现（是的，使用gunicorn后你甚至都不需要自己monkey patch）</li>
+<li>启动了一个协程池来处理请求</li>
+</ul>
+<h4 id="题外话">“题外话”</h4>
+<p>话题跟当前主题不太相关，但也是有关系的，我想再多说几句关于使用wrk的一些心得</p>
+<blockquote>
+<p>wrk 是什么？</p>
+</blockquote>
+<p>首先明确一点，wrk是压力测试工具，其目的是验证出系统支持的最大QPS，不是为了模拟现实流量的。（wrk is not tool for emulate real load from humans, 100 connections doesn&rsquo;t mean 100 users (browsers). No one can push F5 key 10000 times a second. But wrk can send 10000 requests on 1 connection.）</p>
+<blockquote>
+<p>压测时，c 和 t 参数各该如何设置？</p>
+</blockquote>
+<p>这个问题曾经困扰了我好久.. 在项目的github issues里也充斥了此类疑问。在围观了各路大神的回复后，有如下结论：</p>
+<p>t（线程数）应当根据压测机器的配置来设置（比如<code>2*core + 1</code>)，而c（连接数）则根据被压测接口的表现，从一个初始值开始慢慢提升，直至被压测接口的qps无法再提升为止</p>
+<blockquote>
+<p>wrk 的机制（原理）？</p>
+</blockquote>
+<p>底层也使用了异步IO，不过是借用的Redis实现的event loop，没有使用常用的libev等库。它会启动 t 个线程，每个线程中开 c / t = m 个连接，然后不停的在一个连接中发request、接response。是的，它利用了 http 的 keep alive特性，不会不停的新建和关闭连接。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-19
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2020/01/06/asynchronous-python-and-databases/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">「译」Asynchronous Python and Databases</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2019/10/27/source-code-of-gin-framework/">
+            <span class="next-text nav-default">Gin源码分析</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

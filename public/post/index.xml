@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on I&#39;m linuxfish</title>
+    <link>http://localhost:1313/post/</link>
+    <description>Recent content in Posts on I&#39;m linuxfish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 05 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Grafana源码分析</title>
+      <link>http://localhost:1313/post/2021/02/05/sourcecode-of-grafana/</link>
+      <pubDate>Fri, 05 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2021/02/05/sourcecode-of-grafana/</guid>
+      <description>Grafana源码分析 服务自动注入 / inject 代码里的service使用了一个包来实现自动注入：facebookarchive / inject 要实现这个自动，需</description>
+    </item>
+    
+    <item>
+      <title>「Applying UML and Patterns」读书笔记</title>
+      <link>http://localhost:1313/post/2021/02/05/reading-notes-of-applying-uml-and-patterns/</link>
+      <pubDate>Fri, 05 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2021/02/05/reading-notes-of-applying-uml-and-patterns/</guid>
+      <description>「Applying UML and Patterns」读书笔记 Inception 前期评估 the idea is to do just enough investigation to form a rational, justifiable opinion of the overall purpose and feasibility of the potential new system, and decide if it is worthwhile to invest in deeper exploration It is to decide if</description>
+    </item>
+    
+    <item>
+      <title>「影响力」读书笔记</title>
+      <link>http://localhost:1313/post/2021/02/05/reading-notes-of-influence/</link>
+      <pubDate>Fri, 05 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2021/02/05/reading-notes-of-influence/</guid>
+      <description>互惠 一个古老的原理：给予、索取。。。再索取 互惠原因认为，我们应该尽量以相同的方式回报他人为我们所做的一切 当前社会的普遍价值观认为「互惠」是一</description>
+    </item>
+    
+    <item>
+      <title>极客时间「软件工程之美」学习笔记</title>
+      <link>http://localhost:1313/post/2021/02/05/reading-notes-of-geektime-software-engineering/</link>
+      <pubDate>Fri, 05 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2021/02/05/reading-notes-of-geektime-software-engineering/</guid>
+      <description>软件工程之美 配套书籍：构建之法 [toc] 开篇 未来10年，什么不会变？ 数据结构、算法、面向对象思想、设计模式、软件工程 基础理论 怎样理解软件工程 像这种有</description>
+    </item>
+    
+    <item>
+      <title>error code vs exception</title>
+      <link>http://localhost:1313/post/2021/01/26/error-code-vs-exception/</link>
+      <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2021/01/26/error-code-vs-exception/</guid>
+      <description>error-code OR exception, it&amp;rsquo;s a question. 然而答案是，you should use both，难点在于确定在什么场景下用什么 适合用 exception 的情况 发生的错误无法处理时 In some situations you can&amp;rsquo;t do anything with the error code, and you just need to</description>
+    </item>
+    
+    <item>
+      <title>Golang工程最佳实践</title>
+      <link>http://localhost:1313/post/2021/01/26/golang-best-practice/</link>
+      <pubDate>Tue, 26 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2021/01/26/golang-best-practice/</guid>
+      <description>examples Building Go Web Applications and Microservices Using Gin 有实现，有测试，有重构 项目分层 model 所有的数据模型，被其它层所依赖 repo 数据层，屏蔽所有数据存取的细节 它的底层可以是数据库，也可以</description>
+    </item>
+    
+    <item>
+      <title>sarama源码分析Part I</title>
+      <link>http://localhost:1313/post/2021/01/22/source-code-of-sarama-part-i/</link>
+      <pubDate>Fri, 22 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2021/01/22/source-code-of-sarama-part-i/</guid>
+      <description>Shopify / sarama 以下代码分析基于此快照的代码：2a5254c26ef606cd9a587 生产者如何发送消息 这一篇帖子已经分析的非常好了：Sarama生</description>
+    </item>
+    
+    <item>
+      <title>designing data intensive applications part1</title>
+      <link>http://localhost:1313/post/2020/11/12/designing-data-intensive-applications-part1/</link>
+      <pubDate>Thu, 12 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2020/11/12/designing-data-intensive-applications-part1/</guid>
+      <description>Part I - Foundations of Data Systems Chapter 1 - Reliable, Scalable, and Maintainable Applications Reliability / 可用性 The system should continue to work correctly (performing the correct function at the desired level of performance) even in the face of adversity (hardware or soft‐ ware faults, and even human error). Note that a fault is not the same as a failure [2]. A fault</description>
+    </item>
+    
+    <item>
+      <title>「译」Asynchronous Python and Databases</title>
+      <link>http://localhost:1313/post/2020/01/06/asynchronous-python-and-databases/</link>
+      <pubDate>Mon, 06 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2020/01/06/asynchronous-python-and-databases/</guid>
+      <description>翻译一篇 SQLAlchemy 作者的博文，原文：Asynchronous Python and Databases 这篇文章给异步IO泼了点冷水，引导我们用正确的态度来看待这个技术(其实是任何技术)</description>
+    </item>
+    
+    <item>
+      <title>异步IO的威力</title>
+      <link>http://localhost:1313/post/2019/11/19/the-power-of-asyncio/</link>
+      <pubDate>Tue, 19 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/11/19/the-power-of-asyncio/</guid>
+      <description>what so, what&amp;rsquo;s the problem? 压测目标有提升 之前的压测没有考虑三方服务慢返回(通常为200ms左右)的问题，如果当前的压测仍用同步worker会死的佷惨 how 结合项</description>
+    </item>
+    
+    <item>
+      <title>Gin源码分析</title>
+      <link>http://localhost:1313/post/2019/10/27/source-code-of-gin-framework/</link>
+      <pubDate>Sun, 27 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/10/27/source-code-of-gin-framework/</guid>
+      <description>github仓库：https://github.com/gin-gonic/gin what Gin is a web framework written in Go (Golang). It features a martini-like API with much better performance, up to 40 times faster thanks to httprouter how 从</description>
+    </item>
+    
+    <item>
+      <title>database/sql 源码学习</title>
+      <link>http://localhost:1313/post/2019/10/17/golang-database-sql/</link>
+      <pubDate>Thu, 17 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/10/17/golang-database-sql/</guid>
+      <description>数据结构 ColumnType contains the name and type of a column. 用于表示数据库表字段的基本信息 Conn represents a single database connection rather than a pool of database connections. 只代表一个数据库连接，适用于只能对一个连接操作的场景，比如</description>
+    </item>
+    
+    <item>
+      <title>job queue in Golang</title>
+      <link>http://localhost:1313/post/2019/07/20/job-queue-in-golang/</link>
+      <pubDate>Sat, 20 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/07/20/job-queue-in-golang/</guid>
+      <description>异步任务，还是蛮常见的 算不上 job queue的形式 go process(job) 这其实算不上一个queue，但简单。同时，少了一些对并发的控制，比如控制同时执行的任务数等</description>
+    </item>
+    
+    <item>
+      <title>Golang 中的文字编码问题</title>
+      <link>http://localhost:1313/post/2019/05/19/a-encoding-problem-in-golang/</link>
+      <pubDate>Sun, 19 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/05/19/a-encoding-problem-in-golang/</guid>
+      <description>过程描述 记录一个文字编码的问题 在请求支付宝支付的接口时，发现返回的Response如果有中文的话，print出来后会有乱码。第一反应肯定是编</description>
+    </item>
+    
+    <item>
+      <title>database with sqlx in Golang</title>
+      <link>http://localhost:1313/post/2019/05/09/database-with-sqlx-in-golang/</link>
+      <pubDate>Thu, 09 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/05/09/database-with-sqlx-in-golang/</guid>
+      <description>database with sqlx in Golang Parameterized Queries 翻译为参数化查询？是个什么概念呢？ Bind parameters—also called dynamic parameters or bind variables—are an alternative way to pass data to the database. Instead of putting</description>
+    </item>
+    
+    <item>
+      <title>Error Handling in Go</title>
+      <link>http://localhost:1313/post/2019/05/09/error-handling-in-go/</link>
+      <pubDate>Thu, 09 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/05/09/error-handling-in-go/</guid>
+      <description>From: Don’t just check errors, handle them gracefully error变量 1 2 3 4 5 6 var ErrNotFound = errors.New(&amp;#34;datastore:notfound&amp;#34;) err := Foo() if err == ErrNotFound { // ... } 优点：简单 缺点：不能带上下文，只有一个简单的固定字符描述；而</description>
+    </item>
+    
+    <item>
+      <title>Redis中set元素设置过期？</title>
+      <link>http://localhost:1313/post/2019/03/24/expire-elements-in-redis-set/</link>
+      <pubDate>Sun, 24 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/03/24/expire-elements-in-redis-set/</guid>
+      <description>需求 项目中遇到一个需求，要实现一个黑白名单的服务，对外暴露向名单添加元素和检查元素是否在名单中的接口，这个用 Redis 实现是很容易的，有现成的类型支</description>
+    </item>
+    
+    <item>
+      <title>Golang FAQ</title>
+      <link>http://localhost:1313/post/2019/02/01/golang-faq/</link>
+      <pubDate>Fri, 01 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2019/02/01/golang-faq/</guid>
+      <description>这几天看了下Golang FAQ，解了不少困惑，我相信有人会有同样的困惑，挑选了一些有意思的问题翻译了一下。 Design Does Go have a runtime? / Go有运行时吗？ Go</description>
+    </item>
+    
+    <item>
+      <title>如何处理数据库大结果集?</title>
+      <link>http://localhost:1313/post/2017/11/26/big-resultsets-handling-in-django/</link>
+      <pubDate>Sun, 26 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2017/11/26/big-resultsets-handling-in-django/</guid>
+      <description>问题的起因是想知道在Django ORM中如何处理大数据集的返回，比如怎么避免进程由于内存占用过多被kill掉。由于数据库使用的是MySQL，</description>
+    </item>
+    
+    <item>
+      <title>zhihu authentication analysis</title>
+      <link>http://localhost:1313/post/2017/03/20/zhihu-authentication-analysis/</link>
+      <pubDate>Mon, 20 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2017/03/20/zhihu-authentication-analysis/</guid>
+      <description>##知乎以及得到手机App与Server端的认证机制分析 ###抓包 采用Charles进行抓包 一个关键点是如何抓SSL包 https://www.charlesproxy.com/documentation/using-charles/ssl-certificates/ 需要在手机上安装Ch</description>
+    </item>
+    
+    <item>
+      <title>process data using awk</title>
+      <link>http://localhost:1313/post/2017/02/22/process-data-using-awk/</link>
+      <pubDate>Wed, 22 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2017/02/22/process-data-using-awk/</guid>
+      <description>###AWK学习笔记 以下内容主要参考自《The AWK Programming Language》一书以及GNU的《The GNU Awk User’s Guide》。 the structure of an AWK program pattern { action</description>
+    </item>
+    
+    <item>
+      <title>thrift server error caused by aliyun health check</title>
+      <link>http://localhost:1313/post/2017/01/14/thrift-server-error-caused-by-aliyun-health-check/</link>
+      <pubDate>Sat, 14 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2017/01/14/thrift-server-error-caused-by-aliyun-health-check/</guid>
+      <description>近期遇到一个thrift server方面的问题，记录一下。 ###Background server做的事情其实很简单，就是一个图片上传服务，别人把图片传过来，服务器上</description>
+    </item>
+    
+    <item>
+      <title>first glance at django admin</title>
+      <link>http://localhost:1313/post/2016/09/13/first-glance-at-django-admin/</link>
+      <pubDate>Tue, 13 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2016/09/13/first-glance-at-django-admin/</guid>
+      <description>主要是一些定制的问题，其实django admin已经集成的非常好了，该有的都有了，一般开箱即用就行了。 如果你对Django Admin不熟悉的</description>
+    </item>
+    
+    <item>
+      <title>csapp concurrent programming</title>
+      <link>http://localhost:1313/post/2016/08/29/csapp-concurrent-programming/</link>
+      <pubDate>Mon, 29 Aug 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2016/08/29/csapp-concurrent-programming/</guid>
+      <description>Applications that use application-level concurrency are known as concurrent programs. Modern operating systems provide three basic approaches for building concurrent programs: Processes. With this approach, each logical control flow is a process that is scheduled and maintained by the kernel. Since processes have separate virtual address spaces, flows that want to communicate with each other must use some kind of explicit interprocess communication (IPC) mechanism. I/O multiplexing.This is a form</description>
+    </item>
+    
+    <item>
+      <title>csapp network programming</title>
+      <link>http://localhost:1313/post/2016/08/29/csapp-network-programming/</link>
+      <pubDate>Mon, 29 Aug 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2016/08/29/csapp-network-programming/</guid>
+      <description>###The Client-Server Programming Model Every network application is based on the client-server model. With this model, an application consists of a server process and one or more client processes. A server manages some resource, and it provides some service for its clients by manipulating that resource. ###Networks Clients and servers often run on separate hosts and communicate using the hard- ware and software resources of a computer network. To a</description>
+    </item>
+    
+    <item>
+      <title>csapp system level io</title>
+      <link>http://localhost:1313/post/2016/08/28/csapp-system-level-io/</link>
+      <pubDate>Sun, 28 Aug 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2016/08/28/csapp-system-level-io/</guid>
+      <description>###概览 是什么？ Input/output (I/O) is the process of copying data between main memory and external devices such as disk drives, terminals, and networks. An input operation copies data from an I/O device to main memory, and an output operation copies data from memory to a device. 为什么？ All language run-time systems provide higher-level facilities for performing I/O. For example, ANSI</description>
+    </item>
+    
+    <item>
+      <title>csapp exceptional control flow</title>
+      <link>http://localhost:1313/post/2016/08/26/csapp-exceptional-control-flow/</link>
+      <pubDate>Fri, 26 Aug 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2016/08/26/csapp-exceptional-control-flow/</guid>
+      <description>###Chapter 8 Exceptional Control Flow 从一上电开始，CPU就在不停得执行指令，从第k个指令转到k+1个指令执行，叫做指令转移(control transfer)，一堆指令</description>
+    </item>
+    
+    <item>
+      <title>thrift source code walkthrough</title>
+      <link>http://localhost:1313/post/2016/08/19/thrift-source-code-walkthrough/</link>
+      <pubDate>Fri, 19 Aug 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2016/08/19/thrift-source-code-walkthrough/</guid>
+      <description>准备学习一下thrift的源码，看的是Python版的，以下所有分析都是基于0.9.0版本的thrift thrift整个逻辑结构是分层的，类</description>
+    </item>
+    
+    <item>
+      <title>baidu ife</title>
+      <link>http://localhost:1313/post/2016/03/06/baidu-ife/</link>
+      <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2016/03/06/baidu-ife/</guid>
+      <description>###盒模型及定位 用两种方法来实现一个背景色为红色、宽度为960px的&amp;lt;DIV&amp;gt;在浏览器中居中 第一种方法：margin:0px auto;</description>
+    </item>
+    
+    <item>
+      <title>leetcode challenage</title>
+      <link>http://localhost:1313/post/2016/02/25/leetcode-challenage/</link>
+      <pubDate>Thu, 25 Feb 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2016/02/25/leetcode-challenage/</guid>
+      <description>###Nim Game 这是最简单的题目了，但也想了很久，只想到用递归，看了答案才知道原来一条代码可以解决。。 这个问题的关键是给出一个数字，判断是否一定能赢，而</description>
+    </item>
+    
+    <item>
+      <title>continue blogging on Mac OSX using octoress</title>
+      <link>http://localhost:1313/post/2015/07/12/continue-blogging-on-macosx-using-octoress/</link>
+      <pubDate>Sun, 12 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2015/07/12/continue-blogging-on-macosx-using-octoress/</guid>
+      <description>换了Mac，终于可以继续用Octopress写blog了，但首先得把原来的blog从git上同步过来，纪录下在此过程中遇到的坑。 clone sourc</description>
+    </item>
+    
+    <item>
+      <title>test from new mac</title>
+      <link>http://localhost:1313/post/2015/07/12/test-from-new-mac/</link>
+      <pubDate>Sun, 12 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2015/07/12/test-from-new-mac/</guid>
+      <description>if you see this page, then the migration is ok!</description>
+    </item>
+    
+    <item>
+      <title>Python的logging模块总结</title>
+      <link>http://localhost:1313/post/2015/02/02/logging-module-of-python/</link>
+      <pubDate>Mon, 02 Feb 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2015/02/02/logging-module-of-python/</guid>
+      <description>里面主要有这么几个类：logger handler formatter，其中logger类用于实例化logger对象，handler类负责指定log信息的发</description>
+    </item>
+    
+    <item>
+      <title>trivial problems</title>
+      <link>http://localhost:1313/post/2015/01/20/trivial-problems/</link>
+      <pubDate>Tue, 20 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2015/01/20/trivial-problems/</guid>
+      <description>今天很高兴，因为解决了几个困扰很久的问题。 OpenVPN 为便于办公，公司提供了VPN，不过只提供了OpenVPN的连接方案，之前在arch上一直是用pp</description>
+    </item>
+    
+    <item>
+      <title>problems about python and mysql</title>
+      <link>http://localhost:1313/post/2015/01/19/problems-about-python-and-mysql/</link>
+      <pubDate>Mon, 19 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2015/01/19/problems-about-python-and-mysql/</guid>
+      <description>记录一下这几天项目上遇到的问题 Python 2.7的编码问题 Python 2.x内部处理编码默认还是ascii，在处理utf8编码的数据时会报UnicodeEnco</description>
+    </item>
+    
+    <item>
+      <title>Practical Vim 读书笔记</title>
+      <link>http://localhost:1313/post/2015/01/12/note-from-practical-vim/</link>
+      <pubDate>Mon, 12 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2015/01/12/note-from-practical-vim/</guid>
+      <description>The Vim Way .命令可以重复做上一次的改变(repeat last change)。这里关键是要理解这个改变的意思，就我现在的理解，这个改变是不包括光标位置的</description>
+    </item>
+    
+    <item>
+      <title>理解Python中的stdin stdout stderr</title>
+      <link>http://localhost:1313/post/2014/10/07/io-in-python/</link>
+      <pubDate>Tue, 07 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2014/10/07/io-in-python/</guid>
+      <description>看到一个题目，要求用Python实现linux中的命令tee的功能，tee的功能还是很简单的，就是把接收到的标准输入再输出到重定向和一个文件</description>
+    </item>
+    
+    <item>
+      <title>preparing for the job</title>
+      <link>http://localhost:1313/post/2014/10/06/preparing-for-the-job/</link>
+      <pubDate>Mon, 06 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2014/10/06/preparing-for-the-job/</guid>
+      <description>面试太渣，皆因毫无准备。 多进程与多线程的区别 进程叫process，线程叫thread，cpu在任一时刻只能运行一个进程。一个进程可以包含多个</description>
+    </item>
+    
+    <item>
+      <title>socks代理和http代理的区别</title>
+      <link>http://localhost:1313/post/2014/10/05/socks-proxy-and-http-proxy/</link>
+      <pubDate>Sun, 05 Oct 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2014/10/05/socks-proxy-and-http-proxy/</guid>
+      <description>一直傻傻分不清楚，都是因为平时很少接触，虽然翻墙常用，但也只是按教程一步一步来，并未知其所以然。 之前一直听别人说socks代理多么多么好，自</description>
+    </item>
+    
+    <item>
+      <title>binary search and spreadsheet numeration</title>
+      <link>http://localhost:1313/post/2014/09/18/binary-search-and-spreadsheet-numeration/</link>
+      <pubDate>Thu, 18 Sep 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2014/09/18/binary-search-and-spreadsheet-numeration/</guid>
+      <description>昨天去知道创宇的面试失败了，很感谢他们能给我这个机会。通过这次面试，我总算迈出了一步，更加明确了自己应该努力的方向。这次面试反映出的一个很严</description>
+    </item>
+    
+    <item>
+      <title>Structure and Interpretation of Computer Programs</title>
+      <link>http://localhost:1313/post/2014/07/26/sicp/</link>
+      <pubDate>Sat, 26 Jul 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2014/07/26/sicp/</guid>
+      <description>大名鼎鼎的SICP，下面是我在学习Berkeley的CS61A时做的笔记,非常有意思的一门课！ 高阶函数 理解这玩意儿有时候确实挺费脑筋。。。下</description>
+    </item>
+    
+    <item>
+      <title>捣鼓VPS翻墙</title>
+      <link>http://localhost:1313/post/2014/07/14/my-first-vps/</link>
+      <pubDate>Mon, 14 Jul 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2014/07/14/my-first-vps/</guid>
+      <description>在学校论坛上看到有人介绍在vps上搭建shadowsocks服务器来翻墙，看到他推荐的vps很便宜，一年才20多，于是立马也想买一个了，其实</description>
+    </item>
+    
+    <item>
+      <title>冒泡排序和插入排序</title>
+      <link>http://localhost:1313/post/2014/03/30/two-sort-algorithms/</link>
+      <pubDate>Sun, 30 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2014/03/30/two-sort-algorithms/</guid>
+      <description>冒泡排序 应该是最简单的吧，但是效率很低。对于给定的n个无序数列，不断的比较相邻的两个数的大小，若满足条件，则互换两个数的位置，这样经过一次循</description>
+    </item>
+    
+    <item>
+      <title>重新学习C</title>
+      <link>http://localhost:1313/post/2014/03/28/relearning-c/</link>
+      <pubDate>Fri, 28 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2014/03/28/relearning-c/</guid>
+      <description>发现写learn python the hard way的大神Zed.A.Shaw的the hard其实是一个系列，除了python还有Ruby、C、SQL、Regex，</description>
+    </item>
+    
+    <item>
+      <title>统计浏览器历史记录</title>
+      <link>http://localhost:1313/post/2014/03/03/get-your-visit-internet-frequency-by-python/</link>
+      <pubDate>Mon, 03 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2014/03/03/get-your-visit-internet-frequency-by-python/</guid>
+      <description>又是好久没更新。 知乎是个好网站。那么多大牛分享自己的经验教训～涉及范围包罗万象，无所不有。对我而言，很重要的一点是它拓展了我的眼界，让我知道</description>
+    </item>
+    
+    <item>
+      <title>last day of 2013</title>
+      <link>http://localhost:1313/post/2013/12/31/last-day-of-2013/</link>
+      <pubDate>Tue, 31 Dec 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/12/31/last-day-of-2013/</guid>
+      <description>今天是2013年最后一天了，不经意间一年又过去了。</description>
+    </item>
+    
+    <item>
+      <title>五儿子到手了！</title>
+      <link>http://localhost:1313/post/2013/12/01/nexus5-has-arrived/</link>
+      <pubDate>Sun, 01 Dec 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/12/01/nexus5-has-arrived/</guid>
+      <description>在拿到包裹的时候竟然异常的平静，或许是因为早已经麻木了。对了，感谢政府感谢党，没有睡我。 回顾下整个购买过程：11月20号在日本google p</description>
+    </item>
+    
+    <item>
+      <title>最近各种不顺</title>
+      <link>http://localhost:1313/post/2013/11/20/bad-days/</link>
+      <pubDate>Wed, 20 Nov 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/11/20/bad-days/</guid>
+      <description>最近一个月都不在状态。 也许是因为停止跑步了？天气一冷就懒得跑了。。唉，最终还是没有坚持下去。 最可恨的是买个谷歌5儿子，从月初就开始买，直到现</description>
+    </item>
+    
+    <item>
+      <title>understand octopress</title>
+      <link>http://localhost:1313/post/2013/10/13/understand-octopress/</link>
+      <pubDate>Sun, 13 Oct 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/10/13/understand-octopress/</guid>
+      <description>好奇害死猫。 一开始是想着给现在的博客主题添加一个sidebar，再后来就想着搞清楚Octopress的原理，仔细一研究，原来里面用到了好多好</description>
+    </item>
+    
+    <item>
+      <title>ipv6 in cauc?</title>
+      <link>http://localhost:1313/post/2013/10/11/ipv6-in-cauc/</link>
+      <pubDate>Fri, 11 Oct 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/10/11/ipv6-in-cauc/</guid>
+      <description>经过我将近一天的折腾后，结论是ipv6在CAUC根本不可行。 没来这个学校之前还一直期待教育网的ipv6的呢，来了后才发现，悲剧了。。不要说i</description>
+    </item>
+    
+    <item>
+      <title>A brand new blog</title>
+      <link>http://localhost:1313/post/2013/10/08/change-the-default-theme-for-octopress/</link>
+      <pubDate>Tue, 08 Oct 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/10/08/change-the-default-theme-for-octopress/</guid>
+      <description>终于忍不住了。 添加了disqus评论系统，还是挺简单的，Octopress内建了对disqus的支持，只要去disqus官网注册，然后在Oc</description>
+    </item>
+    
+    <item>
+      <title>confused about cronie</title>
+      <link>http://localhost:1313/post/2013/10/08/confused-about-cronie/</link>
+      <pubDate>Tue, 08 Oct 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/10/08/confused-about-cronie/</guid>
+      <description>昨天想要为每日一图脚本添加定时运行时才发现，貌似crond不工作了。 于是发现原来的dcron早就被踢进AUR了，现在的crond是croni</description>
+    </item>
+    
+    <item>
+      <title>python复习</title>
+      <link>http://localhost:1313/post/2013/09/30/some-python-practices/</link>
+      <pubDate>Mon, 30 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/09/30/some-python-practices/</guid>
+      <description>发现了一本学python的好书，额，起码感觉很对我的口味。。名字叫The Practice of Computing Using Python，中译名很二，叫《Python入门经典》。。这本</description>
+    </item>
+    
+    <item>
+      <title>two more books about macro economics</title>
+      <link>http://localhost:1313/post/2013/09/11/two-more-books-about-macro-economics/</link>
+      <pubDate>Wed, 11 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/09/11/two-more-books-about-macro-economics/</guid>
+      <description>###《一转念》 by 兰小欢 书中大部分内容讲的是用经济学的供求原理来解释生活中一些看似古怪的现象，还有一些作者的随想。以下是摘录： 你要是把喜儿都</description>
+    </item>
+    
+    <item>
+      <title>宏观经济学</title>
+      <link>http://localhost:1313/post/2013/09/01/macro-economics/</link>
+      <pubDate>Sun, 01 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/09/01/macro-economics/</guid>
+      <description>趁假期终于把拖了很久没看的宏观经济学匆匆看完了，这样加上之前的微观经济学，我对经济学的入门算是开始了吧！不过发现如果仅仅只是摘抄书上的内容，</description>
+    </item>
+    
+    <item>
+      <title>初读《社会心理学》</title>
+      <link>http://localhost:1313/post/2013/07/07/amazing-social-psychology/</link>
+      <pubDate>Sun, 07 Jul 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/07/07/amazing-social-psychology/</guid>
+      <description>继《心理学与生活》后，又攻下一本心理学大部头。。HOHO～～ 这几天在翻看刘未鹏的《暗时间》，讲到如何有效的记忆，说实在点就是不仅要多看书，而</description>
+    </item>
+    
+    <item>
+      <title>归并排序的非递归算法</title>
+      <link>http://localhost:1313/post/2013/07/03/merge-sort/</link>
+      <pubDate>Wed, 03 Jul 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/07/03/merge-sort/</guid>
+      <description>归并排序的效率很高，复杂度只有NlogN，但想起来很费劲啊。。尤其是递归算法，绕来绕去的被绕晕了。。今天在看《Python编程实践》（Pra</description>
+    </item>
+    
+    <item>
+      <title>操蛋的GFW</title>
+      <link>http://localhost:1313/post/2013/06/30/fuck-gfw/</link>
+      <pubDate>Sun, 30 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/06/30/fuck-gfw/</guid>
+      <description>Google Reader要被Google关掉了，网上已经出了一堆替代品了，前段时间就试了试，可每次都没导入成功，每次都卡在google认证上了，能登录</description>
+    </item>
+    
+    <item>
+      <title>在WR703N上刷openwrt</title>
+      <link>http://localhost:1313/post/2013/06/21/flash-openwrt-in-wr703n/</link>
+      <pubDate>Fri, 21 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/06/21/flash-openwrt-in-wr703n/</guid>
+      <description>买这个传说中很牛逼的路由器已经很久了，直到现在才想起来刷。。当初买它是因为一直用的一个无线路由老是罢工，一开始以为是学校网络的问题，后来发现</description>
+    </item>
+    
+    <item>
+      <title>学习正则表达式</title>
+      <link>http://localhost:1313/post/2013/06/16/regular-expressions/</link>
+      <pubDate>Sun, 16 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/06/16/regular-expressions/</guid>
+      <description>正则表达式真的很强大啊！ 但我在用的过程中写的表达式总是不能达到期望的效果，今天又认真看了下，对它又有了一些新的理解。 贪婪模式Vs非贪婪模式。</description>
+    </item>
+    
+    <item>
+      <title>Hello,World</title>
+      <link>http://localhost:1313/post/2013/06/12/hello/</link>
+      <pubDate>Wed, 12 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/06/12/hello/</guid>
+      <description>Hello,Octopress!This is my first post!</description>
+    </item>
+    
+    <item>
+      <title>Octopress搭建备忘</title>
+      <link>http://localhost:1313/post/2013/06/12/memo-about-octopress/</link>
+      <pubDate>Wed, 12 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2013/06/12/memo-about-octopress/</guid>
+      <description>缘由 突然想玩玩Octopress，于是开始搜索，发现在Archlinux上使用Octopress会有两个问题 Ruby版本问题。Arch上的R</description>
+    </item>
+    
+  </channel>
+</rss>

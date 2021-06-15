@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Golang FAQ - I&#39;m linuxfish</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="linuxfish" /><meta name="description" content="这几天看了下Golang FAQ，解了不少困惑，我相信有人会有同样的困惑，挑选了一些有意思的问题翻译了一下。 Design Does Go have a runtime? / Go有运行时吗？ Go" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.83.1 with theme even" />
+
+
+<link rel="canonical" href="http://localhost:1313/post/2019/02/01/golang-faq/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Golang FAQ" />
+<meta property="og:description" content="这几天看了下Golang FAQ，解了不少困惑，我相信有人会有同样的困惑，挑选了一些有意思的问题翻译了一下。 Design Does Go have a runtime? / Go有运行时吗？ Go" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/post/2019/02/01/golang-faq/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-02-01T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2019-02-01T00:00:00&#43;00:00" />
+
+<meta itemprop="name" content="Golang FAQ">
+<meta itemprop="description" content="这几天看了下Golang FAQ，解了不少困惑，我相信有人会有同样的困惑，挑选了一些有意思的问题翻译了一下。 Design Does Go have a runtime? / Go有运行时吗？ Go"><meta itemprop="datePublished" content="2019-02-01T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-02-01T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="4540">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Golang FAQ"/>
+<meta name="twitter:description" content="这几天看了下Golang FAQ，解了不少困惑，我相信有人会有同样的困惑，挑选了一些有意思的问题翻译了一下。 Design Does Go have a runtime? / Go有运行时吗？ Go"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">linuxfish</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">linuxfish</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Golang FAQ</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-02-01 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#design">Design</a></li>
+            <li><a href="#types">Types</a></li>
+            <li><a href="#values">Values</a></li>
+            <li><a href="#concurrency">Concurrency</a></li>
+            <li><a href="#functions-and-methods">Functions and Methods</a></li>
+            <li><a href="#control-flow">Control flow</a></li>
+            <li><a href="#packages-and-testing">Packages and Testing</a></li>
+            <li><a href="#implementation">Implementation</a></li>
+            <li><a href="#changes-from-c">Changes from C</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <p>这几天看了下Golang FAQ，解了不少困惑，我相信有人会有同样的困惑，挑选了一些有意思的问题翻译了一下。</p>
+<h3 id="design">Design</h3>
+<blockquote>
+<p>Does Go have a runtime? / Go有运行时吗？</p>
+</blockquote>
+<p>Go确实有一个runtime库(runtime library)。这个runtime库主要实现了垃圾回收、并发管理、堆栈管理等其它Go语言的关键特性。这个所谓的runtime可以类比于c语言的标准库(libc)</p>
+<p>但很重要的一点是要理解，Go的这个所谓的runtime并没有带虚拟机（比如，像Java一样）。所以，尽管runtime这个词一般用来指某些语言带的虚拟机实现，但在Golang的语境下，它仅仅指代标准库。</p>
+<blockquote>
+<p>Why does Go not have generic types? / 为什么没有泛型？</p>
+</blockquote>
+<p>泛型在将来的某个时候可能会被加上。但我们并不着急加它，虽然我们理解有些程序员可能不认同。</p>
+<p>Go的目的是用于服务端程序开发，它的设计的目标在于增强程序的可扩展性、并发能力以及代码的可读性。泛型对于这些设计目标并没有多大帮助，所以为了实现的简单，当时并没有支持泛型。</p>
+<p>现在Go语言已经越来越成熟了，可以考虑加上泛型的支持，但是对于泛型我还是想多说几句。</p>
+<p>泛型很方便，但是它大大增加了语言的类型系统(type system)和运行时的实现复杂度，我们还没有找到一种能很好平衡两者的设计方案。目前大家先用<code>interface{}</code>来顶一顶吧。</p>
+<blockquote>
+<p>Why does Go not have exceptions? / 为什么没有异常？</p>
+</blockquote>
+<p>我们认为把exception耦合进正常逻辑中（比如其它语言中常见的<code>try-catch-finally</code>惯用法）会导致混乱的代码。使用exception的方式也倾向于鼓励程序员把很多普通的错误（比如无法打开文件）当成异常来处理。</p>
+<p>对于普通的错误，需要在函数调用后立即处理。</p>
+<p>Go也提供了一组内置函数用来处理真正的异常情况（panic和recovery）。</p>
+<p>linuxfish注：我个人理解，关键是要区分普通错误和真正的异常。</p>
+<h3 id="types">Types</h3>
+<blockquote>
+<p>Why does Go not support overloading of methods and operators? / 为何不支持方法和运算符重载？</p>
+</blockquote>
+<p>在其它语言上的经验告诉我们，搞一堆名字一样，签名不同的方法，只是偶尔有点用处，更多的会带来理解上的混乱。相反，不支持重载大大简化了Go语言的类型系统的设计。</p>
+<p>至于运算符重载，在我们看来它可以带来一定的便利性，但并非必须。按照我们的惯例，宁缺毋滥。</p>
+<blockquote>
+<p>Why doesn&rsquo;t Go have &ldquo;implements&rdquo; declarations? / 为何不用<code>implements</code>显示声明？</p>
+</blockquote>
+<p>一个Go的类型如果实现了某个interface的方法，那它就隐式的“声明”为这个interface类型了（即可以当成这个interface类型来用了）。</p>
+<p>好处是实现了接口和实现的真正解耦，允许在不更改现有代码的前提下定义和使用接口。</p>
+<blockquote>
+<p>Can I convert a []T to an []interface{}?</p>
+</blockquote>
+<p>不能直接转，因为它们在内存中的表示并不一样，需要这样做：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">t</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">}</span>
+<span class="nx">s</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kd">interface</span><span class="p">{},</span> <span class="nb">len</span><span class="p">(</span><span class="nx">t</span><span class="p">))</span>
+<span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">t</span> <span class="p">{</span>
+    <span class="nx">s</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">v</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>一个更通用但也更慢的函数：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">InterfaceSlice</span><span class="p">(</span><span class="nx">slice</span> <span class="kd">interface</span><span class="p">{})</span> <span class="p">[]</span><span class="kd">interface</span><span class="p">{}</span> <span class="p">{</span>
+    <span class="nx">s</span> <span class="o">:=</span> <span class="nx">reflect</span><span class="p">.</span><span class="nf">ValueOf</span><span class="p">(</span><span class="nx">slice</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Kind</span><span class="p">()</span> <span class="o">!=</span> <span class="nx">reflect</span><span class="p">.</span><span class="nx">Slice</span> <span class="p">{</span>
+        <span class="nb">panic</span><span class="p">(</span><span class="s">&#34;InterfaceSlice() given a non-slice type&#34;</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">ret</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kd">interface</span><span class="p">{},</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Len</span><span class="p">())</span>
+
+    <span class="k">for</span> <span class="nx">i</span><span class="o">:=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="p">&lt;</span><span class="nx">s</span><span class="p">.</span><span class="nf">Len</span><span class="p">();</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="nx">ret</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">s</span><span class="p">.</span><span class="nf">Index</span><span class="p">(</span><span class="nx">i</span><span class="p">).</span><span class="nf">Interface</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">ret</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>参考：<a href="https://stackoverflow.com/questions/12753805/type-converting-slices-of-interfaces-in-go">Type converting slices of interfaces in go</a></p>
+<blockquote>
+<p>Can I convert []T1 to []T2 if T1 and T2 have the same underlying type?</p>
+</blockquote>
+<p>不可以，只能一个一个转。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">T1</span> <span class="kt">int</span>
+<span class="kd">type</span> <span class="nx">T2</span> <span class="kt">int</span>
+<span class="kd">var</span> <span class="nx">t1</span> <span class="nx">T1</span>
+<span class="kd">var</span> <span class="nx">x</span> <span class="p">=</span> <span class="nf">T2</span><span class="p">(</span><span class="nx">t1</span><span class="p">)</span> <span class="c1">// OK
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">st1</span> <span class="p">[]</span><span class="nx">T1</span>
+<span class="kd">var</span> <span class="nx">sx</span> <span class="p">=</span> <span class="p">([]</span><span class="nx">T2</span><span class="p">)(</span><span class="nx">st1</span><span class="p">)</span> <span class="c1">// NOT OK
+</span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>Why is my nil error value not equal to nil?</p>
+</blockquote>
+<p>首先，interface类型的底层实现是一个二元组（一个类型T和一个值V），V就是具体的值，T就是这个值的类型。比如，我们存了一个int 3在接口里，那么用字符简单的表示，这个接口值现在就等于<code>(T=int, V=3)</code>。</p>
+<p>一个接口值当且仅当V和T都未设置时（T=nil, V未设置）才为nil。特别地，一个值为nil的接口的底层T永远都是nil。那么，如果把一个值为nil类型为<code>*int</code>存入一个接口中，此时这个接口值的底层表示为<code>(T=*int, V=nil)</code>，按照定义，这个接口值不等于nil。</p>
+<p>但这跟我们的日常认知相悖，明明是个空指针嘛！这种情况在从函数中返回error时更容易使人困惑：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">returnsError</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">p</span> <span class="o">*</span><span class="nx">MyError</span> <span class="p">=</span> <span class="kc">nil</span>
+	<span class="k">if</span> <span class="nf">bad</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">p</span> <span class="p">=</span> <span class="nx">ErrBad</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">p</span> <span class="c1">// Will always return a non-nil error.
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上面的写法的错误之处在于，不管有没有错误发生，函数返回的error永远都是non-nil的，所以当无错误发生时，应当显式地返回nil：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">returnsError</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nf">bad</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">ErrBad</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="values">Values</h3>
+<blockquote>
+<p>Why does Go not provide implicit numeric conversions? / 为何不提供隐式数字类型转换？</p>
+</blockquote>
+<p>c语言中的自动数值类型转换带来的那点便利性跟它引起的困惑相比根本不值得一提。表达式的结果什么时候是无符号的？它的值有多大？是不是溢出了？结果是不是可移植的（执行结果跟程序所在的机器无关）？考虑到移植性的问题，我们要求在进行类型转换时必须进行显式的转换，尽管有些麻烦。</p>
+<p>一个相关的细节是，就算<code>int</code>实质上是一个<code>int64</code>（当在64位机器上时），<code>int</code>和<code>int64</code>也是两个不同的类型。如果你真的关心一个应该用多少位来表示一个整数，我们鼓励你显式地声明它（用int32或者int64，而不是int）。</p>
+<blockquote>
+<p>How do constants work in Go?</p>
+</blockquote>
+<p>尽管Go要求不同的数值类型必须进行显式的转换，它对常数值的要求比较灵活。因为常数值默认是无类型的（untyped），所以不必这么写：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">sqrt2</span> <span class="o">:=</span> <span class="nx">math</span><span class="p">.</span><span class="nf">Sqrt</span><span class="p">(</span><span class="nb">float64</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>你可以直接写：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">sqrt2</span> <span class="o">:=</span> <span class="nx">math</span><span class="p">.</span><span class="nf">Sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>想了解Go中的常数值的具体实现的可以参考<a href="https://blog.golang.org/constants">这篇Blog</a></p>
+<blockquote>
+<p>Should I define methods on values or pointers? / 方法定义在值上还是指针上？</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">MyStruct</span><span class="p">)</span> <span class="nf">pointerMethod</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span> <span class="c1">// method on pointer
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="nx">MyStruct</span><span class="p">)</span>  <span class="nf">valueMethod</span><span class="p">()</span>   <span class="p">{</span> <span class="p">}</span> <span class="c1">// method on value
+</span></code></pre></td></tr></table>
+</div>
+</div><p>接收者是要定义成值还是指针本质上跟函数的参数是定义成值还是指针是一个问题。</p>
+<p>我们在回答这个问题时通常有以下考虑：</p>
+<ul>
+<li>方法是否需要修改这个接收者？如果需要修改，那没有什么纠结的，必须用指针（slice 和 map 本身就是引用类型，需要单独讨论）。</li>
+<li>效率上的考虑。如果接收者是一个大结构体，那么很显然用指针更合适</li>
+<li>一致性。如果有些方法必须用指针做为接收者，那么为了使用上的一致，其它的方法也应该用指针</li>
+<li>除非必须，一般情况下使用值就可以了</li>
+</ul>
+<blockquote>
+<p>What&rsquo;s the difference between new and make? / new 和 make 的区别？</p>
+</blockquote>
+<p>简而言之，new 用来分配内存，而 make 用来初始化slice，map 和 channel。</p>
+<p>具体解释可参考 Effective Go 中的<a href="https://golang.org/doc/effective_go.html#allocation_new">相关章节</a></p>
+<h3 id="concurrency">Concurrency</h3>
+<blockquote>
+<p>Why doesn&rsquo;t my program run faster with more CPUs?</p>
+</blockquote>
+<p>一个程序是否会因为有更多的CPU资源而运行更快取决于这个程序所要解决的问题。Go语言提供了基本的并发原语，比如 goroutine 和 channel，但只有当要解决的问题存在并行执行的可能性时才会发挥它们的作用。本质上是串行的问题，仅仅通过增加更多的CPU资源无法获得更高的执行效率。</p>
+<h3 id="functions-and-methods">Functions and Methods</h3>
+<blockquote>
+<p>What happens with closures running as goroutines? / 闭包的坑</p>
+</blockquote>
+<p>在并发中使用闭包时，可能会出现一些令人困惑的现象，考虑以下代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">done</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">bool</span><span class="p">)</span>
+
+    <span class="nx">values</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;a&#34;</span><span class="p">,</span> <span class="s">&#34;b&#34;</span><span class="p">,</span> <span class="s">&#34;c&#34;</span><span class="p">}</span>
+    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">values</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span>
+            <span class="nx">done</span> <span class="o">&lt;-</span> <span class="kc">true</span>
+        <span class="p">}()</span>
+    <span class="p">}</span>
+
+    <span class="c1">// wait for all goroutines to complete before exiting
+</span><span class="c1"></span>    <span class="k">for</span> <span class="nx">_</span> <span class="p">=</span> <span class="k">range</span> <span class="nx">values</span> <span class="p">{</span>
+        <span class="o">&lt;-</span><span class="nx">done</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>我们可能错误的认为输出结果应该是<code>a,b,c</code>，但实际上你看到的结果可能是<code>c,c,c</code>。这是因为所有的闭包都共享了一个变量v，而v在循环中被不断的更新，当闭包中的程序真正在另一个goroutine中运行时，v的值已经变了。使用<code>go vet</code>可以在运行程序前提前检测这种情况。</p>
+<p>针对这个“坑”，有两个解决方案：</p>
+<p>要么，把v显式传入闭包中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">values</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="nx">u</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span>
+            <span class="nx">done</span> <span class="o">&lt;-</span> <span class="kc">true</span>
+        <span class="p">}(</span><span class="nx">v</span><span class="p">)</span>
+    <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>或者这样写：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">    for _, v := range values {
+        v := v // create a new &#39;v&#39;.
+        go func() {
+            fmt.Println(v)
+            done &lt;- true
+        }()
+    }
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="control-flow">Control flow</h3>
+<blockquote>
+<p>Why does Go not have the ?: operator? / 为何没有<code>?:</code>操作符？</p>
+</blockquote>
+<p>可以使用以下代码实现类似的效果：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="k">if</span> <span class="nx">expr</span> <span class="p">{</span>
+    <span class="nx">n</span> <span class="p">=</span> <span class="nx">trueVal</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">n</span> <span class="p">=</span> <span class="nx">falseVal</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Go中不存在这个三元操作符的原因是Go语言的设计者认为这个三元操作符经常被用来写出晦涩难懂的表达式。<code>if-else</code>的模式，虽然写起来更长一些，但毫无疑问表达的更清楚。一门语言只需要一种条件控制结构就够了。</p>
+<h3 id="packages-and-testing">Packages and Testing</h3>
+<blockquote>
+<p>Where is my favorite helper function for testing?</p>
+</blockquote>
+<p>使用Go标准库中的测试包很容易写单元测试，但这个测试包缺乏一些其它测试框架中常用的功能，比如断言。之前的章节中已经解释了为啥Go不支持断言，这个解释同样适用于写测试。在进行单元测试时，正确的错误处理方式是在某个测试出错后，允许其它的测试继续进行，这样进行测试的人可以从全局看到是什么地方出了问题。举个例子，现在正在测试 isPrime 这个函数，那么与其只报告了isPrime对于2这个输入的结果是错的，然后就停止测试了，直接报告 isPrime 对于输入（2，3，5，7）的结果都是错的明显更有用处。运行测试代码的人可能对被测试的代码并不熟悉，那么在写测试代码时，好好写一个错误提示信息就很有必要了，能帮助后面测试出现错误定位问题时省不少力气。</p>
+<p>还有一点是测试框架都喜欢定义自己的一套用来表示条件、控制语句和打印等固定模式的DSL，但问题是Go本身就能实现这些功能，为什么还要重复造轮子呢？可以少学一门语言，何乐而不为呢？</p>
+<p>如果你觉得用Go的测试包来写测试太啰嗦了，会有很多重复的代码，那么你可以考虑用驱动表的方式来写测试，这样的话，重复的代码会大大减少。Go标准库中有大量的测试代码可供你参考。</p>
+<h3 id="implementation">Implementation</h3>
+<blockquote>
+<p>Why is my trivial program such a large binary? / 为啥那么点代码就编译出这么大一个二进制文件？</p>
+</blockquote>
+<p>gc 工具链中的链接器(linker)默认创建静态链接的二进制文件。 因此所有的 Go 二进制文件包含了Go的运行时，同时还有执行动态类型检测、反射甚至崩溃时的堆栈信息的运行时</p>
+<p>一个简单的 hello world 版 c 程序，用 gcc 在 linux 上静态编译后，体积大约是750KB。同样的 Go 程序，体积大概有几M，但功能也更强大，因为它有 run time 支持，还有动态类型检查和 debug 信息。</p>
+<p>Go程序在用 gc 编译时可以带上<code>-ldflags=-w</code>参数来关闭 debug 信息的生成，这不会影响程序的正常功能，但会很大程度地减少程序的体积。</p>
+<blockquote>
+<p>Can I stop these complaints about my unused variable/import? / 能不能别老提示我未用的变量和引入库？</p>
+</blockquote>
+<p>代码中存在未使用的变量可能意味着潜在的 bug，而未使用的引用库只会增大编译时间，而且随着代码量的增长，这个问题会越来越严重。基于以上原因 Go 拒绝编译存在未使用变量和未使用的引用库的代码，短期来看，这个决定带来了很多麻烦，但从长远来看，它利于提升程序的编译速度和代码的整洁性。</p>
+<p>当然了，在写代码的时候，创建一堆临时变量是常见的，每次都必须要先处理一下这些用不上的临时变量才能编译确实是挺烦的。</p>
+<p>有人提议加一个编译器的参数可以关闭这个傻X的检查，或者至少编译能通过，比如只是发个警告信息提示用户。但我们没有加这个参数，一是因为我们认为编译器的参数不应该影响语言的语义；二是 Go 编译器没有警告，它只报告错误。</p>
+<p>Go编译器没有警告，原因有二：一是，如果一个问题需要报警提示，那它就应该被改正（相反，如果它不值得被修正，那也根本无需发警告提示）；第二，有时候太多警告反而会掩盖了真实的问题。</p>
+<p>使用空白标识符<code>_</code>可以一定程度的缓解这个问题。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">import</span> <span class="s">&#34;unused&#34;</span>
+
+<span class="c1">// This declaration marks the import as used by referencing an
+</span><span class="c1">// item from the package.
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">unused</span><span class="p">.</span><span class="nx">Item</span>  <span class="c1">// TODO: Delete before committing!
+</span><span class="c1"></span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">debugData</span> <span class="o">:=</span> <span class="nx">debug</span><span class="p">.</span><span class="nf">Profile</span><span class="p">()</span>
+    <span class="nx">_</span> <span class="p">=</span> <span class="nx">debugData</span> <span class="c1">// Used only during debugging.
+</span><span class="c1"></span>    <span class="o">...</span><span class="p">.</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>当然了，现在大部分Go程序员都知道有这个神器，goimports，它能分析你的源文件，自动清理掉未用到的变量，在你保存文件的时候自动重写源文件，大部分的编辑器都支持它。</p>
+<h3 id="changes-from-c">Changes from C</h3>
+<blockquote>
+<p>Why is there no pointer arithmetic? / 为啥不支持指针运算？</p>
+</blockquote>
+<p>安全。不支持指针运算能避免很多诡异的问题。编译器和硬件技术发展到现在，用数组索引和用指针来遍历一个数组，在效率上已经没有什么区别。另外，不支持指针运算使得垃圾回收也更好实现了。</p>
+<blockquote>
+<p>Why are ++ and &ndash; statements and not expressions? And why postfix, not prefix?</p>
+</blockquote>
+<p>不支持指针运算的话，那么对<code>++</code>和<code>--</code>的需求就没那么大了。通过把<code>++</code>和<code>--</code>限制为 statement，而不是表达式(expression)，我们可以避免类似以下写法的出现：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nf">f</span><span class="p">(</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span>
+<span class="nx">p</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">q</span><span class="p">[</span><span class="o">++</span><span class="nx">i</span><span class="p">])</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">linuxfish</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-02-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/2019/03/24/expire-elements-in-redis-set/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Redis中set元素设置过期？</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/2017/11/26/big-resultsets-handling-in-django/">
+            <span class="next-text nav-default">如何处理数据库大结果集?</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://localhost:1313" class="iconfont icon-stack-overflow" title="stack-overflow"></a>
+      <a href="http://localhost:1313" class="iconfont icon-twitter" title="twitter"></a>
+      <a href="http://localhost:1313" class="iconfont icon-facebook" title="facebook"></a>
+      <a href="http://localhost:1313" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="http://localhost:1313" class="iconfont icon-google" title="google"></a>
+      <a href="http://localhost:1313" class="iconfont icon-github" title="github"></a>
+      <a href="http://localhost:1313" class="iconfont icon-weibo" title="weibo"></a>
+      <a href="http://localhost:1313" class="iconfont icon-zhihu" title="zhihu"></a>
+      <a href="http://localhost:1313" class="iconfont icon-douban" title="douban"></a>
+      <a href="http://localhost:1313" class="iconfont icon-pocket" title="pocket"></a>
+      <a href="http://localhost:1313" class="iconfont icon-tumblr" title="tumblr"></a>
+      <a href="http://localhost:1313" class="iconfont icon-instagram" title="instagram"></a>
+      <a href="http://localhost:1313" class="iconfont icon-gitlab" title="gitlab"></a>
+      <a href="http://localhost:1313" class="iconfont icon-bilibili" title="bilibili"></a>
+  
+  
+  
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2021<span class="heart"><i class="iconfont icon-heart"></i></span><span>linuxfish</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.c99b103c33d1539acf3025e1913697534542c4a5aa5af0ccc20475ed2863603b.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
