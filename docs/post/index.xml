@@ -6,7 +6,16 @@
     <description>Recent content in Posts on I&#39;m linuxfish</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 05 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 15 Jun 2021 19:02:04 +0800</lastBuildDate><atom:link href="http://localhost:1313/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Golang调度器源码分析</title>
+      <link>http://localhost:1313/post/golang-scheduler/</link>
+      <pubDate>Tue, 15 Jun 2021 19:02:04 +0800</pubDate>
+      
+      <guid>http://localhost:1313/post/golang-scheduler/</guid>
+      <description>内核对系统线程的调度简单的归纳为：在执行操作系统代码时，内核调度器按照一定的算法挑选出一个线程并把该线程保存在内存之中的寄存器的值放入CPU</description>
+    </item>
+    
     <item>
       <title>Grafana源码分析</title>
       <link>http://localhost:1313/post/2021/02/05/sourcecode-of-grafana/</link>
