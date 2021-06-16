@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="linuxfish" /><meta name="description" content="##知乎以及得到手机App与Server端的认证机制分析 ###抓包 采用Charles进行抓包 一个关键点是如何抓SSL包 https://www.charlesproxy.com/documentation/using-charles/ssl-certificates/ 需要在手机上安装Ch" />
+<meta name="author" content="linuxfish" /><meta name="description" content="知乎以及得到手机App与Server端的认证机制分析 抓包 采用Charles进行抓包 一个关键点是如何抓SSL包 https://www.charlesproxy.com/documentation/using-charles/ssl-certificates/ 需要在手机上安装Charles" />
 
 
 
@@ -40,19 +40,19 @@
 
 
 <meta property="og:title" content="zhihu authentication analysis" />
-<meta property="og:description" content="##知乎以及得到手机App与Server端的认证机制分析 ###抓包 采用Charles进行抓包 一个关键点是如何抓SSL包 https://www.charlesproxy.com/documentation/using-charles/ssl-certificates/ 需要在手机上安装Ch" />
+<meta property="og:description" content="知乎以及得到手机App与Server端的认证机制分析 抓包 采用Charles进行抓包 一个关键点是如何抓SSL包 https://www.charlesproxy.com/documentation/using-charles/ssl-certificates/ 需要在手机上安装Charles" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://localhost:1313/post/2017/03/20/zhihu-authentication-analysis/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2017-03-20T00:00:00&#43;00:00" />
 <meta property="article:modified_time" content="2017-03-20T00:00:00&#43;00:00" />
 
 <meta itemprop="name" content="zhihu authentication analysis">
-<meta itemprop="description" content="##知乎以及得到手机App与Server端的认证机制分析 ###抓包 采用Charles进行抓包 一个关键点是如何抓SSL包 https://www.charlesproxy.com/documentation/using-charles/ssl-certificates/ 需要在手机上安装Ch"><meta itemprop="datePublished" content="2017-03-20T00:00:00&#43;00:00" />
+<meta itemprop="description" content="知乎以及得到手机App与Server端的认证机制分析 抓包 采用Charles进行抓包 一个关键点是如何抓SSL包 https://www.charlesproxy.com/documentation/using-charles/ssl-certificates/ 需要在手机上安装Charles"><meta itemprop="datePublished" content="2017-03-20T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2017-03-20T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="757">
+<meta itemprop="wordCount" content="746">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="zhihu authentication analysis"/>
-<meta name="twitter:description" content="##知乎以及得到手机App与Server端的认证机制分析 ###抓包 采用Charles进行抓包 一个关键点是如何抓SSL包 https://www.charlesproxy.com/documentation/using-charles/ssl-certificates/ 需要在手机上安装Ch"/>
+<meta name="twitter:description" content="知乎以及得到手机App与Server端的认证机制分析 抓包 采用Charles进行抓包 一个关键点是如何抓SSL包 https://www.charlesproxy.com/documentation/using-charles/ssl-certificates/ 需要在手机上安装Charles"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -137,12 +137,26 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">文章目录</h2>
   <div class="post-toc-content always-active">
-    <nav id="TableOfContents"></nav>
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#知乎以及得到手机app与server端的认证机制分析">知乎以及得到手机App与Server端的认证机制分析</a>
+          <ul>
+            <li><a href="#抓包">抓包</a></li>
+            <li><a href="#逆向apk">逆向APK</a></li>
+            <li><a href="#签名算法">签名算法</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
   </div>
 </div>
     <div class="post-content">
-      <p>##知乎以及得到手机App与Server端的认证机制分析</p>
-<p>###抓包</p>
+      <h2 id="知乎以及得到手机app与server端的认证机制分析">知乎以及得到手机App与Server端的认证机制分析</h2>
+<h3 id="抓包">抓包</h3>
 <p>采用Charles进行抓包</p>
 <ul>
 <li>
@@ -154,8 +168,8 @@
 </li>
 </ul>
 <p>在分析得到App与Server端的交互时发现，几乎每个链接都会带一个sign参数，如果不传递这个参数的话，Server端会返回错误，那么这个sign参数是从哪里来的呢？这个时候就需要反编译一下APK来分析一下了。</p>
-<p>###逆向APK
-逆向APK所用到的工具主要是Jadx，有时可能还需要Hopper Dissembler，下面会详细介绍</p>
+<h3 id="逆向apk">逆向APK</h3>
+<p>逆向APK所用到的工具主要是Jadx，有时可能还需要Hopper Dissembler，下面会详细介绍</p>
 <ul>
 <li>
 <p>Jadx</p>
@@ -187,7 +201,7 @@
 </li>
 </ul>
 <p>分析知乎客户端与Server认证机制时遇到一个签名算法HMAC，顺便把各种签名算法学习一下</p>
-<p>###签名算法</p>
+<h3 id="签名算法">签名算法</h3>
 <ul>
 <li>hmac-sha1</li>
 <li>md5</li>

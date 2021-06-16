@@ -5,7 +5,7 @@ slug = "2016/02/25/leetcode-challenage"
 Categories = []
 +++
 
-###Nim Game
+### Nim Game
 这是最简单的题目了，但也想了很久，只想到用递归，看了答案才知道原来一条代码可以解决。。
 
 这个问题的关键是给出一个数字，判断是否一定能赢，而不管过程。
@@ -200,7 +200,7 @@ class Solution(object):
         return self.reverseListRecursion(next, head)  # doing this recursively
 ```
 
-###Roman to Integer
+### Roman to Integer
 自己想出来的，不容易啊。。
 
 首先把罗马数字与阿拉伯数字的映射关系准备好，然后遍历罗马数字的字符，同时维护一个prev变量保存前一个遍历过的字符，当发现当前字符比前一个字符代表的阿拉伯数字小时，使用特殊的累加策略，否则就是简单的把当前字符对应的阿拉伯数字累加到总和total中。
@@ -223,7 +223,7 @@ class Solution(object):
         return total
 ```
 
-###Odd Even Linked List
+### Odd Even Linked List
 思路其实比较简单，就是遍历链表，奇数序元素放到奇数链表中，偶数序元素放到偶数链表中。但是，要维护的指针比较多，不注意就会搞混。。新生成的奇数链表和偶数链表都需要指针来操作。
 而且，在从头生成一个指针时，需要先初始化一个DummyNode，然后再把元素一个一个接在后面，元素添加完成后，`DummyNode.next`就是这条刚生成的链表的head了。
 
@@ -260,7 +260,7 @@ class Solution(object):
             
         return oddHead.next
 ```
-###Remove Duplicates from Sorted List
+### Remove Duplicates from Sorted List
 
 维护两个指针，一个prev，一个current，分别指向遍历链表的前一个元素和当前元素，当 前一个元素跟当前元素相同时，舍弃掉当前元素。
 否则，就把prev和current各自向下移动一位元素。
@@ -289,7 +289,7 @@ class Solution(object):
         return head
 ```
 
-###Happy Number
+### Happy Number
 用一个集合来放已经算过的数，如果有数重复出现，说明开始进入循环了。
 
 ```python Happy Number
@@ -313,7 +313,7 @@ class Solution(object):
         return n == 1
 ```
 
-###Merge Two Sorted Lists
+### Merge Two Sorted Lists
 
 比较两个链表当前的元素大小，把符合条件的元素加到新list中，同时把符合条件的元素所在的链表的指针往下移动一个元素，另一个链表的指针不动，
 如此直到至少一个链表遍历完成，最后把剩下的链表未遍历完的元素全部追加到新链表即可。
@@ -349,7 +349,7 @@ class Solution(object):
         return dummy.next
 ```
 
-###Intersection of Two Arrays
+### Intersection of Two Arrays
 
 先对两个数组排序，然后对两个数组各自维护一个指针，同时遍历两个数组，当在一个数组中当前指针对应的值小于另一个数组中当前指针对应的值时，把指针往前移动。
 当两个指针对应的元素相等时，说明找到一个interaction了。
@@ -384,14 +384,14 @@ class Solution(object):
         return res
 ```
 
-###Top K Frequent Elements
+### Top K Frequent Elements
 
 使用桶排序  比较有意思，先遍历一遍找到每个元素的频率存在字典中，然后初始化一个数组，以每个元素的频率为数组的下标（index）把对应的元素存入这个数组，
 最后把这个数组从后往前遍历，得到的结果就是出现频率从高到低的元素
 
 
 
-###Binary Tree Preorder Traversal
+### Binary Tree Preorder Traversal
 
 ```python Binary Tree Preorder Traversal
 # Definition for a binary tree node.
@@ -447,7 +447,7 @@ class Solution(object):
         return res
 ```
 
-###Kth Smallest Element in a BST
+### Kth Smallest Element in a BST
 
 对BST的in-order traversal就是按顺序的遍历，所以执行一个in-order traversal，同时记录遍历到第几个就行了。
 
@@ -485,7 +485,7 @@ class Solution(object):
         return element.val
 ```
 
-###Two Sum II - Input array is sorted
+### Two Sum II - Input array is sorted
 
 维护两个指针，从两边向中间搜索
 
@@ -510,7 +510,7 @@ class Solution(object):
         return []
 ```
 
-###Linked List Random Node
+### Linked List Random Node
 
 蓄水池抽样（Reservoir Sampling）
 
@@ -554,7 +554,7 @@ class Solution(object):
 # obj = Solution(head)
 # param_1 = obj.getRandom()
 ```
-###Shuffle an Array
+### Shuffle an Array
 
 对于每个i，从0-i随机选择一个数r，交换
 
@@ -596,7 +596,7 @@ class Solution(object):
 # param_1 = obj.reset()
 # param_2 = obj.shuffle()
 ```
-###Count Numbers with Unique Digits
+### Count Numbers with Unique Digits
 
 排列组合
 
@@ -624,7 +624,7 @@ class Solution(object):
         return sum(res)
 ```
 
-###Kth Smallest Element in a Sorted Matrix
+### Kth Smallest Element in a Sorted Matrix
 
 利用优先队列 heapq
 
@@ -654,7 +654,7 @@ class Solution(object):
         return val
 ```
 
-###Product of Array Except Self
+### Product of Array Except Self
 
 除自己之外的其它数的乘积可以看作由两部分组成：该数左边部分的数的积和改数右边部分的数的积。
 
@@ -683,7 +683,7 @@ class Solution(object):
         return output
 ```
 
-###Binary Tree Paths
+### Binary Tree Paths
 
 DFS 深度优先搜索，在traverse过程中记住经过的node，当到达叶子节点时，把路径打印出来
 

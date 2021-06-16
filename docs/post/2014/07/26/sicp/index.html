@@ -168,36 +168,39 @@
     <div class="post-content">
       <p>大名鼎鼎的SICP，下面是我在学习Berkeley的CS61A时做的笔记,非常有意思的一门课！</p>
 <h2 id="高阶函数">高阶函数</h2>
-<p>理解这玩意儿有时候确实挺费脑筋。。。下面这个trick花了好久才理解。。关键一开始没想明白返回的到底是匿名函数还是匿名函数的执行结果 <br>
-def cons(a, b):
-return lambda m: m(a,b) # 此处返回的是一个参数为m的匿名函数！！并且m是一个函数，m接受两个参数a和b</p>
-<pre><code>def car(p):
+<p>理解这玩意儿有时候确实挺费脑筋。。。下面这个trick花了好久才理解。。关键一开始没想明白返回的到底是匿名函数还是匿名函数的执行结果</p>
+<pre><code>def cons(a, b):
+	return lambda m: m(a,b) # 此处返回的是一个参数为m的匿名函数！！并且m是一个函数，m接受两个参数a和b
+
+def car(p):
 	return p(lambda x,y:x) # 
 
 car(cons(1,2)) # 结果应该为1
 </code></pre>
-<p>以上代码大概类似于下面的代码： <br>
-def fuck(func):
-def wrapper(a,b):
-return func(a,b)
-return wrapper</p>
-<pre><code>x = fuck(lambda x,y:x)
+<p>以上代码大概类似于下面的代码：</p>
+<pre><code>def fuck(func):
+	def wrapper(a,b):
+        return func(a,b)
+	return wrapper
+
+x = fuck(lambda x,y:x)
 x(1,2) # 输出1
 </code></pre>
 <h2 id="递归--破钱">递归  破钱</h2>
-<p>下面的函数实现的功能是，给定一个数值，比方说100块，和一堆小面额的纸币，找出用这些小面额纸币来表示这100块总共有几种方法。其中link函数是用来制作链表的，first函数返回链表的第一个元素，rest函数返回链表的剩余所有元素。可以看到函数是用递归实现的，依据大概是这样的：100块的表示方法可以分为两类，一类方法中使用链表中的第一个面额，另一类方法中不使用第一个面额。就这么简单。。。神奇的是它竟然是能工作的！
-def count_change(amount, denominations):
-'''
-Return the number of ways to make change for amount
-'''
-if amount &lt; 0 or denominations == empty:
-return 0
-elif amount == 0:
-return 1
-using_coin = count_change(amount - first(denominations), denominations)
-not_using_coin = count_change(amount, rest(denominations))
-return using_coin + not_using_coin</p>
-<pre><code>denominations = link(50, link(25, link(10, link(5, link(1, empty)))))
+<p>下面的函数实现的功能是，给定一个数值，比方说100块，和一堆小面额的纸币，找出用这些小面额纸币来表示这100块总共有几种方法。其中link函数是用来制作链表的，first函数返回链表的第一个元素，rest函数返回链表的剩余所有元素。可以看到函数是用递归实现的，依据大概是这样的：100块的表示方法可以分为两类，一类方法中使用链表中的第一个面额，另一类方法中不使用第一个面额。就这么简单。。。神奇的是它竟然是能工作的！</p>
+<pre><code>def count_change(amount, denominations):
+	'''
+	Return the number of ways to make change for amount
+	'''
+	if amount &lt; 0 or denominations == empty:
+        return 0
+	elif amount == 0:
+        return 1
+	using_coin = count_change(amount - first(denominations), denominations)
+	not_using_coin = count_change(amount, rest(denominations))
+	return using_coin + not_using_coin
+
+denominations = link(50, link(25, link(10, link(5, link(1, empty)))))
 &gt;&gt;&gt; print_linked_list(denominations)
 &lt; 50 25 10 5 1 &gt;
 &gt;&gt;&gt; count_change(100, denominations)
@@ -210,20 +213,21 @@ return using_coin + not_using_coin</p>
 <ul>
 <li>iterators与iterables</li>
 </ul>
-<p>原来这两个不是一个东西。iterators需要实现<code>__next__</code>方法，是具体干活的。  <br>
-An object is iterable if it <strong>returns an iterator</strong> when its <code>__iter__</code> method is invoked. Iterable values represent data collections, and they provide a fixed representation that may produce more than one iterator. iterator和iterable类似于类和实例的关系吧,iterator负责实现模型、架构，iterable负责实例化。For example, an instance of the <code>Letters</code> class below represents a sequence of consecutive letters. Each time its <code>__iter__</code> method is invoked, a new <code>LetterIter</code> instance is constructed, which allows for sequential access to the contents of the sequence.  <br>
-&raquo;&gt; class LetterIter:
-&ldquo;&ldquo;&ldquo;An iterator over letters of the alphabet in ASCII order.&rdquo;&rdquo;&rdquo;
-def <strong>init</strong>(self, start=&lsquo;a&rsquo;, end=&lsquo;e&rsquo;):
-self.next_letter = start
-self.end = end
-def <strong>next</strong>(self):
-if self.next_letter == self.end:
-raise StopIteration
-letter = self.next_letter
-self.next_letter = chr(ord(letter)+1)
-return letter</p>
-<pre><code>&gt;&gt;&gt; class Letters:
+<p>原来这两个不是一个东西。iterators需要实现<code>__next__</code>方法，是具体干活的。</p>
+<p>An object is iterable if it <strong>returns an iterator</strong> when its <code>__iter__</code> method is invoked. Iterable values represent data collections, and they provide a fixed representation that may produce more than one iterator. iterator和iterable类似于类和实例的关系吧,iterator负责实现模型、架构，iterable负责实例化。For example, an instance of the <code>Letters</code> class below represents a sequence of consecutive letters. Each time its <code>__iter__</code> method is invoked, a new <code>LetterIter</code> instance is constructed, which allows for sequential access to the contents of the sequence.</p>
+<pre><code>&gt;&gt;&gt; class LetterIter:
+	&quot;&quot;&quot;An iterator over letters of the alphabet in ASCII order.&quot;&quot;&quot;
+	def __init__(self, start='a', end='e'):
+        self.next_letter = start
+        self.end = end
+	def __next__(self):
+        if self.next_letter == self.end:
+        raise StopIteration
+        letter = self.next_letter
+        self.next_letter = chr(ord(letter)+1)
+        return letter
+
+&gt;&gt;&gt; class Letters:
 	def __init__(self, start='a', end='e'):
         self.start = start
         self.end = end
@@ -270,20 +274,21 @@ d
 </code></pre>
 <p>Even though we never explicitly defined <code>__iter__</code> or <code>__next__</code> methods, the yield statement indicates that we are defining a generator function. When called, a generator function doesn&rsquo;t return a particular yielded value, but instead a generator (which is a type of iterator) that itself can return the yielded values. A generator object has <code>__iter__</code> and <code>__next__</code> methods, and each call to <code>__next__</code> continues execution of the generator function from wherever it left off previously until another yield statement is executed.</p>
 <p>The first time <code>__next__</code> is called, the program executes statements from the body of the <code>letters_generator</code> function until it encounters the yield statement. Then, it pauses and returns the value of current. yield statements do not destroy the newly created environment, they preserve it for later. When <code>__next__</code> is called again, execution resumes where it left off. The values of current and of any other bound names in the scope of <code>letters_generator</code> are preserved across subsequent calls to <code>__next__</code>.</p>
-<p>这样，可以用yield语句来简化iterables的写法
-&raquo;&gt; class LettersWithYield:
-def <strong>init</strong>(self, start=&lsquo;a&rsquo;, end=&lsquo;e&rsquo;):
-self.start = start
-self.end = end
-def <strong>iter</strong>(self):
-next_letter = self.start
-while next_letter &lt; self.end:
-yield next_letter
-next_letter = chr(ord(next_letter)+1)</p>
+<p>这样，可以用yield语句来简化iterables的写法</p>
+<pre><code>&gt;&gt;&gt; class LettersWithYield:
+	def __init__(self, start='a', end='e'):
+        self.start = start
+        self.end = end
+	def __iter__(self):
+        next_letter = self.start
+        while next_letter &lt; self.end:
+        yield next_letter
+        next_letter = chr(ord(next_letter)+1)
+</code></pre>
 <p>以前没有Generators的时候，还需要定义一个<code>__next__</code>方法来生成iterator，然后用<code>__iter__</code>方法来返回self，这下因为yield本身返回的就是一个Generator(也属于Iterator)，所以无需<code>__next__</code>方法来生成iterator。</p>
 <h2 id="mutation-in-for-loops">Mutation in for loops</h2>
-<p>如果在for循环中对对象做了修改（增加或删除），会出现无法预测的结果
-# Demo: Mutation in For Loops
+<p>如果在for循环中对对象做了修改（增加或删除），会出现无法预测的结果</p>
+<pre><code># Demo: Mutation in For Loops
 # lst = list(range(10, 20))
 # for item in lst:
 #     print(item)
@@ -291,20 +296,22 @@ next_letter = chr(ord(next_letter)+1)</p>
 # lst
 # 下面是解决办法, 不过原理未搞懂，待查
 class BetterList(list):
-def <strong>iter</strong>(self):
-return list.<strong>iter</strong>(self[:])</p>
+    def __iter__(self):
+	return list.__iter__(self[:])
+</code></pre>
 <h2 id="nonlocal与list">nonlocal与list</h2>
-<p>看下面两段代码  <br>
-def make_accumulator():
-&ldquo;&ldquo;&ldquo;Return an accumulator function that takes a single numeric argument and
-accumulates that argument into total, then returns total.
-&quot;&rdquo;&rdquo;
-total = []
-def accumulator(amount):
-total.append(amount)
-return sum(total)
-return accumulator</p>
-<pre><code>def make_accumulator_nonlocal():
+<p>看下面两段代码</p>
+<pre><code>def make_accumulator():
+    &quot;&quot;&quot;Return an accumulator function that takes a single numeric argument and
+    accumulates that argument into total, then returns total.
+    &quot;&quot;&quot;
+    total = []
+    def accumulator(amount):
+	total.append(amount)
+	return sum(total)
+    return accumulator
+
+def make_accumulator_nonlocal():
     &quot;&quot;&quot;Return an accumulator function that takes a single numeric argument and
     accumulates that argument into total, then returns total.
     &quot;&quot;&quot;
@@ -335,21 +342,33 @@ return accumulator</p>
 <ul>
 <li>统计字母出现频率，并据此创建霍夫曼二叉树。创建的方法就是对给定的字母、频率，不停的merge掉频率最小的两个，并根据这两个生成一个新的HuffmanTree，它的频率为那两个频率最小的频率之和，以此直至只剩下两个HuffmanTree为止.</li>
 <li>编码</li>
-<li>解码
-编码和解码部分可用递归优雅的实现</li>
+<li>解码</li>
 </ul>
+<p>编码和解码部分可用递归优雅的实现</p>
 <h2 id="scheme">Scheme</h2>
 <ul>
-<li>区分symbol和string. When you type things in the interpreter, Scheme will evaluate it. The rule for evaluating a symbol is to get the value bound to that symbol. This is one difference between strings and symbols&ndash;symbols don&rsquo;t evaluate to themselves(which strings do). However, as you saw above, when you type in &lsquo;a, you get a. This is because when you use single quote, you&rsquo;re telling Scheme <strong>not to follow</strong> the normal rules of the evaluation and just have the symbol return as itself.</li>
-<li>Special Forms. 类似于其它语言中的关键字，比如define if and or等等</li>
-<li>Lambdas. 语法： <code>(lambda (&lt;PARAMETERS&gt;) &lt;EXPR&gt;)</code></li>
-<li>Functions. 语法：<code>(define (&lt;FUNCTIONNAME&gt; &lt;PARAMETERS&gt;) &lt;EXPR&gt;)</code>. Python will automatically transform it to <code>(define &lt;FUNCTIONNAME&gt; (lambda (&lt;PARAMETERS&gt;) &lt;EXPR&gt;)</code> for you.所以在Scheme中，lambda更基础.</li>
-<li>关键字let. 语法：
-(let ( (<SYMBOL1> <EXPR1>)
+<li>
+<p>区分symbol和string. When you type things in the interpreter, Scheme will evaluate it. The rule for evaluating a symbol is to get the value bound to that symbol. This is one difference between strings and symbols&ndash;symbols don&rsquo;t evaluate to themselves(which strings do). However, as you saw above, when you type in &lsquo;a, you get a. This is because when you use single quote, you&rsquo;re telling Scheme <strong>not to follow</strong> the normal rules of the evaluation and just have the symbol return as itself.</p>
+</li>
+<li>
+<p>Special Forms. 类似于其它语言中的关键字，比如define if and or等等</p>
+</li>
+<li>
+<p>Lambdas. 语法： <code>(lambda (&lt;PARAMETERS&gt;) &lt;EXPR&gt;)</code></p>
+</li>
+<li>
+<p>Functions. 语法：<code>(define (&lt;FUNCTIONNAME&gt; &lt;PARAMETERS&gt;) &lt;EXPR&gt;)</code>. Python will automatically transform it to <code>(define &lt;FUNCTIONNAME&gt; (lambda (&lt;PARAMETERS&gt;) &lt;EXPR&gt;)</code> for you.所以在Scheme中，lambda更基础.</p>
+</li>
+<li>
+<p>关键字let. 语法：</p>
+<p>(let ( (<SYMBOL1> <EXPR1>)
 &hellip;
 (<SYMBOLN> <EXPRN>) )
-<BODY> )
-它等价于：<code>( (lambda (&lt;SYMBOL1&gt; ... &lt;SYMBOLN&gt;) &lt;BODY&gt;) &lt;EXPR1&gt; ... &lt;EXPRN&gt;)</code></li>
+<BODY> )</p>
+</li>
+</ul>
+<p>它等价于：<code>( (lambda (&lt;SYMBOL1&gt; ... &lt;SYMBOLN&gt;) &lt;BODY&gt;) &lt;EXPR1&gt; ... &lt;EXPRN&gt;)</code></p>
+<ul>
 <li>Pairs. 创建：<code>(define a (cons 1 2))</code> 获取： <code>(car a)</code> <code>(cdr a)</code></li>
 <li>List. A List is a specific kind of Pair that is either nil(an empty list) or a Pair whose cdr is another List. 比如，(cons 1 (cons 2 nil))，它可以简写成&rsquo;(1 2)，检查List是否为空可用null?语句</li>
 </ul>

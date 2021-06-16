@@ -193,7 +193,7 @@
       <pubDate>Mon, 20 Mar 2017 00:00:00 +0000</pubDate>
       
       <guid>http://localhost:1313/post/2017/03/20/zhihu-authentication-analysis/</guid>
-      <description>##知乎以及得到手机App与Server端的认证机制分析 ###抓包 采用Charles进行抓包 一个关键点是如何抓SSL包 https://www.charlesproxy.com/documentation/using-charles/ssl-certificates/ 需要在手机上安装Ch</description>
+      <description>知乎以及得到手机App与Server端的认证机制分析 抓包 采用Charles进行抓包 一个关键点是如何抓SSL包 https://www.charlesproxy.com/documentation/using-charles/ssl-certificates/ 需要在手机上安装Charles</description>
     </item>
     
     <item>
@@ -202,7 +202,7 @@
       <pubDate>Wed, 22 Feb 2017 00:00:00 +0000</pubDate>
       
       <guid>http://localhost:1313/post/2017/02/22/process-data-using-awk/</guid>
-      <description>###AWK学习笔记 以下内容主要参考自《The AWK Programming Language》一书以及GNU的《The GNU Awk User’s Guide》。 the structure of an AWK program pattern { action</description>
+      <description>AWK学习笔记 以下内容主要参考自《The AWK Programming Language》一书以及GNU的《The GNU Awk User’s Guide》。 the structure of an AWK program pattern { action } the basic</description>
     </item>
     
     <item>
@@ -211,7 +211,7 @@
       <pubDate>Sat, 14 Jan 2017 00:00:00 +0000</pubDate>
       
       <guid>http://localhost:1313/post/2017/01/14/thrift-server-error-caused-by-aliyun-health-check/</guid>
-      <description>近期遇到一个thrift server方面的问题，记录一下。 ###Background server做的事情其实很简单，就是一个图片上传服务，别人把图片传过来，服务器上</description>
+      <description>近期遇到一个thrift server方面的问题，记录一下。 Background server做的事情其实很简单，就是一个图片上传服务，别人把图片传过来，服务器上</description>
     </item>
     
     <item>
@@ -238,7 +238,7 @@
       <pubDate>Mon, 29 Aug 2016 00:00:00 +0000</pubDate>
       
       <guid>http://localhost:1313/post/2016/08/29/csapp-network-programming/</guid>
-      <description>###The Client-Server Programming Model Every network application is based on the client-server model. With this model, an application consists of a server process and one or more client processes. A server manages some resource, and it provides some service for its clients by manipulating that resource. ###Networks Clients and servers often run on separate hosts and communicate using the hard- ware and software resources of a computer network. To a</description>
+      <description>The Client-Server Programming Model Every network application is based on the client-server model. With this model, an application consists of a server process and one or more client processes. A server manages some resource, and it provides some service for its clients by manipulating that resource. Networks Clients and servers often run on separate hosts and communicate using the hard- ware and software resources of a computer network. To a</description>
     </item>
     
     <item>
@@ -247,7 +247,7 @@
       <pubDate>Sun, 28 Aug 2016 00:00:00 +0000</pubDate>
       
       <guid>http://localhost:1313/post/2016/08/28/csapp-system-level-io/</guid>
-      <description>###概览 是什么？ Input/output (I/O) is the process of copying data between main memory and external devices such as disk drives, terminals, and networks. An input operation copies data from an I/O device to main memory, and an output operation copies data from memory to a device. 为什么？ All language run-time systems provide higher-level facilities for performing I/O. For example, ANSI</description>
+      <description>概览 是什么？ Input/output (I/O) is the process of copying data between main memory and external devices such as disk drives, terminals, and networks. An input operation copies data from an I/O device to main memory, and an output operation copies data from memory to a device. 为什么？ All language run-time systems provide higher-level facilities for performing I/O. For example, ANSI C provides the</description>
     </item>
     
     <item>
@@ -256,7 +256,7 @@
       <pubDate>Fri, 26 Aug 2016 00:00:00 +0000</pubDate>
       
       <guid>http://localhost:1313/post/2016/08/26/csapp-exceptional-control-flow/</guid>
-      <description>###Chapter 8 Exceptional Control Flow 从一上电开始，CPU就在不停得执行指令，从第k个指令转到k+1个指令执行，叫做指令转移(control transfer)，一堆指令</description>
+      <description>Chapter 8 Exceptional Control Flow 从一上电开始，CPU就在不停得执行指令，从第k个指令转到k+1个指令执行，叫做指令转移(control transfer)，一堆指令</description>
     </item>
     
     <item>
@@ -274,7 +274,7 @@
       <pubDate>Sun, 06 Mar 2016 00:00:00 +0000</pubDate>
       
       <guid>http://localhost:1313/post/2016/03/06/baidu-ife/</guid>
-      <description>###盒模型及定位 用两种方法来实现一个背景色为红色、宽度为960px的&amp;lt;DIV&amp;gt;在浏览器中居中 第一种方法：margin:0px auto;</description>
+      <description>盒模型及定位 用两种方法来实现一个背景色为红色、宽度为960px的&amp;lt;DIV&amp;gt;在浏览器中居中 第一种方法：margin:0px auto; 第二种</description>
     </item>
     
     <item>
@@ -283,7 +283,7 @@
       <pubDate>Thu, 25 Feb 2016 00:00:00 +0000</pubDate>
       
       <guid>http://localhost:1313/post/2016/02/25/leetcode-challenage/</guid>
-      <description>###Nim Game 这是最简单的题目了，但也想了很久，只想到用递归，看了答案才知道原来一条代码可以解决。。 这个问题的关键是给出一个数字，判断是否一定能赢，而</description>
+      <description>Nim Game 这是最简单的题目了，但也想了很久，只想到用递归，看了答案才知道原来一条代码可以解决。。 这个问题的关键是给出一个数字，判断是否一定能赢，而</description>
     </item>
     
     <item>
@@ -499,7 +499,7 @@
       <pubDate>Wed, 11 Sep 2013 00:00:00 +0000</pubDate>
       
       <guid>http://localhost:1313/post/2013/09/11/two-more-books-about-macro-economics/</guid>
-      <description>###《一转念》 by 兰小欢 书中大部分内容讲的是用经济学的供求原理来解释生活中一些看似古怪的现象，还有一些作者的随想。以下是摘录： 你要是把喜儿都</description>
+      <description>《一转念》 by 兰小欢 书中大部分内容讲的是用经济学的供求原理来解释生活中一些看似古怪的现象，还有一些作者的随想。以下是摘录： 你要是把喜儿都霸占了</description>
     </item>
     
     <item>

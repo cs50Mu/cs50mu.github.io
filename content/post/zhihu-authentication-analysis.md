@@ -5,9 +5,9 @@ slug = "2017/03/20/zhihu-authentication-analysis"
 Categories = []
 +++
 
-##知乎以及得到手机App与Server端的认证机制分析
+## 知乎以及得到手机App与Server端的认证机制分析
 
-###抓包
+### 抓包
 
 采用Charles进行抓包
 
@@ -18,7 +18,7 @@ Categories = []
 
 在分析得到App与Server端的交互时发现，几乎每个链接都会带一个sign参数，如果不传递这个参数的话，Server端会返回错误，那么这个sign参数是从哪里来的呢？这个时候就需要反编译一下APK来分析一下了。
 
-###逆向APK
+### 逆向APK
 逆向APK所用到的工具主要是Jadx，有时可能还需要Hopper Dissembler，下面会详细介绍
 
 - Jadx
@@ -48,7 +48,7 @@ Categories = []
 
 分析知乎客户端与Server认证机制时遇到一个签名算法HMAC，顺便把各种签名算法学习一下
 
-###签名算法
+### 签名算法
 
 - hmac-sha1
 - md5

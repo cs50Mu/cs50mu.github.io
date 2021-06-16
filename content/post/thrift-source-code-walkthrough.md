@@ -9,7 +9,7 @@ Categories = []
 
 thrift整个逻辑结构是分层的，类似于网络模型的分层，从下到上依次为Transport层，它封装了底层的socket；Protocol层在Transport层的基础上实现了传输协议；
 
-###Transport
+### Transport
 先看是如何用的，thrift client端的正确打开方式是:
 
 ```python
@@ -232,7 +232,7 @@ class TServerSocket(TSocketBase, TServerTransportBase):
     result.setHandle(client)
     return result
 ```
-###Protocol
+### Protocol
 这个模块定义的是传输协议，代码都放在protocol目录下。关于这一部分的作用，官网已经说的很清楚了，直接引用过来：
 
 >The Protocol abstraction defines a mechanism to map in-memory data structures to a wire-format. In other words, a protocol specifies how datatypes use the underlying Transport to encode/decode themselves. Thus the protocol implementation governs the encoding scheme and is responsible for (de)serialization. Some examples of protocols in this sense include JSON, XML, plain text, compact binary etc.
@@ -362,7 +362,7 @@ class TServerSocket(TSocketBase, TServerTransportBase):
 [由浅入深了解Thrift（二）——Thrift的工作原理](http://houjixin.blog.163.com/blog/static/35628410201501654039437/)
 
 
-###Processor
+### Processor
 这一块儿的代码是由thrift compiler自动生成的
 
-###Server
+### Server

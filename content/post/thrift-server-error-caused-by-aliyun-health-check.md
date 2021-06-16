@@ -7,14 +7,14 @@ Categories = []
 
 近期遇到一个thrift server方面的问题，记录一下。
 
-###Background
+### Background
 
 server做的事情其实很简单，就是一个图片上传服务，别人把图片传过来，服务器上传到阿里云的云上，再返回一个图片地址。
 
 问题暴露出来的现象是：这个服务每隔一段时间就会“挂掉”，重启服务后会好那么一段时间然后又会“挂掉”。客户端调用返回`TSocket: Could read 4 bytes from ....`，但去线上ps会发现，server进程其实是在的，
 也就是说服务器其实只是不响应了，并没有真正挂掉。
 
-###First guess
+### First guess
 
 分析后台日志发现，大量重复的报错信息`Connection reset by peer`，以及偶尔的错误信息`too many open files`（其实，这个偶尔也只是猜测，因为并没有完整的确认过），当时看到这个日志后，就猜测
 原因是：请求太多，导致该程序打开的文件描述符超过限制，从而拒绝服务。由于是线上服务，出现问题时为了及时恢复服务，当时就重启了服务，因此也并没有验证这个猜测。但看了下操作系统对单个程序
@@ -32,7 +32,7 @@ server做的事情其实很简单，就是一个图片上传服务，别人把�
 里面讲到，ThreadPoolServer来说，它使用的是定长线程池来服务的，当并发太多时使得现存的线程数无法满足要求时，就会出现很多`CLOSE_WAIT`状态的连接，最终会
 把当前程序的文件描述符占满，从而出现`too many open files`的错误。正好这个服务用的线程是默认的，只有10个，当时就认为问题就在这里了。
 
-###Second guess
+### Second guess
 
 然后第二天又问了下服务调用方，其实这个服务的使用频率很低，只有在用户更改头像的时候才会调一下，按理说不会有太多并发量，所以这样看来，上面的猜测就不成立了。然后去线上看了下，该服务一共部署了两台机器，
 发现其中一台机器上的服务又“挂了”，抓住这个好机会，看了下这个服务的socket连接情况：
@@ -88,7 +88,7 @@ google到一篇阿里云上部署thrift server出问题的文章，里面也提�
 
 - [http://www.concurrent.work/one-java-thrift-case-caused-by-default-parameters/](http://www.concurrent.work/one-java-thrift-case-caused-by-default-parameters/)
 
-###反思
+### 反思
 
 - 不要急于下结论。先把日志完整分析下，服务的使用场景也要了解下，再下结论，而不要看到一点问题就瞎猜。
 - 需要了解下网络方面的基础知识了。

@@ -5,7 +5,8 @@ slug = "2016/08/28/csapp-system-level-io"
 Categories = []
 +++
 
-###概览
+### 概览
+
 是什么？
 
 Input/output (I/O) is the process of copying data between main memory and external devices such as disk drives, terminals, and networks. An input operation copies data from an I/O device to main memory, and an output operation copies data from memory to a device.
@@ -18,7 +19,7 @@ All language run-time systems provide higher-level facilities for performing I/O
 
 - Sometimes you have no choice but to use Unix I/O. There are some important cases where using higher-level I/O functions is either impossible or inappro- priate. For example, the standard I/O library provides no way to access file metadata such as file size or file creation time. Further, there are problems with the standard I/O library that make it risky to use for network programming.
 
-###Unix I/O
+### Unix I/O
 
 A Unix file is a sequence of m bytes.
 
@@ -45,5 +46,3 @@ Each process created by a Unix shell begins life with three open files: standard
 - Reading and writing network sockets. If the open file corresponds to a network socket (Section 11.3.3), then internal buffering constraints and long network delays can cause read and write to return short counts. Short counts can also occur when you call read and write on a Unix pipe, an interprocess communication mechanism that is beyond our scope. 从socket返回时，由于buffer或者网络延迟。
 
 In practice, you will never encounter short counts when you read from disk files except on EOF, and you will never encounter short counts when you write to disk files. However, if you want to build robust (reliable) network applications such as Web servers, then you must deal with short counts by repeatedly calling read and write until all requested bytes have been transferred. 实际在从硬盘文件中读的时候，除了碰到EOF其它时候都不应该遇到返回字节数少的情况；在往硬盘文件中写的时候，任何时候都不应该出现这种情况。
-
-

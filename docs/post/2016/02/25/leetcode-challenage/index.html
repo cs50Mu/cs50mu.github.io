@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="linuxfish" /><meta name="description" content="###Nim Game 这是最简单的题目了，但也想了很久，只想到用递归，看了答案才知道原来一条代码可以解决。。 这个问题的关键是给出一个数字，判断是否一定能赢，而" />
+<meta name="author" content="linuxfish" /><meta name="description" content="Nim Game 这是最简单的题目了，但也想了很久，只想到用递归，看了答案才知道原来一条代码可以解决。。 这个问题的关键是给出一个数字，判断是否一定能赢，而" />
 
 
 
@@ -40,19 +40,19 @@
 
 
 <meta property="og:title" content="leetcode challenage" />
-<meta property="og:description" content="###Nim Game 这是最简单的题目了，但也想了很久，只想到用递归，看了答案才知道原来一条代码可以解决。。 这个问题的关键是给出一个数字，判断是否一定能赢，而" />
+<meta property="og:description" content="Nim Game 这是最简单的题目了，但也想了很久，只想到用递归，看了答案才知道原来一条代码可以解决。。 这个问题的关键是给出一个数字，判断是否一定能赢，而" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://localhost:1313/post/2016/02/25/leetcode-challenage/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2016-02-25T00:00:00&#43;00:00" />
 <meta property="article:modified_time" content="2016-02-25T00:00:00&#43;00:00" />
 
 <meta itemprop="name" content="leetcode challenage">
-<meta itemprop="description" content="###Nim Game 这是最简单的题目了，但也想了很久，只想到用递归，看了答案才知道原来一条代码可以解决。。 这个问题的关键是给出一个数字，判断是否一定能赢，而"><meta itemprop="datePublished" content="2016-02-25T00:00:00&#43;00:00" />
+<meta itemprop="description" content="Nim Game 这是最简单的题目了，但也想了很久，只想到用递归，看了答案才知道原来一条代码可以解决。。 这个问题的关键是给出一个数字，判断是否一定能赢，而"><meta itemprop="datePublished" content="2016-02-25T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2016-02-25T00:00:00&#43;00:00" />
 <meta itemprop="wordCount" content="4314">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="leetcode challenage"/>
-<meta name="twitter:description" content="###Nim Game 这是最简单的题目了，但也想了很久，只想到用递归，看了答案才知道原来一条代码可以解决。。 这个问题的关键是给出一个数字，判断是否一定能赢，而"/>
+<meta name="twitter:description" content="Nim Game 这是最简单的题目了，但也想了很久，只想到用递归，看了答案才知道原来一条代码可以解决。。 这个问题的关键是给出一个数字，判断是否一定能赢，而"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -143,11 +143,28 @@
       <ul>
         <li>
           <ul>
+            <li><a href="#nim-game">Nim Game</a></li>
             <li><a href="#maximum-depth-of-binary-tree">Maximum Depth of Binary Tree</a></li>
             <li><a href="#invert-binary-tree">Invert Binary Tree</a></li>
             <li><a href="#move-zeroes">Move Zeroes</a></li>
             <li><a href="#majority-element">Majority Element</a></li>
             <li><a href="#reverse-linked-list">Reverse Linked List</a></li>
+            <li><a href="#roman-to-integer">Roman to Integer</a></li>
+            <li><a href="#odd-even-linked-list">Odd Even Linked List</a></li>
+            <li><a href="#remove-duplicates-from-sorted-list">Remove Duplicates from Sorted List</a></li>
+            <li><a href="#happy-number">Happy Number</a></li>
+            <li><a href="#merge-two-sorted-lists">Merge Two Sorted Lists</a></li>
+            <li><a href="#intersection-of-two-arrays">Intersection of Two Arrays</a></li>
+            <li><a href="#top-k-frequent-elements">Top K Frequent Elements</a></li>
+            <li><a href="#binary-tree-preorder-traversal">Binary Tree Preorder Traversal</a></li>
+            <li><a href="#kth-smallest-element-in-a-bst">Kth Smallest Element in a BST</a></li>
+            <li><a href="#two-sum-ii---input-array-is-sorted">Two Sum II - Input array is sorted</a></li>
+            <li><a href="#linked-list-random-node">Linked List Random Node</a></li>
+            <li><a href="#shuffle-an-array">Shuffle an Array</a></li>
+            <li><a href="#count-numbers-with-unique-digits">Count Numbers with Unique Digits</a></li>
+            <li><a href="#kth-smallest-element-in-a-sorted-matrix">Kth Smallest Element in a Sorted Matrix</a></li>
+            <li><a href="#product-of-array-except-self">Product of Array Except Self</a></li>
+            <li><a href="#binary-tree-paths">Binary Tree Paths</a></li>
           </ul>
         </li>
       </ul>
@@ -157,8 +174,8 @@
   </div>
 </div>
     <div class="post-content">
-      <p>###Nim Game
-这是最简单的题目了，但也想了很久，只想到用递归，看了答案才知道原来一条代码可以解决。。</p>
+      <h3 id="nim-game">Nim Game</h3>
+<p>这是最简单的题目了，但也想了很久，只想到用递归，看了答案才知道原来一条代码可以解决。。</p>
 <p>这个问题的关键是给出一个数字，判断是否一定能赢，而不管过程。</p>
 <p>一开始想到递归：</p>
 <div class="highlight"><div class="chroma">
@@ -516,8 +533,8 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverseListRecursion</span><span class="p">(</span><span class="nb">next</span><span class="p">,</span> <span class="n">head</span><span class="p">)</span>  <span class="c1"># doing this recursively</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>###Roman to Integer
-自己想出来的，不容易啊。。</p>
+</div><h3 id="roman-to-integer">Roman to Integer</h3>
+<p>自己想出来的，不容易啊。。</p>
 <p>首先把罗马数字与阿拉伯数字的映射关系准备好，然后遍历罗马数字的字符，同时维护一个prev变量保存前一个遍历过的字符，当发现当前字符比前一个字符代表的阿拉伯数字小时，使用特殊的累加策略，否则就是简单的把当前字符对应的阿拉伯数字累加到总和total中。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -557,8 +574,8 @@
         <span class="k">return</span> <span class="n">total</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>###Odd Even Linked List
-思路其实比较简单，就是遍历链表，奇数序元素放到奇数链表中，偶数序元素放到偶数链表中。但是，要维护的指针比较多，不注意就会搞混。。新生成的奇数链表和偶数链表都需要指针来操作。
+</div><h3 id="odd-even-linked-list">Odd Even Linked List</h3>
+<p>思路其实比较简单，就是遍历链表，奇数序元素放到奇数链表中，偶数序元素放到偶数链表中。但是，要维护的指针比较多，不注意就会搞混。。新生成的奇数链表和偶数链表都需要指针来操作。
 而且，在从头生成一个指针时，需要先初始化一个DummyNode，然后再把元素一个一个接在后面，元素添加完成后，<code>DummyNode.next</code>就是这条刚生成的链表的head了。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -628,7 +645,7 @@
         <span class="k">return</span> <span class="n">oddHead</span><span class="o">.</span><span class="n">next</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>###Remove Duplicates from Sorted List</p>
+</div><h3 id="remove-duplicates-from-sorted-list">Remove Duplicates from Sorted List</h3>
 <p>维护两个指针，一个prev，一个current，分别指向遍历链表的前一个元素和当前元素，当 前一个元素跟当前元素相同时，舍弃掉当前元素。
 否则，就把prev和current各自向下移动一位元素。</p>
 <div class="highlight"><div class="chroma">
@@ -681,8 +698,8 @@
         <span class="k">return</span> <span class="n">head</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>###Happy Number
-用一个集合来放已经算过的数，如果有数重复出现，说明开始进入循环了。</p>
+</div><h3 id="happy-number">Happy Number</h3>
+<p>用一个集合来放已经算过的数，如果有数重复出现，说明开始进入循环了。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -725,7 +742,7 @@
         <span class="k">return</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>###Merge Two Sorted Lists</p>
+</div><h3 id="merge-two-sorted-lists">Merge Two Sorted Lists</h3>
 <p>比较两个链表当前的元素大小，把符合条件的元素加到新list中，同时把符合条件的元素所在的链表的指针往下移动一个元素，另一个链表的指针不动，
 如此直到至少一个链表遍历完成，最后把剩下的链表未遍历完的元素全部追加到新链表即可。</p>
 <div class="highlight"><div class="chroma">
@@ -790,7 +807,7 @@
         <span class="k">return</span> <span class="n">dummy</span><span class="o">.</span><span class="n">next</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>###Intersection of Two Arrays</p>
+</div><h3 id="intersection-of-two-arrays">Intersection of Two Arrays</h3>
 <p>先对两个数组排序，然后对两个数组各自维护一个指针，同时遍历两个数组，当在一个数组中当前指针对应的值小于另一个数组中当前指针对应的值时，把指针往前移动。
 当两个指针对应的元素相等时，说明找到一个interaction了。</p>
 <div class="highlight"><div class="chroma">
@@ -853,10 +870,10 @@
         <span class="k">return</span> <span class="n">res</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>###Top K Frequent Elements</p>
+</div><h3 id="top-k-frequent-elements">Top K Frequent Elements</h3>
 <p>使用桶排序  比较有意思，先遍历一遍找到每个元素的频率存在字典中，然后初始化一个数组，以每个元素的频率为数组的下标（index）把对应的元素存入这个数组，
 最后把这个数组从后往前遍历，得到的结果就是出现频率从高到低的元素</p>
-<p>###Binary Tree Preorder Traversal</p>
+<h3 id="binary-tree-preorder-traversal">Binary Tree Preorder Traversal</h3>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -965,7 +982,7 @@
         <span class="k">return</span> <span class="n">res</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>###Kth Smallest Element in a BST</p>
+</div><h3 id="kth-smallest-element-in-a-bst">Kth Smallest Element in a BST</h3>
 <p>对BST的in-order traversal就是按顺序的遍历，所以执行一个in-order traversal，同时记录遍历到第几个就行了。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1035,7 +1052,7 @@
         <span class="k">return</span> <span class="n">element</span><span class="o">.</span><span class="n">val</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>###Two Sum II - Input array is sorted</p>
+</div><h3 id="two-sum-ii---input-array-is-sorted">Two Sum II - Input array is sorted</h3>
 <p>维护两个指针，从两边向中间搜索</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1079,7 +1096,7 @@
         <span class="k">return</span> <span class="p">[]</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>###Linked List Random Node</p>
+</div><h3 id="linked-list-random-node">Linked List Random Node</h3>
 <p>蓄水池抽样（Reservoir Sampling）</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1163,7 +1180,7 @@
 <span class="c1"># param_1 = obj.getRandom()</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>###Shuffle an Array</p>
+</div><h3 id="shuffle-an-array">Shuffle an Array</h3>
 <p>对于每个i，从0-i随机选择一个数r，交换</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1243,7 +1260,7 @@
 <span class="c1"># param_2 = obj.shuffle()</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>###Count Numbers with Unique Digits</p>
+</div><h3 id="count-numbers-with-unique-digits">Count Numbers with Unique Digits</h3>
 <p>排列组合</p>
 <p>设i为长度为i的各个位置上数字互不相同的数。</p>
 <pre><code>i==1 : 10（0~9共10个数，均不重复）
@@ -1281,7 +1298,7 @@ i== n: 9 * 9 * 8 *…… (9-i+2)
         <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>###Kth Smallest Element in a Sorted Matrix</p>
+</div><h3 id="kth-smallest-element-in-a-sorted-matrix">Kth Smallest Element in a Sorted Matrix</h3>
 <p>利用优先队列 heapq</p>
 <p>先把第一行加入heapq，然后经过k次循环即可得到第k大的元素，在每次循环中，pop出最小的元素，然后push进刚pop出的元素下方的元素（即它同一列上相邻的元素）</p>
 <div class="highlight"><div class="chroma">
@@ -1332,7 +1349,7 @@ i== n: 9 * 9 * 8 *…… (9-i+2)
         <span class="k">return</span> <span class="n">val</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>###Product of Array Except Self</p>
+</div><h3 id="product-of-array-except-self">Product of Array Except Self</h3>
 <p>除自己之外的其它数的乘积可以看作由两部分组成：该数左边部分的数的积和改数右边部分的数的积。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -1384,7 +1401,7 @@ i== n: 9 * 9 * 8 *…… (9-i+2)
         <span class="k">return</span> <span class="n">output</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>###Binary Tree Paths</p>
+</div><h3 id="binary-tree-paths">Binary Tree Paths</h3>
 <p>DFS 深度优先搜索，在traverse过程中记住经过的node，当到达叶子节点时，把路径打印出来</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">

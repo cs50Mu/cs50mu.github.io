@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="linuxfish" /><meta name="description" content="###Chapter 8 Exceptional Control Flow 从一上电开始，CPU就在不停得执行指令，从第k个指令转到k&#43;1个指令执行，叫做指令转移(control transfer)，一堆指令" />
+<meta name="author" content="linuxfish" /><meta name="description" content="Chapter 8 Exceptional Control Flow 从一上电开始，CPU就在不停得执行指令，从第k个指令转到k&#43;1个指令执行，叫做指令转移(control transfer)，一堆指令" />
 
 
 
@@ -40,19 +40,19 @@
 
 
 <meta property="og:title" content="csapp exceptional control flow" />
-<meta property="og:description" content="###Chapter 8 Exceptional Control Flow 从一上电开始，CPU就在不停得执行指令，从第k个指令转到k&#43;1个指令执行，叫做指令转移(control transfer)，一堆指令" />
+<meta property="og:description" content="Chapter 8 Exceptional Control Flow 从一上电开始，CPU就在不停得执行指令，从第k个指令转到k&#43;1个指令执行，叫做指令转移(control transfer)，一堆指令" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://localhost:1313/post/2016/08/26/csapp-exceptional-control-flow/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2016-08-26T00:00:00&#43;00:00" />
 <meta property="article:modified_time" content="2016-08-26T00:00:00&#43;00:00" />
 
 <meta itemprop="name" content="csapp exceptional control flow">
-<meta itemprop="description" content="###Chapter 8 Exceptional Control Flow 从一上电开始，CPU就在不停得执行指令，从第k个指令转到k&#43;1个指令执行，叫做指令转移(control transfer)，一堆指令"><meta itemprop="datePublished" content="2016-08-26T00:00:00&#43;00:00" />
+<meta itemprop="description" content="Chapter 8 Exceptional Control Flow 从一上电开始，CPU就在不停得执行指令，从第k个指令转到k&#43;1个指令执行，叫做指令转移(control transfer)，一堆指令"><meta itemprop="datePublished" content="2016-08-26T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2016-08-26T00:00:00&#43;00:00" />
 <meta itemprop="wordCount" content="6093">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="csapp exceptional control flow"/>
-<meta name="twitter:description" content="###Chapter 8 Exceptional Control Flow 从一上电开始，CPU就在不停得执行指令，从第k个指令转到k&#43;1个指令执行，叫做指令转移(control transfer)，一堆指令"/>
+<meta name="twitter:description" content="Chapter 8 Exceptional Control Flow 从一上电开始，CPU就在不停得执行指令，从第k个指令转到k&#43;1个指令执行，叫做指令转移(control transfer)，一堆指令"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -143,7 +143,7 @@
       <ul>
         <li>
           <ul>
-            <li></li>
+            <li><a href="#chapter-8-exceptional-control-flow">Chapter 8 Exceptional Control Flow</a></li>
           </ul>
         </li>
       </ul>
@@ -153,7 +153,7 @@
   </div>
 </div>
     <div class="post-content">
-      <p>###Chapter 8 Exceptional Control Flow</p>
+      <h3 id="chapter-8-exceptional-control-flow">Chapter 8 Exceptional Control Flow</h3>
 <p>从一上电开始，CPU就在不停得执行指令，从第k个指令转到k+1个指令执行，叫做指令转移(control transfer)，一堆指令转移的集合就叫控制流(flow of control or control flow of the process)。</p>
 <p>最简单的控制流就是一条接着一条的执行，只要执行的指令在内存中都是毗邻的，不需要跳转。当然，由于程序逻辑上的一些需求（比如分支、函数调用、调用返回）不可避免的会产生跳转。</p>
 <p>但还有其它一些跳转需求，是跟程序内部执行逻辑无关的，比如硬件时钟、磁盘IO、创建子进程等(a hardware timer goes off at regular intervals and must be dealt with. Packets arrive at the network adapter and must be stored in memory. Programs request data from a disk and then sleep until they are notified that the data are ready. Parent processes that create child processes must be notified when their children terminate.) 对于这些情形，现代操作系统也是通过跳转来应对的。这些跳转被统称为exceptional control flow (ECF). ECF可以发生在一个计算机系统的各个层面，比如硬件层面、操作系统层面、应用程序层面等。(Exceptional control flow occurs at all levels of a computer system. For example, at the hardware level, events detected by the hardware trigger abrupt control transfers to exception handlers. At the operating systems level, the kernel transfers control from one user process to another via context switches. At the application level, a process can send a signal to another process that abruptly transfers control to a signal handler in the recipient. An individual program can react to errors by sidestepping the usual stack discipline and making nonlocal jumps to arbitrary locations in other functions)</p>
@@ -164,8 +164,8 @@
 <li>有助于理解并发(concurrency)。ECF is a basic mechanism for implementing concurrency in computer systems. An exception handler that interrupts the execution of an application program, processes and threads whose execution overlap in time, and a signal handler that interrupts the execution of an application program are all examples of concurrency in action. Understanding ECF is a first step to understanding concurrency.
 有助于理解软件层面的异常(software exceptions)是如何工作的。Languages such as C++ and Java provide software exception mechanisms via try, catch, and throw statements. Software exceptions allow the program to make nonlocal jumps (i.e., jumps that violate the usual call/return stack discipline) in response to error conditions. Nonlocal jumps are a form of application-level ECF, and are provided in C via the setjmp and longjmp functions. Understanding these low-level functions will help you understand how higher-level software exceptions can be implemented.</li>
 </ul>
-<p>####8.1 Exceptions
-异常部分是由硬件实现的，部分是由操作系统实现的(Exceptions are a form of exceptional control flow that are implemented partly by the hardware and partly by the operating system.)。</p>
+<h4 id="81-exceptions">8.1 Exceptions</h4>
+<p>异常部分是由硬件实现的，部分是由操作系统实现的(Exceptions are a form of exceptional control flow that are implemented partly by the hardware and partly by the operating system.)。</p>
 <p>An exception is an abrupt change in the control flow in response to some change in the processor’s state. The change in state is known as an event. The event might be directly related to the execution of the current instruction. For example, a virtual memory page fault occurs, an arithmetic overflow occurs, or an instruction attempts a divide by zero. On the other hand, the event might be unrelated to the execution of the current instruction. For example, a system timer goes off or an I/O request completes.（状态的改变我们称之为事件，事件可能跟正在执行的指令相关，比如内存页错误；也可能与当前执行的指令不相干，比如CPU时间到了。）</p>
 <p>不管是哪种情况，都会跳到对应的异常处理程序那里执行。(In any case, when the processor detects that the event has occurred, it makes an indirect procedure call (the exception), through a jump table called an exception table, to an operating system subroutine (the exception handler) that is specifically designed to process this particular kind of event.)</p>
 <p>异常处理程序处理完以后，可能会发生以下三种情况的一种：</p>
@@ -174,8 +174,8 @@
 <li>The handler returns control to Inext, the instruction that would have executed next had the exception not occurred.</li>
 <li>The handler aborts the interrupted program.</li>
 </ul>
-<p>#####Classes of Exceptions
-异常可以被分为4类：interrupts, traps, faults, and aborts.</p>
+<h5 id="classes-of-exceptions">Classes of Exceptions</h5>
+<p>异常可以被分为4类：interrupts, traps, faults, and aborts.</p>
 <ul>
 <li>Interrupts</li>
 </ul>
@@ -267,7 +267,7 @@ child : x=2
 <p>Reaping Child Processes</p>
 <p>When a process terminates for any reason, the kernel does not remove it from the system immediately. Instead, the process is kept around in a terminated state until it is reaped by its parent. When the parent reaps the terminated child, the kernel passes the child’s exit status to the parent, and then discards the terminated process, at which point it ceases to exist. A terminated process that has not yet been reaped is called a zombie. 已经是terminated状态但还没有被reaped的process叫僵尸程序</p>
 <p>If the parent process terminates without reaping its zombie children, the kernel arranges for the init process to reap them. The init process has a PID of 1 and is created by the kernel during system initialization. Long-running programs such as shells or servers should always reap their zombie children. Even though zombies are not running, they still consume system memory resources. 父进程没收割的僵尸process会被init进程代为收割。</p>
-<p>####Signals 信号</p>
+<h4 id="signals-信号">Signals 信号</h4>
 <p>A signal is a small message that notifies a process that an event of some type has occurred in the system.</p>
 <p>Each signal type corresponds to some kind of system event. <strong>Low-level hard-ware exceptions are processed by the kernel’s exception handlers and would not normally be visible to user processes. Signals provide a mechanism for exposing the occurrence of such exceptions to user processes.</strong> For example, if a process attempts to divide by zero, then the kernel sends it a SIGFPE signal (number 8). If a process executes an illegal instruction, the kernel sends it a SIGILL signal (number 4). If a process makes an illegal memory reference, the kernel sends it a SIGSEGV signal (number 11). Other signals correspond to higher-level soft- ware events in the kernel or in other user processes. For example, if you type a ctrl-c (i.e., press the ctrl key and the c key at the same time) while a process is running in the foreground, then the kernel sends a SIGINT (number 2) to the foreground process. A process can forcibly terminate another process by sending it a SIGKILL signal (number 9). When a child process terminates or stops, the kernel sends a SIGCHLD signal (number 17) to the parent. 信号为底层硬件异常与应用程序之间搭了一座桥梁。</p>
 <p>信号的发和收</p>
@@ -292,7 +292,7 @@ child : x=2
 <p>并发容易引发bug, 并且很难定位。</p>
 <p>The problem of how to program concurrent flows that read and write the same storage locations has challenged generations of computer scientists. In general,<strong>the number of potential interleavings of the flows is exponential in the number of instructions. Some of those interleavings will produce correct answers, and others will not.</strong> The fundamental problem is to somehow synchronize the concurrent flows so as to allow the largest set of feasible interleavings such that each of the feasible interleavings produces a correct answer.</p>
 <p>Such errors are enormously difficult to debug because it is often impossible to test every interleaving. You may run the code a billion times without a problem, but then the next test results in an interleaving that triggers the race.</p>
-<p>####Nonlocal Jumps</p>
+<h4 id="nonlocal-jumps">Nonlocal Jumps</h4>
 <p>C provides a form of user-level exceptional control flow, called a nonlocal jump, that transfers control directly from one function to another currently executing function without having to go through the normal call-and-return sequence. Non- local jumps are provided by the setjmp and longjmp functions.</p>
 <p>The setjmp function saves the current calling environment in the env buffer, for later use by longjmp, and returns a 0. The calling environment includes the program counter, stack pointer, and general purpose registers.</p>
 <p>The longjmp function restores the calling environment from the env buffer and then triggers a return from the most recent setjmp call that initialized env. The setjmp then returns with the nonzero return value retval.</p>

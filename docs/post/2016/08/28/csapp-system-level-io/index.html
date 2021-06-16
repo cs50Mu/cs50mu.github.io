@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="linuxfish" /><meta name="description" content="###概览 是什么？ Input/output (I/O) is the process of copying data between main memory and external devices such as disk drives, terminals, and networks. An input operation copies data from an I/O device to main memory, and an output operation copies data from memory to a device. 为什么？ All language run-time systems provide higher-level facilities for performing I/O. For example, ANSI" />
+<meta name="author" content="linuxfish" /><meta name="description" content="概览 是什么？ Input/output (I/O) is the process of copying data between main memory and external devices such as disk drives, terminals, and networks. An input operation copies data from an I/O device to main memory, and an output operation copies data from memory to a device. 为什么？ All language run-time systems provide higher-level facilities for performing I/O. For example, ANSI C provides the" />
 
 
 
@@ -40,19 +40,19 @@
 
 
 <meta property="og:title" content="csapp system level io" />
-<meta property="og:description" content="###概览 是什么？ Input/output (I/O) is the process of copying data between main memory and external devices such as disk drives, terminals, and networks. An input operation copies data from an I/O device to main memory, and an output operation copies data from memory to a device. 为什么？ All language run-time systems provide higher-level facilities for performing I/O. For example, ANSI" />
+<meta property="og:description" content="概览 是什么？ Input/output (I/O) is the process of copying data between main memory and external devices such as disk drives, terminals, and networks. An input operation copies data from an I/O device to main memory, and an output operation copies data from memory to a device. 为什么？ All language run-time systems provide higher-level facilities for performing I/O. For example, ANSI C provides the" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://localhost:1313/post/2016/08/28/csapp-system-level-io/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2016-08-28T00:00:00&#43;00:00" />
 <meta property="article:modified_time" content="2016-08-28T00:00:00&#43;00:00" />
 
 <meta itemprop="name" content="csapp system level io">
-<meta itemprop="description" content="###概览 是什么？ Input/output (I/O) is the process of copying data between main memory and external devices such as disk drives, terminals, and networks. An input operation copies data from an I/O device to main memory, and an output operation copies data from memory to a device. 为什么？ All language run-time systems provide higher-level facilities for performing I/O. For example, ANSI"><meta itemprop="datePublished" content="2016-08-28T00:00:00&#43;00:00" />
+<meta itemprop="description" content="概览 是什么？ Input/output (I/O) is the process of copying data between main memory and external devices such as disk drives, terminals, and networks. An input operation copies data from an I/O device to main memory, and an output operation copies data from memory to a device. 为什么？ All language run-time systems provide higher-level facilities for performing I/O. For example, ANSI C provides the"><meta itemprop="datePublished" content="2016-08-28T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2016-08-28T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="1214">
+<meta itemprop="wordCount" content="1211">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="csapp system level io"/>
-<meta name="twitter:description" content="###概览 是什么？ Input/output (I/O) is the process of copying data between main memory and external devices such as disk drives, terminals, and networks. An input operation copies data from an I/O device to main memory, and an output operation copies data from memory to a device. 为什么？ All language run-time systems provide higher-level facilities for performing I/O. For example, ANSI"/>
+<meta name="twitter:description" content="概览 是什么？ Input/output (I/O) is the process of copying data between main memory and external devices such as disk drives, terminals, and networks. An input operation copies data from an I/O device to main memory, and an output operation copies data from memory to a device. 为什么？ All language run-time systems provide higher-level facilities for performing I/O. For example, ANSI C provides the"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -137,12 +137,25 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">文章目录</h2>
   <div class="post-toc-content always-active">
-    <nav id="TableOfContents"></nav>
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#概览">概览</a></li>
+            <li><a href="#unix-io">Unix I/O</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
   </div>
 </div>
     <div class="post-content">
-      <p>###概览
-是什么？</p>
+      <h3 id="概览">概览</h3>
+<p>是什么？</p>
 <p>Input/output (I/O) is the process of copying data between main memory and external devices such as disk drives, terminals, and networks. An input operation copies data from an I/O device to main memory, and an output operation copies data from memory to a device.</p>
 <p>为什么？</p>
 <p>All language run-time systems provide higher-level facilities for performing I/O. For example, ANSI C provides the standard I/O library, with functions such as printf and scanf that perform buffered I/O. The C++ language provides similar functionality with its overloaded &laquo; (“put to”) and &raquo; (“get from”) operators. On Unix systems, these higher-level I/O functions are implemented using system-level Unix I/O functions provided by the kernel. <strong>Most of the time, the higher-level I/O functions work quite well and there is no need to use Unix I/O directly. So why bother learning about Unix I/O?</strong></p>
@@ -154,7 +167,7 @@
 <p>Sometimes you have no choice but to use Unix I/O. There are some important cases where using higher-level I/O functions is either impossible or inappro- priate. For example, the standard I/O library provides no way to access file metadata such as file size or file creation time. Further, there are problems with the standard I/O library that make it risky to use for network programming.</p>
 </li>
 </ul>
-<p>###Unix I/O</p>
+<h3 id="unix-io">Unix I/O</h3>
 <p>A Unix file is a sequence of m bytes.</p>
 <p>All I/O devices, such as networks, disks, and terminals, are modeled as files, and all input and output is performed by reading and writing the appropriate files. This elegant mapping of devices to files allows the Unix kernel to export a simple, low-level application interface, known as Unix I/O, that enables all input and output to be performed in a uniform and consistent way. 所有的io设备都被抽象成文件，对设备的输入输出操作被抽象成对文件的读和写操作。</p>
 <p>针对文件的基本操作：</p>

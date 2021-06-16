@@ -137,14 +137,29 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">文章目录</h2>
   <div class="post-toc-content always-active">
-    <nav id="TableOfContents"></nav>
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#transport">Transport</a></li>
+            <li><a href="#protocol">Protocol</a></li>
+            <li><a href="#processor">Processor</a></li>
+            <li><a href="#server">Server</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
   </div>
 </div>
     <div class="post-content">
       <p>准备学习一下thrift的源码，看的是Python版的，以下所有分析都是基于0.9.0版本的thrift</p>
 <p>thrift整个逻辑结构是分层的，类似于网络模型的分层，从下到上依次为Transport层，它封装了底层的socket；Protocol层在Transport层的基础上实现了传输协议；</p>
-<p>###Transport
-先看是如何用的，thrift client端的正确打开方式是:</p>
+<h3 id="transport">Transport</h3>
+<p>先看是如何用的，thrift client端的正确打开方式是:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -578,8 +593,8 @@
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>###Protocol
-这个模块定义的是传输协议，代码都放在protocol目录下。关于这一部分的作用，官网已经说的很清楚了，直接引用过来：</p>
+</div><h3 id="protocol">Protocol</h3>
+<p>这个模块定义的是传输协议，代码都放在protocol目录下。关于这一部分的作用，官网已经说的很清楚了，直接引用过来：</p>
 <blockquote>
 <p>The Protocol abstraction defines a mechanism to map in-memory data structures to a wire-format. In other words, a protocol specifies how datatypes use the underlying Transport to encode/decode themselves. Thus the protocol implementation governs the encoding scheme and is responsible for (de)serialization. Some examples of protocols in this sense include JSON, XML, plain text, compact binary etc.</p>
 </blockquote>
@@ -762,9 +777,9 @@ string = readString()</p>
 </div><p>类似的，读出header信息后，会继续读出具体的返回数据，视情况决定是否返回exception。</p>
 <p>这一部分的分析有一个巨牛的资源，写的非常清楚：<br>
 <a href="http://houjixin.blog.163.com/blog/static/35628410201501654039437/">由浅入深了解Thrift（二）——Thrift的工作原理</a></p>
-<p>###Processor
-这一块儿的代码是由thrift compiler自动生成的</p>
-<p>###Server</p>
+<h3 id="processor">Processor</h3>
+<p>这一块儿的代码是由thrift compiler自动生成的</p>
+<h3 id="server">Server</h3>
 
     </div>
 

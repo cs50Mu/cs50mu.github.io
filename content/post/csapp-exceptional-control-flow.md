@@ -5,7 +5,7 @@ slug = "2016/08/26/csapp-exceptional-control-flow"
 Categories = []
 +++
 
-###Chapter 8 Exceptional Control Flow
+### Chapter 8 Exceptional Control Flow
 
 从一上电开始，CPU就在不停得执行指令，从第k个指令转到k+1个指令执行，叫做指令转移(control transfer)，一堆指令转移的集合就叫控制流(flow of control or control flow of the process)。
 
@@ -20,7 +20,7 @@ Categories = []
 - 有助于理解并发(concurrency)。ECF is a basic mechanism for implementing concurrency in computer systems. An exception handler that interrupts the execution of an application program, processes and threads whose execution overlap in time, and a signal handler that interrupts the execution of an application program are all examples of concurrency in action. Understanding ECF is a first step to understanding concurrency.
 有助于理解软件层面的异常(software exceptions)是如何工作的。Languages such as C++ and Java provide software exception mechanisms via try, catch, and throw statements. Software exceptions allow the program to make nonlocal jumps (i.e., jumps that violate the usual call/return stack discipline) in response to error conditions. Nonlocal jumps are a form of application-level ECF, and are provided in C via the setjmp and longjmp functions. Understanding these low-level functions will help you understand how higher-level software exceptions can be implemented.
 
-####8.1 Exceptions
+#### 8.1 Exceptions
 异常部分是由硬件实现的，部分是由操作系统实现的(Exceptions are a form of exceptional control flow that are implemented partly by the hardware and partly by the operating system.)。
 
 An exception is an abrupt change in the control flow in response to some change in the processor’s state. The change in state is known as an event. The event might be directly related to the execution of the current instruction. For example, a virtual memory page fault occurs, an arithmetic overflow occurs, or an instruction attempts a divide by zero. On the other hand, the event might be unrelated to the execution of the current instruction. For example, a system timer goes off or an I/O request completes.（状态的改变我们称之为事件，事件可能跟正在执行的指令相关，比如内存页错误；也可能与当前执行的指令不相干，比如CPU时间到了。）
@@ -33,7 +33,7 @@ An exception is an abrupt change in the control flow in response to some change 
 - The handler returns control to Inext, the instruction that would have executed next had the exception not occurred.
 - The handler aborts the interrupted program.
 
-#####Classes of Exceptions
+##### Classes of Exceptions
 异常可以被分为4类：interrupts, traps, faults, and aborts.
 - Interrupts
 
@@ -164,7 +164,7 @@ When a process terminates for any reason, the kernel does not remove it from the
 
 If the parent process terminates without reaping its zombie children, the kernel arranges for the init process to reap them. The init process has a PID of 1 and is created by the kernel during system initialization. Long-running programs such as shells or servers should always reap their zombie children. Even though zombies are not running, they still consume system memory resources. 父进程没收割的僵尸process会被init进程代为收割。
 
-####Signals 信号
+#### Signals 信号
 
 A signal is a small message that notifies a process that an event of some type has occurred in the system.
 
@@ -206,7 +206,7 @@ The problem of how to program concurrent flows that read and write the same stor
 
 Such errors are enormously difficult to debug because it is often impossible to test every interleaving. You may run the code a billion times without a problem, but then the next test results in an interleaving that triggers the race.
 
-####Nonlocal Jumps
+#### Nonlocal Jumps
 
 C provides a form of user-level exceptional control flow, called a nonlocal jump, that transfers control directly from one function to another currently executing function without having to go through the normal call-and-return sequence. Non- local jumps are provided by the setjmp and longjmp functions.
 

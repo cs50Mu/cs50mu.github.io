@@ -49,7 +49,7 @@
 <meta itemprop="name" content="csapp concurrent programming">
 <meta itemprop="description" content="Applications that use application-level concurrency are known as concurrent programs. Modern operating systems provide three basic approaches for building concurrent programs: Processes. With this approach, each logical control flow is a process that is scheduled and maintained by the kernel. Since processes have separate virtual address spaces, flows that want to communicate with each other must use some kind of explicit interprocess communication (IPC) mechanism. I/O multiplexing.This is a form"><meta itemprop="datePublished" content="2016-08-29T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2016-08-29T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="4441">
+<meta itemprop="wordCount" content="4434">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="csapp concurrent programming"/>
 <meta name="twitter:description" content="Applications that use application-level concurrency are known as concurrent programs. Modern operating systems provide three basic approaches for building concurrent programs: Processes. With this approach, each logical control flow is a process that is scheduled and maintained by the kernel. Since processes have separate virtual address spaces, flows that want to communicate with each other must use some kind of explicit interprocess communication (IPC) mechanism. I/O multiplexing.This is a form"/>
@@ -137,7 +137,22 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">文章目录</h2>
   <div class="post-toc-content always-active">
-    <nav id="TableOfContents"></nav>
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#io之殇">IO之殇</a></li>
+            <li><a href="#concurrent-programming-with-processes">Concurrent Programming with Processes</a></li>
+            <li><a href="#concurrent-programming-with-io-multiplexing">Concurrent Programming with I/O Multiplexing</a></li>
+            <li><a href="#concurrent-programming-with-threads">Concurrent Programming with Threads</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
   </div>
 </div>
     <div class="post-content">
@@ -153,7 +168,7 @@
 <p>Threads. Threads are logical flows that run in the context of a single process and are scheduled by the kernel. You can think of threads as a hybrid of the other two approaches, scheduled by the kernel like process flows, and sharing the same virtual address space like I/O multiplexing flows.</p>
 </li>
 </ul>
-<p>###IO之殇</p>
+<h3 id="io之殇">IO之殇</h3>
 <p>Access to the filesystem or the network are really long operations from the perspective of the CPU. See the numbers from Jeffrey Dean’s talk Stanford CS295 class lecture, Spring, 2007.</p>
 <pre><code>Operation     Latency
 L1 cache reference     0.5 ns
@@ -172,18 +187,18 @@ Send packet CA-&gt;Netherlands-&gt;CA     150,000,000 ns
 <p>Blocking I/Os (or synchronous I/Os) will tie up the system resources as the waiting processes/threads cannot be used for something else. And from the CPU perspective, any I/O which is not done from/to memory takes ages. Fortunately the system itself is not stuck while I/Os are happening. The OS is going to preempt (i.e. interrupt) the process waiting for an I/O, allowing the CPU to be used by another process. But <strong>this costs another context switch and meanwhile I/O intensive applications will spend most of their time… waiting!</strong></p>
 <p>对于multi-process/threading来说</p>
 <p>So, the more processes there are, the more they will compete for the CPU. <strong>The more I/Os the application is doing, the more context switches there are, amplified by the number of process/threads the application is made of.</strong> At some point, no matter how good the operating system is, it is going to become overwhelmed. It will spend most of its time switching contexts and have many processes/threads waiting either for I/O or to acquire the CPU. This basically means that <strong>in such a model, the scalability is not at all linear to the number of processes/threads up to the CPU limit. The capacity gain of adding a process/thread significantly decreases with the number of active processes/threads.</strong></p>
-<p>###Concurrent Programming with Processes</p>
+<h3 id="concurrent-programming-with-processes">Concurrent Programming with Processes</h3>
 <p>Pros and Cons of Processes</p>
 <p>Processes have a clean model for sharing state information between parents and children: file tables are shared and user address spaces are not. Having separate address spaces for processes is both an advantage and a disadvantage. It is im- possible for one process to accidentally overwrite the virtual memory of another process, which eliminates a lot of confusing failures—an obvious advantage.</p>
 <p>On the other hand, separate address spaces make it more difficult for pro- cesses to share state information. To share information, they must use explicit IPC (interprocess communications) mechanisms. (See Aside.) Another disadvan- tage of process-based designs is that they tend to be slower because the overhead for process control and IPC is high.</p>
-<p>###Concurrent Programming with I/O Multiplexing</p>
+<h3 id="concurrent-programming-with-io-multiplexing">Concurrent Programming with I/O Multiplexing</h3>
 <p>The select function manipulates sets of type <code>fd_set</code>, which are known as descriptor sets. Logically, we think of a descriptor set as a bit vector of size n: bn−1,&hellip;,b1,b0</p>
 <p>Each bit bk corresponds to descriptor k. Descriptor k is a member of the descriptor set if and only if bk = 1.</p>
 <p>the select function takes two inputs: a descriptor set (fdset) called the read set, and the cardinality (n) of the read set (actually the maximum cardinality of any descriptor set). **The select function blocks until at least one descriptor in the read set is ready for reading. A descriptor k is ready for reading if and only if a request to read 1 byte from that descriptor would not block.**select函数也是会阻塞的。</p>
 <p>Question: IO多路复用是如何实现并发的效果的？</p>
 <p>本质上是Event Driven Model来实现并发的，I/O Multiplexing只是必不可少的一环，有了它，使用Event Driven Model才成为可能。</p>
 <p>我是这样理解的：在一个事件循环（event loop）中，不断的调用select来返回当前可读、可写的descriptor，然后做相应的处理，一直循环往复。在这个过程中的一个关键是，只有select操作是阻塞的，一旦它有返回，后面的操作就一定不是阻塞的，所以就不会有无谓的时间浪费在等待读和等待写上面。如果CPU的执行速度够快，那么从一个使用者的角度来看的话，就会看到并发的效果（而实质上这些“并发”的连接是按顺序被处理的）。这个道理现在看来，跟单核CPU上的多进程、多线程是一个道理（CPU-time multiplexing）。感觉实现并发效果的关键是：select的这个过程要足够快，然后对select返回的descriptor的处理也要快，否则就不会有并发的效果了。</p>
-<p>####Pros and Cons of I/O Multiplexing</p>
+<h4 id="pros-and-cons-of-io-multiplexing">Pros and Cons of I/O Multiplexing</h4>
 <ul>
 <li>
 <p>One advantage is that event-driven designs give programmers more control over the behavior of their programs than process-based designs. For example, we can imagine writing an event-driven concurrent server that gives preferred service to some clients, which would be difficult for a concurrent server based on processes. 程序员对自己的程序有更多的控制，比如优先提供某个服务，而不是像基于进程的并发那样，完全交给操作系统来决定。</p>
@@ -198,24 +213,24 @@ Send packet CA-&gt;Netherlands-&gt;CA     150,000,000 ns
 <p>Another significant disadvantage of event-based designs is that they cannot fully utilize multi-core processors. 还有一个缺点是不能利用多核</p>
 </li>
 </ul>
-<p>####Event Driven Programming又是什么呢？
-常常看到event driven和I/O Multiplexing这两个概念在一起。我是这样理解的，通过I/O Multiplexing可以提供event driven programming中的事件。</p>
+<h4 id="event-driven-programming又是什么呢">Event Driven Programming又是什么呢？</h4>
+<p>常常看到event driven和I/O Multiplexing这两个概念在一起。我是这样理解的，通过I/O Multiplexing可以提供event driven programming中的事件。</p>
 <p>In an event model, everything runs in one process, one thread. Instead of spawning a new process/thread for each connection request, a event is emitted and the appropriate callback for that event is invoked. Once an event is treated, the process is ready to treat another event.</p>
 <p>Such a model is particularly interesting if most of the activities can be turned into events. This becomes a really good concurrency and high-performance model when any I/Os (not just network I/O as is the most common in existing frameworks) are events. It is based on event patterns such as the Reactor or the Proactor which are patterns for Concurrent, Parallel, and Distributed Systems; documents from Douglas C. Schmidt. This event-driven concurrency model is superior to the traditional multithreaded/multi-process one: the memory footprint is drastically reduced, the CPU is better used and more clients can be served concurrently out of a single machine.</p>
-<p>####The Event Loop
-To some extent, one can consider the event-driven approach being very similar to cooperative multitasking but at the application level. Event-driven applications are themselves multiplexing CPU time between clients.</p>
+<h4 id="the-event-loop">The Event Loop</h4>
+<p>To some extent, one can consider the event-driven approach being very similar to cooperative multitasking but at the application level. Event-driven applications are themselves multiplexing CPU time between clients.</p>
 <p>There is obviously a risk with this; the same that with cooperative multitasking in fact. A risk which explains why at the OS level, preemptive multitasking is used. <strong>If the process at some point can block for one client, then it will block all the other clients.</strong> For example, in cooperative multitasking a non-responding process would make the system hang (Remember Windows before Windows 95 or Mac OS before Mac OS X ? )</p>
 <p>In event-driven model, all the events are treated by a gigantic loop know as the event-loop. The event-loop is going to get from a queue the next event to process and will dispatch it the corresponding handler. Anyone blocking the event-loop will prevent the other events from being processed. So in Node (and in all event-driven framework) the golden rule is <strong>“DO NOT BLOCK THE EVENT LOOP”.</strong> Everything has to be non-blocking. And Node is particularly good at this because all the API it exposes is non-blocking (with the exception of some file system operations which come in two flavors: asynchronous and synchronous).</p>
-<p>####参考</p>
+<h4 id="参考">参考</h4>
 <ul>
 <li><a href="http://www.baloo.io/blog/2013/11/30/node-event-driven-programming/">Node-Event-driven programming</a></li>
 </ul>
-<p>###Concurrent Programming with Threads</p>
+<h3 id="concurrent-programming-with-threads">Concurrent Programming with Threads</h3>
 <p>A thread is a logical flow that runs in the context of a process. modern systems also allow us to write programs that have multiple threads running concurrently in a single process. The threads are scheduled automatically by the kernel. <strong>Each thread has its own thread context, including a unique integer thread ID (TID), stack, stack pointer, program counter, general-purpose registers, and condition codes.</strong> All threads running in a process share the entire virtual address space of that process.</p>
-<p>####Thread Execution Model</p>
+<h4 id="thread-execution-model">Thread Execution Model</h4>
 <p><strong>Each process begins life as a single thread called the main thread.</strong> At some point, the main thread creates a peer thread, and from this point in time the two threads run concurrently. Eventually, control passes to the peer thread via a context switch, because the main thread executes a slow system call such as read or sleep, or because it is interrupted by the system’s interval timer. The peer thread executes for a while before control passes back to the main thread, and so on.</p>
 <p>Thread execution differs from processes in some important ways. Because a thread context is much smaller than a process context, a thread context switch is faster than a process context switch(由于thread context要比process context要小，所以上下文切换要比进程快). Another difference is that threads, unlike processes, are not organized in a rigid parent-child hierarchy. The threads associated with a process form a pool of peers, independent of which threads were created by which other threads. The main thread is distinguished from other threads only in the sense that it is always the first thread to run in the process. The main impact of this notion of a pool of peers is that a thread can kill any of its peers, or wait for any of its peers to terminate. Further, each peer can read and write the same shared data.(进程内的线程之间没有父子的继承关系，都是平等的，一个线程可以kill或者wait其它任何线程，主线程跟其它线程的唯一区别是它总是一个第一个被创建的)</p>
-<p>####Terminating Threads</p>
+<h4 id="terminating-threads">Terminating Threads</h4>
 <p>A thread terminates in one of the following ways:</p>
 <ul>
 <li>
@@ -231,15 +246,15 @@ To some extent, one can consider the event-driven approach being very similar to
 <p>Another peer thread terminates the current thread by calling the &ldquo;pthread cancel&rdquo; function with the ID of the current thread. 被其它线程kill</p>
 </li>
 </ul>
-<p>####Detaching Threads</p>
+<h4 id="detaching-threads">Detaching Threads</h4>
 <p>At any point in time, a thread is joinable or detached. A joinable thread can be reaped and killed by other threads. Its memory resources (such as the stack) are not freed until it is reaped by another thread. In contrast, a detached thread cannot be reaped or killed by other threads. Its memory resources are freed automatically by the system when it terminates. detached状态的thread在退出后会被操作系统自动回收。</p>
 <p>By default, threads are created joinable. In order to avoid memory leaks, each joinable thread should either be explicitly reaped by another thread, or detached by a call to the &ldquo;pthread detach&rdquo; function. 线程默认都是joinable的</p>
-<p>####Shared Variables in Threaded Programs</p>
+<h4 id="shared-variables-in-threaded-programs">Shared Variables in Threaded Programs</h4>
 <p>From a programmer’s perspective, one of the attractive aspects of threads is the ease with which multiple threads can share the same program variables. However, this sharing can be tricky. In order to write correctly threaded programs, <strong>we must have a clear understanding of what we mean by sharing and how it works.</strong></p>
 <p>Threads Memory Model</p>
 <p>A pool of concurrent threads runs in the context of a process. Each thread has its own separate thread context, which includes a thread ID, stack, stack pointer, program counter, condition codes, and general-purpose register values. Each thread shares the rest of the process context with the other threads. <strong>This includes the entire user virtual address space, which consists of read-only text (code), read/write data, the heap, and any shared library code and data areas. The threads also share the same set of open files.</strong></p>
 <p>In an operational sense, <strong>it is impossible for one thread to read or write the register values of another thread.</strong> On the other hand, <strong>any thread can access any location in the shared virtual memory.</strong> If some thread modifies a memory location, then every other thread will eventually see the change if it reads that location. Thus, registers are never shared, whereas virtual memory is always shared.</p>
-<p>####Synchronizing Threads with Semaphores</p>
+<h4 id="synchronizing-threads-with-semaphores">Synchronizing Threads with Semaphores</h4>
 <p>Shared variables can be convenient, but they introduce the possibility of nasty <strong>synchronization errors</strong></p>
 <p>Semaphores</p>
 <p>Semaphores provide a convenient way to ensure mutually exclusive access to shared variables. The basic idea is to associate a semaphore s, initially 1, with each shared variable (or related set of shared variables) and then surround the corresponding critical section with P (s) and V (s) operations.</p>
@@ -260,7 +275,7 @@ To some extent, one can consider the event-driven approach being very similar to
 <p>Producer-Consumer Problem</p>
 <p>A producer and consumer thread share a bounded buffer with n slots. The producer thread repeatedly produces new items and inserts them in the buffer. The consumer thread repeat- edly removes items from the buffer and then consumes (uses) them. Variants with multiple producers and consumers are also possible.</p>
 <p>Since inserting and removing items involves updating shared variables, we must guarantee mutually exclusive access to the buffer. But guaranteeing mutual exclusion is not sufficient. We also need to schedule accesses to the buffer. If the buffer is full (there are no empty slots), then the producer must wait until a slot becomes available. Similarly, if the buffer is empty (there are no available items), then the consumer must wait until an item becomes available. 不仅要保证对共享变量的独享读写，而且还有保证先后顺序，必须要先生产再消费。</p>
-<p>####Other Concurrency Issues</p>
+<h4 id="other-concurrency-issues">Other Concurrency Issues</h4>
 <p>You probably noticed that life got much more complicated once we were asked to synchronize accesses to shared data. Synchronization is a fundamentally difficult problem that raises issues that simply do not arise in ordinary sequential programs.</p>
 <p>Thread Safety</p>
 <p>A function is said to be thread-safe if and only if it will always produce correct results when called repeatedly from multiple concurrent threads. If a function is not thread-safe, then we say it is thread-unsafe.</p>

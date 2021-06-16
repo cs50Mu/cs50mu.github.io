@@ -5,7 +5,7 @@ slug = "2017/02/22/process-data-using-awk"
 Categories = []
 +++
 
-###AWK学习笔记
+### AWK学习笔记
 以下内容主要参考自《The AWK Programming Language》一书以及GNU的《The GNU Awk User’s Guide》。
 
 - the structure of an AWK program
@@ -148,7 +148,7 @@ the basic operation of awk is to scan a sequence of input lines one after anothe
 		    
 		   上面的例子用到了gawk扩展的多维array特性，不适用于unix下默认的awk
 		   
-###避坑指南
+### 避坑指南
 这几天用awk写了几个处理数据的小程序，顺便总结下遇到的坑：
 
 - 由于操作系统平台不同引起的问题
@@ -157,7 +157,7 @@ the basic operation of awk is to scan a sequence of input lines one after anothe
 	- 文件编码问题
 		- *nix系统下一般使用`utf-8`编码，win平台中文环境一般为gb18030编码。更需要注意的是中国人民的好朋友Excel，在编辑完csv文件再保存后，会把文件编码强制更改为gb18030，即使原来的文件编码是utf-8.
 
-###参考
+### 参考
 - The GNU Awk User’s Guide
     - [https://www.gnu.org/software/gawk/manual/gawk.html](https://www.gnu.org/software/gawk/manual/gawk.html#Index)
 - The AWK Programming Language 
