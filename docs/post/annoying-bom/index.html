@@ -49,7 +49,7 @@
 <meta itemprop="name" content="记住EF BB BF">
 <meta itemprop="description" content="遇到一个问题，记录一下。 收到反馈说，用户上传的文件无法解析。查看日志后发现，解析第一行时就报错了，但是用普通文本编辑器查看发现文件看起来并无"><meta itemprop="datePublished" content="2021-08-09T11:57:13&#43;08:00" />
 <meta itemprop="dateModified" content="2021-08-09T11:57:13&#43;08:00" />
-<meta itemprop="wordCount" content="346">
+<meta itemprop="wordCount" content="385">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="记住EF BB BF"/>
 <meta name="twitter:description" content="遇到一个问题，记录一下。 收到反馈说，用户上传的文件无法解析。查看日志后发现，解析第一行时就报错了，但是用普通文本编辑器查看发现文件看起来并无"/>
@@ -162,7 +162,16 @@
 <p>Normally, the BOM is used to signal the endianness of an encoding, but since endianness is irrelevant to UTF-8, the BOM is unnecessary. UTF-8 has the same byte order regardless of platform endianness, so a byte order mark isn&rsquo;t needed.</p>
 </blockquote>
 <p>至于为啥utf-8没必要使用BOM，<a href="https://www.zhihu.com/question/20167122/answer/103632765">据说</a>是由于它的编码特性，是字节序无关的，具体可能需要新开一篇帖子来学习下utf-8的原理了。</p>
-<p>ps, 那个惹祸的文件是由Mac OS X 系统下的 Excel 生成的。</p>
+<p>知道了问题所在，那解法就有了，在解析前先把开头三个BOM字节trim掉：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">bytes</span><span class="p">.</span><span class="nf">Trim</span><span class="p">(</span><span class="nx">fileBytes</span><span class="p">,</span> <span class="s">&#34;\xef\xbb\xbf&#34;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>ps, 那个惹祸的文件是由Mac OS X 系统下的 Excel 生成的。</p>
 
     </div>
 

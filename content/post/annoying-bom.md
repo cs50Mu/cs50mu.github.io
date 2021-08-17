@@ -25,4 +25,10 @@ xxd wrong_format.csv | less
 
 至于为啥utf-8没必要使用BOM，[据说](https://www.zhihu.com/question/20167122/answer/103632765)是由于它的编码特性，是字节序无关的，具体可能需要新开一篇帖子来学习下utf-8的原理了。
 
+知道了问题所在，那解法就有了，在解析前先把开头三个BOM字节trim掉：
+
+```go
+bytes.Trim(fileBytes, "\xef\xbb\xbf")
+```
+
 ps, 那个惹祸的文件是由Mac OS X 系统下的 Excel 生成的。
